@@ -2,6 +2,7 @@ import 'vuetify/styles';
 import type {ThemeDefinition} from "vuetify";
 import {createVuetify} from 'vuetify';
 import {aliases, mdi} from 'vuetify/iconsets/mdi-svg'
+import { VDateInput } from 'vuetify/labs/components'
 const myCustomTheme: ThemeDefinition = {
   dark: false,
   colors: {
@@ -28,9 +29,14 @@ const vuetify = createVuetify({
   defaults: {
     VTextField: {
       variant: 'solo-filled',
+      density: 'compact',
     },
     VTextarea: {
       variant: 'solo-filled',
+    },
+    VAutocomplete: {
+      variant: 'solo-filled',
+      density: 'compact',
     }
   },
   icons: {
@@ -39,7 +45,10 @@ const vuetify = createVuetify({
     sets: {
       mdi,
     },
-  }
+  },
+  components: {
+    VDateInput,
+  },
 });
 
 export default vuetify;

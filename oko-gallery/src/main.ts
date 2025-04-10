@@ -11,11 +11,18 @@ import router from './router'
 
 import vuetify from './plugins/vuetify'
 import {useAuthStore} from "@/stores/auth.ts";
+
+import { VueQueryPlugin } from '@tanstack/vue-query'
+import { PerfectScrollbarPlugin } from 'vue3-perfect-scrollbar'
+
+
+
 const app = createApp(App)
 const pinia = createPinia()
 pinia.use(piniaPluginPersistedstate)
 app.use(pinia)
 app.use(VueCountryRegionSelect)
+app.use(PerfectScrollbarPlugin, { componentName: 'Scrollbar' })
 
 const hello_msg = "Hello curious OKO"
 if (await useAuthStore().isAuthenticated()) {
@@ -24,6 +31,7 @@ if (await useAuthStore().isAuthenticated()) {
   console.log(hello_msg + ' visitor')
 }
 
+app.use(VueQueryPlugin)
 
 app.use(router)
 app.use(vuetify)

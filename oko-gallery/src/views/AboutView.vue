@@ -1,7 +1,11 @@
+<script setup lang="ts">
+import StandardPage from '@/components/main/StandardPage.vue'
+</script>
+
 <template>
-  <div class="about">
-    <h1>OKO Gallery</h1>
-  </div>
+  <StandardPage>
+    <h1 class="about">OKO</h1>
+  </StandardPage>
 </template>
 
 <style>
@@ -9,7 +13,7 @@
   .about {
     min-height: 100vh;
     display: flex;
-    align-items: center;
+    align-items: start;
   }
 }
 </style>

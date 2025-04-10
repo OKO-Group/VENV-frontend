@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { computed, defineEmits, defineProps, ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useAuthStore } from '@/stores/auth.ts'
-import { type MFAListInfo, MFAMethod } from '@/types/auth.ts'
+import { MFAMethod } from '@/types/auth.ts'
 
 const authStore = useAuthStore()
 

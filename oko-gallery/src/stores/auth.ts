@@ -18,14 +18,16 @@ import { AxiosError, type AxiosResponse, HttpStatusCode } from 'axios'
 import { handleBadRequest, handleGenericError } from '@/utils/requests.ts'
 import type { User } from '@/types/oko.ts'
 
+//TODO refactor all this, compress methods, all return statusCode
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     id: null as number | null,
-    user: null as User | null,
+    user: null as User
+      | null,
     loading: false,
-    errors: {} as Record<string, string>, // Stores field-specific errors
-    message: null as string | null, // Stores message (info)
-    statusCode: null as number | null, // Store response status code
+    errors: {} as Record<string, string>, // field-specific errors
+    message: null as string | null, // message (info)
+    statusCode: null as number | null, // last response status code
     twoFAs: null as MFAListInfo | null,
     sessions: null as SessionListInfo | null,
     totp: null as MFAInfo | null,
@@ -137,6 +139,7 @@ export const useAuthStore = defineStore('auth', {
         this.statusCode = response.status
         this.authTimestamp = response.data.data.methods.pop().at
         this.errors = {}
+        this.id = response.data.data.user.id
         await this.fetchUser()
       } catch (error) {
         const { statusCode, errors } = handleGenericError(error as AxiosError)
@@ -333,7 +336,11 @@ export const useAuthStore = defineStore('auth', {
     async updateUserAccount(data: Record<string, any>) {
       this.resetErrors()
       try {
-        const response = await api.patch(`users/artist/${this.id}/`, data) //TODO backend Location check for naughty users
+        const response = await api.patch(`users/artist/${this.id}/`, data, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          }
+        }) //TODO backend Location check for naughty users
         this.statusCode = response.status
         this.user = response.data
       } catch (error) {

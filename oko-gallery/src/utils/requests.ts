@@ -9,6 +9,7 @@ export function handleBadRequest(errors: ErrorData[]): Record<string, string> {
       acc[err.param || ''] = err.message
       return acc
     }, {} as Record<string, string>)
+
   } else {
     return { 'error': 'Invalid data. Please check your input.' }
   }

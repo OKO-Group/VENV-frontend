@@ -1,516 +1,2040 @@
 {
-  "genres": [
-    "abstract",
-    "advertisement",
-    "allegorical painting",
-    "animal painting",
-    "architecture",
-    "artist's book",
-    "battle painting",
-    "bijinga",
-    "bird-and-flower painting",
-    "calligraphy",
-    "capriccio",
-    "caricature",
-    "cityscape",
-    "cloudscape",
-    "design",
-    "digital",
-    "figurative",
-    "flower painting",
-    "genre painting",
-    "graffiti",
-    "history painting",
-    "icon",
-    "illustration",
-    "installation",
-    "interior",
-    "jewelry",
-    "landscape",
-    "literary painting",
-    "manga",
-    "marina",
-    "miniature",
-    "mosaic",
-    "mural",
-    "mythological painting",
-    "nude painting (nu)",
-    "pastorale",
-    "performance",
-    "photo",
-    "pin-up",
-    "portrait",
-    "poster",
-    "quadratura",
-    "religious painting",
-    "sculpture",
-    "self-portrait",
-    "shan shui",
-    "sketch and study",
-    "still life",
-    "symbolic painting",
-    "tapestry",
-    "tessellation",
-    "trompe-l'œil",
-    "tronie",
-    "urushi-e",
-    "utensil",
-    "vanitas",
-    "veduta",
-    "video",
-    "wildlife painting",
-    "yakusha-e"
-  ],
   "styles": [
-    "2nd Intermediate Period",
-    "3rd Intermediate Period",
-    "Abbasid Period",
-    "Abstract Art",
-    "Abstract Expressionism",
-    "Academicism",
-    "Action painting",
-    "Amarna",
-    "American Realism",
-    "Analytical Cubism",
-    "Analytical Realism",
-    "Archaic",
-    "Art Brut",
-    "Art Deco",
-    "Art Informel",
-    "Art Nouveau (Modern)",
-    "Art Singulier",
-    "Automatic Painting",
-    "Baroque",
-    "Biedermeier",
-    "Byzantine",
-    "Cartographic Art",
-    "Chernihiv school of icon painting",
-    "Classical",
-    "Classical Realism",
-    "Classicism",
-    "Cloisonnism",
-    "Color Field Painting",
-    "Conceptual Art",
-    "Concretism",
-    "Confessional Art",
-    "Constructivism",
-    "Contemporary",
-    "Contemporary Realism",
-    "Coptic art",
-    "Costumbrismo",
-    "Cretan school of icon painting",
-    "Crusader workshop",
-    "Cubism",
-    "Cubo-Expressionism",
-    "Cubo-Futurism",
-    "Cyber Art",
-    "Dada",
-    "Digital Art",
-    "Divisionism",
-    "Documentary photography",
-    "Early Byzantine (c. 330–750)",
-    "Early Christian",
-    "Early Dynastic",
-    "Early Renaissance",
-    "Environmental (Land) Art",
-    "Ero guro",
-    "Excessivism",
-    "Existential Art",
-    "Expressionism",
-    "Fantastic Realism",
-    "Fantasy Art",
-    "Fauvism",
-    "Feminist Art",
-    "Fiber art",
-    "Figurative Expressionism",
-    "Folk art",
-    "Futurism",
-    "Galicia-Volyn school",
-    "Geometric",
-    "Gongbi",
-    "Gothic",
-    "Graffiti Art",
-    "Hard Edge Painting",
-    "Hellenistic",
-    "High Renaissance",
-    "Hyper-Mannerism (Anachronism)",
-    "Hyper-Realism",
-    "Ilkhanid",
-    "Impressionism",
-    "Indian Space painting",
-    "Ink and wash painting",
-    "International Gothic",
-    "Intimism",
-    "Japonism",
-    "Joseon Dynasty",
-    "Junk Art",
-    "Kanō school style",
-    "Kinetic Art",
-    "Kitsch",
-    "Komnenian style (1081-1185)",
-    "Kyiv school of icon painting",
-    "Late Byzantine/Palaeologan Renaissance (c. 1261–1453)",
-    "Late Period",
-    "Latin Empire of Constantinople (1204-1261)",
-    "Lettrism",
-    "Light and Space",
-    "Lowbrow Art",
-    "Luminism",
-    "Lyrical Abstraction",
-    "Macedonian Renaissance (867–1056)",
-    "Macedonian school of icon painting",
-    "Magic Realism",
-    "Mail Art",
-    "Mannerism (Late Renaissance)",
-    "Maximalism",
-    "Mechanistic Cubism",
-    "Medieval Art",
-    "Metaphysical art",
-    "Middle Byzantine (c. 850–1204)",
-    "Middle Kingdom",
-    "Minimalism",
-    "Miserablism",
-    "Modernism",
-    "Modernismo",
-    "Mosan art",
-    "Moscow school of icon painting",
-    "Mozarabic",
-    "Mughal",
-    "Muralism",
-    "Naïve Art (Primitivism)",
-    "Nanga (Bunjinga)",
-    "Nas-Taliq",
-    "Native Art",
-    "Naturalism",
-    "Neo-baroque",
-    "Neo-Byzantine",
-    "Neoclassicism",
-    "Neo-Concretism",
-    "Neo-Dada",
-    "Neo-Expressionism",
-    "Neo-Figurative Art",
-    "Neo-Geo",
-    "Neo-Impressionism",
-    "Neo-Minimalism",
-    "Neo-Orthodoxism",
-    "Neoplasticism",
-    "Neo-Pop Art",
-    "Neo-Rococo",
-    "Neo-Romanticism",
-    "Neo-Suprematism",
-    "New Casualism",
-    "New European Painting",
-    "New Ink Painting",
-    "New Kingdom",
-    "New media art",
-    "New Medievialism",
-    "New Realism",
-    "Nihonga",
-    "Northern Renaissance",
-    "Nouveau Réalisme",
-    "Novgorod school of icon painting",
-    "Old Kingdom",
-    "Op Art",
-    "Orientalism",
-    "Orphism",
-    "Ottoman Period",
-    "Outsider art",
-    "P&D (Pattern and Decoration)",
-    "Perceptism",
-    "Performance Art",
-    "Photorealism",
-    "Pictorialism",
-    "Pointillism",
-    "Pop Art",
-    "Post-classic (c.900-1580)",
-    "Postcolonial art",
-    "Poster Art Realism",
-    "Post-Impressionism",
-    "Post-Minimalism",
-    "Post-Painterly Abstraction",
-    "Precisionism",
-    "Proto Renaissance",
-    "Pskov school of icon painting",
-    "Ptolemaic",
-    "Purism",
-    "Queer art",
-    "Rayonism",
-    "Realism",
-    "Regionalism",
-    "Renaissance",
-    "Rococo",
-    "Romanesque",
-    "Romanticism",
-    "Safavid Period",
-    "Severe Style",
-    "Shin-hanga",
-    "Site-specific art",
-    "Sky Art",
-    "Social Realism",
-    "Socialist Realism",
-    "Sōsaku hanga",
-    "Sots Art",
-    "Spatialism",
-    "Spectralism",
-    "Street art",
-    "Street Photography",
-    "Stroganov school of icon painting",
-    "Stuckism",
-    "Sumi-e (Suiboku-ga)",
-    "Superflat",
-    "Suprematism",
-    "Surrealism",
-    "Symbolism",
-    "Synchromism",
-    "Synthetic Cubism",
-    "Synthetism",
-    "Tachisme",
-    "Tenebrism",
-    "Timurid Period",
-    "Tonalism",
-    "Transautomatism",
-    "Transavantgarde",
-    "Tubism",
-    "Ukiyo-e",
-    "Verism",
-    "Viking art",
-    "Vladimir school of icon painting",
-    "Vologda school of icon painting",
-    "Yamato-e",
-    "Yaroslavl school of icon painting",
-    "Yoruba",
-    "Zen"
+    {
+      "label": "2nd Intermediate Period",
+      "value": "2nd intermediate period"
+    },
+    {
+      "label": "3rd Intermediate Period",
+      "value": "3rd intermediate period"
+    },
+    {
+      "label": "Abbasid Period",
+      "value": "abbasid period"
+    },
+    {
+      "label": "Abstract Art",
+      "value": "abstract art"
+    },
+    {
+      "label": "Abstract Expressionism",
+      "value": "abstract expressionism"
+    },
+    {
+      "label": "Academicism",
+      "value": "academicism"
+    },
+    {
+      "label": "Action painting",
+      "value": "action painting"
+    },
+    {
+      "label": "Amarna",
+      "value": "amarna"
+    },
+    {
+      "label": "American Realism",
+      "value": "american realism"
+    },
+    {
+      "label": "Analytical Cubism",
+      "value": "analytical cubism"
+    },
+    {
+      "label": "Analytical Realism",
+      "value": "analytical realism"
+    },
+    {
+      "label": "Archaic",
+      "value": "archaic"
+    },
+    {
+      "label": "Art Brut",
+      "value": "art brut"
+    },
+    {
+      "label": "Art Deco",
+      "value": "art deco"
+    },
+    {
+      "label": "Art Informel",
+      "value": "art informel"
+    },
+    {
+      "label": "Art Nouveau (Modern)",
+      "value": "art nouveau (modern)"
+    },
+    {
+      "label": "Art Singulier",
+      "value": "art singulier"
+    },
+    {
+      "label": "Automatic Painting",
+      "value": "automatic painting"
+    },
+    {
+      "label": "Baroque",
+      "value": "baroque"
+    },
+    {
+      "label": "Biedermeier",
+      "value": "biedermeier"
+    },
+    {
+      "label": "Byzantine",
+      "value": "byzantine"
+    },
+    {
+      "label": "Cartographic Art",
+      "value": "cartographic art"
+    },
+    {
+      "label": "Chernihiv school of icon painting",
+      "value": "chernihiv school of icon painting"
+    },
+    {
+      "label": "Classical",
+      "value": "classical"
+    },
+    {
+      "label": "Classical Realism",
+      "value": "classical realism"
+    },
+    {
+      "label": "Classicism",
+      "value": "classicism"
+    },
+    {
+      "label": "Cloisonnism",
+      "value": "cloisonnism"
+    },
+    {
+      "label": "Color Field Painting",
+      "value": "color field painting"
+    },
+    {
+      "label": "Conceptual Art",
+      "value": "conceptual art"
+    },
+    {
+      "label": "Concretism",
+      "value": "concretism"
+    },
+    {
+      "label": "Confessional Art",
+      "value": "confessional art"
+    },
+    {
+      "label": "Constructivism",
+      "value": "constructivism"
+    },
+    {
+      "label": "Contemporary",
+      "value": "contemporary"
+    },
+    {
+      "label": "Contemporary Realism",
+      "value": "contemporary realism"
+    },
+    {
+      "label": "Coptic art",
+      "value": "coptic art"
+    },
+    {
+      "label": "Costumbrismo",
+      "value": "costumbrismo"
+    },
+    {
+      "label": "Cretan school of icon painting",
+      "value": "cretan school of icon painting"
+    },
+    {
+      "label": "Crusader workshop",
+      "value": "crusader workshop"
+    },
+    {
+      "label": "Cubism",
+      "value": "cubism"
+    },
+    {
+      "label": "Cubo-Expressionism",
+      "value": "cubo-expressionism"
+    },
+    {
+      "label": "Cubo-Futurism",
+      "value": "cubo-futurism"
+    },
+    {
+      "label": "Cyber Art",
+      "value": "cyber art"
+    },
+    {
+      "label": "Dada",
+      "value": "dada"
+    },
+    {
+      "label": "Digital Art",
+      "value": "digital art"
+    },
+    {
+      "label": "Divisionism",
+      "value": "divisionism"
+    },
+    {
+      "label": "Documentary photography",
+      "value": "documentary photography"
+    },
+    {
+      "label": "Early Byzantine (c. 330–750)",
+      "value": "early byzantine (c. 330–750)"
+    },
+    {
+      "label": "Early Christian",
+      "value": "early christian"
+    },
+    {
+      "label": "Early Dynastic",
+      "value": "early dynastic"
+    },
+    {
+      "label": "Early Renaissance",
+      "value": "early renaissance"
+    },
+    {
+      "label": "Environmental (Land) Art",
+      "value": "environmental (land) art"
+    },
+    {
+      "label": "Ero guro",
+      "value": "ero guro"
+    },
+    {
+      "label": "Excessivism",
+      "value": "excessivism"
+    },
+    {
+      "label": "Existential Art",
+      "value": "existential art"
+    },
+    {
+      "label": "Expressionism",
+      "value": "expressionism"
+    },
+    {
+      "label": "Fantastic Realism",
+      "value": "fantastic realism"
+    },
+    {
+      "label": "Fantasy Art",
+      "value": "fantasy art"
+    },
+    {
+      "label": "Fauvism",
+      "value": "fauvism"
+    },
+    {
+      "label": "Feminist Art",
+      "value": "feminist art"
+    },
+    {
+      "label": "Fiber art",
+      "value": "fiber art"
+    },
+    {
+      "label": "Figurative Expressionism",
+      "value": "figurative expressionism"
+    },
+    {
+      "label": "Folk art",
+      "value": "folk art"
+    },
+    {
+      "label": "Futurism",
+      "value": "futurism"
+    },
+    {
+      "label": "Galicia-Volyn school",
+      "value": "galicia-volyn school"
+    },
+    {
+      "label": "Geometric",
+      "value": "geometric"
+    },
+    {
+      "label": "Gongbi",
+      "value": "gongbi"
+    },
+    {
+      "label": "Gothic",
+      "value": "gothic"
+    },
+    {
+      "label": "Graffiti Art",
+      "value": "graffiti art"
+    },
+    {
+      "label": "Hard Edge Painting",
+      "value": "hard edge painting"
+    },
+    {
+      "label": "Hellenistic",
+      "value": "hellenistic"
+    },
+    {
+      "label": "High Renaissance",
+      "value": "high renaissance"
+    },
+    {
+      "label": "Hyper-Mannerism (Anachronism)",
+      "value": "hyper-mannerism (anachronism)"
+    },
+    {
+      "label": "Hyper-Realism",
+      "value": "hyper-realism"
+    },
+    {
+      "label": "Ilkhanid",
+      "value": "ilkhanid"
+    },
+    {
+      "label": "Impressionism",
+      "value": "impressionism"
+    },
+    {
+      "label": "Indian Space painting",
+      "value": "indian space painting"
+    },
+    {
+      "label": "Ink and wash painting",
+      "value": "ink and wash painting"
+    },
+    {
+      "label": "International Gothic",
+      "value": "international gothic"
+    },
+    {
+      "label": "Intimism",
+      "value": "intimism"
+    },
+    {
+      "label": "Japonism",
+      "value": "japonism"
+    },
+    {
+      "label": "Joseon Dynasty",
+      "value": "joseon dynasty"
+    },
+    {
+      "label": "Junk Art",
+      "value": "junk art"
+    },
+    {
+      "label": "Kanō school style",
+      "value": "kanō school style"
+    },
+    {
+      "label": "Kinetic Art",
+      "value": "kinetic art"
+    },
+    {
+      "label": "Kitsch",
+      "value": "kitsch"
+    },
+    {
+      "label": "Komnenian style (1081-1185)",
+      "value": "komnenian style (1081-1185)"
+    },
+    {
+      "label": "Kyiv school of icon painting",
+      "value": "kyiv school of icon painting"
+    },
+    {
+      "label": "Late Byzantine/Palaeologan Renaissance (c. 1261–1453)",
+      "value": "late byzantine/palaeologan renaissance (c. 1261–1453)"
+    },
+    {
+      "label": "Late Period",
+      "value": "late period"
+    },
+    {
+      "label": "Latin Empire of Constantinople (1204-1261)",
+      "value": "latin empire of constantinople (1204-1261)"
+    },
+    {
+      "label": "Lettrism",
+      "value": "lettrism"
+    },
+    {
+      "label": "Light and Space",
+      "value": "light and space"
+    },
+    {
+      "label": "Lowbrow Art",
+      "value": "lowbrow art"
+    },
+    {
+      "label": "Luminism",
+      "value": "luminism"
+    },
+    {
+      "label": "Lyrical Abstraction",
+      "value": "lyrical abstraction"
+    },
+    {
+      "label": "Macedonian Renaissance (867–1056)",
+      "value": "macedonian renaissance (867–1056)"
+    },
+    {
+      "label": "Macedonian school of icon painting",
+      "value": "macedonian school of icon painting"
+    },
+    {
+      "label": "Magic Realism",
+      "value": "magic realism"
+    },
+    {
+      "label": "Mail Art",
+      "value": "mail art"
+    },
+    {
+      "label": "Mannerism (Late Renaissance)",
+      "value": "mannerism (late renaissance)"
+    },
+    {
+      "label": "Maximalism",
+      "value": "maximalism"
+    },
+    {
+      "label": "Mechanistic Cubism",
+      "value": "mechanistic cubism"
+    },
+    {
+      "label": "Medieval Art",
+      "value": "medieval art"
+    },
+    {
+      "label": "Metaphysical art",
+      "value": "metaphysical art"
+    },
+    {
+      "label": "Middle Byzantine (c. 850–1204)",
+      "value": "middle byzantine (c. 850–1204)"
+    },
+    {
+      "label": "Middle Kingdom",
+      "value": "middle kingdom"
+    },
+    {
+      "label": "Minimalism",
+      "value": "minimalism"
+    },
+    {
+      "label": "Miserablism",
+      "value": "miserablism"
+    },
+    {
+      "label": "Modernism",
+      "value": "modernism"
+    },
+    {
+      "label": "Modernismo",
+      "value": "modernismo"
+    },
+    {
+      "label": "Mosan art",
+      "value": "mosan art"
+    },
+    {
+      "label": "Moscow school of icon painting",
+      "value": "moscow school of icon painting"
+    },
+    {
+      "label": "Mozarabic",
+      "value": "mozarabic"
+    },
+    {
+      "label": "Mughal",
+      "value": "mughal"
+    },
+    {
+      "label": "Muralism",
+      "value": "muralism"
+    },
+    {
+      "label": "Naïve Art (Primitivism)",
+      "value": "naïve art (primitivism)"
+    },
+    {
+      "label": "Nanga (Bunjinga)",
+      "value": "nanga (bunjinga)"
+    },
+    {
+      "label": "Nas-Taliq",
+      "value": "nas-taliq"
+    },
+    {
+      "label": "Native Art",
+      "value": "native art"
+    },
+    {
+      "label": "Naturalism",
+      "value": "naturalism"
+    },
+    {
+      "label": "Neo-baroque",
+      "value": "neo-baroque"
+    },
+    {
+      "label": "Neo-Byzantine",
+      "value": "neo-byzantine"
+    },
+    {
+      "label": "Neoclassicism",
+      "value": "neoclassicism"
+    },
+    {
+      "label": "Neo-Concretism",
+      "value": "neo-concretism"
+    },
+    {
+      "label": "Neo-Dada",
+      "value": "neo-dada"
+    },
+    {
+      "label": "Neo-Expressionism",
+      "value": "neo-expressionism"
+    },
+    {
+      "label": "Neo-Figurative Art",
+      "value": "neo-figurative art"
+    },
+    {
+      "label": "Neo-Geo",
+      "value": "neo-geo"
+    },
+    {
+      "label": "Neo-Impressionism",
+      "value": "neo-impressionism"
+    },
+    {
+      "label": "Neo-Minimalism",
+      "value": "neo-minimalism"
+    },
+    {
+      "label": "Neo-Orthodoxism",
+      "value": "neo-orthodoxism"
+    },
+    {
+      "label": "Neoplasticism",
+      "value": "neoplasticism"
+    },
+    {
+      "label": "Neo-Pop Art",
+      "value": "neo-pop art"
+    },
+    {
+      "label": "Neo-Rococo",
+      "value": "neo-rococo"
+    },
+    {
+      "label": "Neo-Romanticism",
+      "value": "neo-romanticism"
+    },
+    {
+      "label": "Neo-Suprematism",
+      "value": "neo-suprematism"
+    },
+    {
+      "label": "New Casualism",
+      "value": "new casualism"
+    },
+    {
+      "label": "New European Painting",
+      "value": "new european painting"
+    },
+    {
+      "label": "New Ink Painting",
+      "value": "new ink painting"
+    },
+    {
+      "label": "New Kingdom",
+      "value": "new kingdom"
+    },
+    {
+      "label": "New media art",
+      "value": "new media art"
+    },
+    {
+      "label": "New Medievialism",
+      "value": "new medievialism"
+    },
+    {
+      "label": "New Realism",
+      "value": "new realism"
+    },
+    {
+      "label": "Nihonga",
+      "value": "nihonga"
+    },
+    {
+      "label": "Northern Renaissance",
+      "value": "northern renaissance"
+    },
+    {
+      "label": "Nouveau Réalisme",
+      "value": "nouveau réalisme"
+    },
+    {
+      "label": "Novgorod school of icon painting",
+      "value": "novgorod school of icon painting"
+    },
+    {
+      "label": "Old Kingdom",
+      "value": "old kingdom"
+    },
+    {
+      "label": "Op Art",
+      "value": "op art"
+    },
+    {
+      "label": "Orientalism",
+      "value": "orientalism"
+    },
+    {
+      "label": "Orphism",
+      "value": "orphism"
+    },
+    {
+      "label": "Ottoman Period",
+      "value": "ottoman period"
+    },
+    {
+      "label": "Outsider art",
+      "value": "outsider art"
+    },
+    {
+      "label": "P&D (Pattern and Decoration)",
+      "value": "p&d (pattern and decoration)"
+    },
+    {
+      "label": "Perceptism",
+      "value": "perceptism"
+    },
+    {
+      "label": "Performance Art",
+      "value": "performance art"
+    },
+    {
+      "label": "Photorealism",
+      "value": "photorealism"
+    },
+    {
+      "label": "Pictorialism",
+      "value": "pictorialism"
+    },
+    {
+      "label": "Pointillism",
+      "value": "pointillism"
+    },
+    {
+      "label": "Pop Art",
+      "value": "pop art"
+    },
+    {
+      "label": "Post-classic (c.900-1580)",
+      "value": "post-classic (c.900-1580)"
+    },
+    {
+      "label": "Postcolonial art",
+      "value": "postcolonial art"
+    },
+    {
+      "label": "Poster Art Realism",
+      "value": "poster art realism"
+    },
+    {
+      "label": "Post-Impressionism",
+      "value": "post-impressionism"
+    },
+    {
+      "label": "Post-Minimalism",
+      "value": "post-minimalism"
+    },
+    {
+      "label": "Post-Painterly Abstraction",
+      "value": "post-painterly abstraction"
+    },
+    {
+      "label": "Precisionism",
+      "value": "precisionism"
+    },
+    {
+      "label": "Proto Renaissance",
+      "value": "proto renaissance"
+    },
+    {
+      "label": "Pskov school of icon painting",
+      "value": "pskov school of icon painting"
+    },
+    {
+      "label": "Ptolemaic",
+      "value": "ptolemaic"
+    },
+    {
+      "label": "Purism",
+      "value": "purism"
+    },
+    {
+      "label": "Queer art",
+      "value": "queer art"
+    },
+    {
+      "label": "Rayonism",
+      "value": "rayonism"
+    },
+    {
+      "label": "Realism",
+      "value": "realism"
+    },
+    {
+      "label": "Regionalism",
+      "value": "regionalism"
+    },
+    {
+      "label": "Renaissance",
+      "value": "renaissance"
+    },
+    {
+      "label": "Rococo",
+      "value": "rococo"
+    },
+    {
+      "label": "Romanesque",
+      "value": "romanesque"
+    },
+    {
+      "label": "Romanticism",
+      "value": "romanticism"
+    },
+    {
+      "label": "Safavid Period",
+      "value": "safavid period"
+    },
+    {
+      "label": "Severe Style",
+      "value": "severe style"
+    },
+    {
+      "label": "Shin-hanga",
+      "value": "shin-hanga"
+    },
+    {
+      "label": "Site-specific art",
+      "value": "site-specific art"
+    },
+    {
+      "label": "Sky Art",
+      "value": "sky art"
+    },
+    {
+      "label": "Social Realism",
+      "value": "social realism"
+    },
+    {
+      "label": "Socialist Realism",
+      "value": "socialist realism"
+    },
+    {
+      "label": "Sōsaku hanga",
+      "value": "sōsaku hanga"
+    },
+    {
+      "label": "Sots Art",
+      "value": "sots art"
+    },
+    {
+      "label": "Spatialism",
+      "value": "spatialism"
+    },
+    {
+      "label": "Spectralism",
+      "value": "spectralism"
+    },
+    {
+      "label": "Street art",
+      "value": "street art"
+    },
+    {
+      "label": "Street Photography",
+      "value": "street photography"
+    },
+    {
+      "label": "Stroganov school of icon painting",
+      "value": "stroganov school of icon painting"
+    },
+    {
+      "label": "Stuckism",
+      "value": "stuckism"
+    },
+    {
+      "label": "Sumi-e (Suiboku-ga)",
+      "value": "sumi-e (suiboku-ga)"
+    },
+    {
+      "label": "Superflat",
+      "value": "superflat"
+    },
+    {
+      "label": "Suprematism",
+      "value": "suprematism"
+    },
+    {
+      "label": "Surrealism",
+      "value": "surrealism"
+    },
+    {
+      "label": "Symbolism",
+      "value": "symbolism"
+    },
+    {
+      "label": "Synchromism",
+      "value": "synchromism"
+    },
+    {
+      "label": "Synthetic Cubism",
+      "value": "synthetic cubism"
+    },
+    {
+      "label": "Synthetism",
+      "value": "synthetism"
+    },
+    {
+      "label": "Tachisme",
+      "value": "tachisme"
+    },
+    {
+      "label": "Tenebrism",
+      "value": "tenebrism"
+    },
+    {
+      "label": "Timurid Period",
+      "value": "timurid period"
+    },
+    {
+      "label": "Tonalism",
+      "value": "tonalism"
+    },
+    {
+      "label": "Transautomatism",
+      "value": "transautomatism"
+    },
+    {
+      "label": "Transavantgarde",
+      "value": "transavantgarde"
+    },
+    {
+      "label": "Tubism",
+      "value": "tubism"
+    },
+    {
+      "label": "Ukiyo-e",
+      "value": "ukiyo-e"
+    },
+    {
+      "label": "Verism",
+      "value": "verism"
+    },
+    {
+      "label": "Viking art",
+      "value": "viking art"
+    },
+    {
+      "label": "Vladimir school of icon painting",
+      "value": "vladimir school of icon painting"
+    },
+    {
+      "label": "Vologda school of icon painting",
+      "value": "vologda school of icon painting"
+    },
+    {
+      "label": "Yamato-e",
+      "value": "yamato-e"
+    },
+    {
+      "label": "Yaroslavl school of icon painting",
+      "value": "yaroslavl school of icon painting"
+    },
+    {
+      "label": "Yoruba",
+      "value": "yoruba"
+    },
+    {
+      "label": "Zen",
+      "value": "zen"
+    }
+  ],
+  "genres": [
+    {
+      "label": "Abstract",
+      "value": "abstract"
+    },
+    {
+      "label": "Advertisement",
+      "value": "advertisement"
+    },
+    {
+      "label": "Allegorical Painting",
+      "value": "allegorical painting"
+    },
+    {
+      "label": "Animal Painting",
+      "value": "animal painting"
+    },
+    {
+      "label": "Architecture",
+      "value": "architecture"
+    },
+    {
+      "label": "Artist's Book",
+      "value": "artist's book"
+    },
+    {
+      "label": "Battle Painting",
+      "value": "battle painting"
+    },
+    {
+      "label": "Bijinga",
+      "value": "bijinga"
+    },
+    {
+      "label": "Bird-and-flower Painting",
+      "value": "bird-and-flower painting"
+    },
+    {
+      "label": "Calligraphy",
+      "value": "calligraphy"
+    },
+    {
+      "label": "Capriccio",
+      "value": "capriccio"
+    },
+    {
+      "label": "Caricature",
+      "value": "caricature"
+    },
+    {
+      "label": "Cityscape",
+      "value": "cityscape"
+    },
+    {
+      "label": "Cloudscape",
+      "value": "cloudscape"
+    },
+    {
+      "label": "Design",
+      "value": "design"
+    },
+    {
+      "label": "Digital",
+      "value": "digital"
+    },
+    {
+      "label": "Figurative",
+      "value": "figurative"
+    },
+    {
+      "label": "Flower Painting",
+      "value": "flower painting"
+    },
+    {
+      "label": "Genre Painting",
+      "value": "genre painting"
+    },
+    {
+      "label": "Graffiti",
+      "value": "graffiti"
+    },
+    {
+      "label": "History Painting",
+      "value": "history painting"
+    },
+    {
+      "label": "Icon",
+      "value": "icon"
+    },
+    {
+      "label": "Illustration",
+      "value": "illustration"
+    },
+    {
+      "label": "Installation",
+      "value": "installation"
+    },
+    {
+      "label": "Interior",
+      "value": "interior"
+    },
+    {
+      "label": "Jewelry",
+      "value": "jewelry"
+    },
+    {
+      "label": "Landscape",
+      "value": "landscape"
+    },
+    {
+      "label": "Literary Painting",
+      "value": "literary painting"
+    },
+    {
+      "label": "Manga",
+      "value": "manga"
+    },
+    {
+      "label": "Marina",
+      "value": "marina"
+    },
+    {
+      "label": "Miniature",
+      "value": "miniature"
+    },
+    {
+      "label": "Mosaic",
+      "value": "mosaic"
+    },
+    {
+      "label": "Mural",
+      "value": "mural"
+    },
+    {
+      "label": "Mythological Painting",
+      "value": "mythological painting"
+    },
+    {
+      "label": "Nude Painting (Nu)",
+      "value": "nude painting (nu)"
+    },
+    {
+      "label": "Pastorale",
+      "value": "pastorale"
+    },
+    {
+      "label": "Performance",
+      "value": "performance"
+    },
+    {
+      "label": "Photo",
+      "value": "photo"
+    },
+    {
+      "label": "Pin-up",
+      "value": "pin-up"
+    },
+    {
+      "label": "Portrait",
+      "value": "portrait"
+    },
+    {
+      "label": "Poster",
+      "value": "poster"
+    },
+    {
+      "label": "Quadratura",
+      "value": "quadratura"
+    },
+    {
+      "label": "Religious Painting",
+      "value": "religious painting"
+    },
+    {
+      "label": "Sculpture",
+      "value": "sculpture"
+    },
+    {
+      "label": "Self-portrait",
+      "value": "self-portrait"
+    },
+    {
+      "label": "Shan Shui",
+      "value": "shan shui"
+    },
+    {
+      "label": "Sketch And Study",
+      "value": "sketch and study"
+    },
+    {
+      "label": "Still Life",
+      "value": "still life"
+    },
+    {
+      "label": "Symbolic Painting",
+      "value": "symbolic painting"
+    },
+    {
+      "label": "Tapestry",
+      "value": "tapestry"
+    },
+    {
+      "label": "Tessellation",
+      "value": "tessellation"
+    },
+    {
+      "label": "Trompe-l'œil",
+      "value": "trompe-l'œil"
+    },
+    {
+      "label": "Tronie",
+      "value": "tronie"
+    },
+    {
+      "label": "Urushi-e",
+      "value": "urushi-e"
+    },
+    {
+      "label": "Utensil",
+      "value": "utensil"
+    },
+    {
+      "label": "Vanitas",
+      "value": "vanitas"
+    },
+    {
+      "label": "Veduta",
+      "value": "veduta"
+    },
+    {
+      "label": "Video",
+      "value": "video"
+    },
+    {
+      "label": "Wildlife Painting",
+      "value": "wildlife painting"
+    },
+    {
+      "label": "Yakusha-e",
+      "value": "yakusha-e"
+    }
   ],
   "media": [
-    "acrylic",
-    "albumen silver",
-    "aluminium",
-    "appropriation",
-    "aquatint",
-    "assemblage",
-    "augmented reality",
-    "basalt",
-    "bas-relief",
-    "binder",
-    "blockchain",
-    "board",
-    "brass",
-    "bronze",
-    "brush",
-    "burlap",
-    "cable",
-    "cameo",
-    "canvas",
-    "carbon fiber",
-    "card",
-    "cardboard",
-    "casein",
-    "cement",
-    "ceramics",
-    "chalk",
-    "charcoal",
-    "chisel",
-    "clay",
-    "cliché-verre",
-    "cloth",
-    "coal",
-    "collage",
-    "collotype",
-    "color varnish",
-    "colored markers",
-    "colored pencils",
-    "concrete",
-    "copper",
-    "cotton",
-    "crayon",
-    "digital",
-    "drawing",
-    "drypoint",
-    "dust",
-    "elephant dung",
-    "embroidery",
-    "emulsion",
-    "enamel",
-    "encaustic",
-    "engraving",
-    "etching",
-    "fabric",
-    "fabric straps",
-    "fat",
-    "feather",
-    "felt",
-    "felt-tip pen",
-    "fiberboard",
-    "fiberglass",
-    "flashlight",
-    "fluorescent paint",
-    "fresco",
-    "frottage",
-    "gelatin silver print",
-    "gesso",
-    "gilt",
-    "glass",
-    "glitter",
-    "gloss",
-    "gold",
-    "gold leaf",
-    "gouache",
-    "graffiti",
-    "granite",
-    "graphite",
-    "graphite pencil",
-    "grattage",
-    "greenstone",
-    "grisaille",
-    "gum arabic",
-    "hematite",
-    "hemp",
-    "hologram",
-    "horns",
-    "indian ink",
-    "ink",
-    "intaglio",
-    "ipad",
-    "iron",
-    "iron plate",
-    "ivory",
-    "japanese paper",
-    "jute",
-    "lacquer",
-    "laid paper",
-    "latex",
-    "lavis",
-    "leadpoint",
-    "leather",
-    "lemon",
-    "light box",
-    "light bulb",
-    "limestone",
-    "linen",
-    "linocut",
-    "linocut b&w",
-    "linocut color",
-    "linoleum",
-    "lithography",
-    "magna",
-    "magnets",
-    "mahogany panel",
-    "majolica",
-    "map pins",
-    "marble",
-    "masking tape",
-    "masonite",
-    "metal",
-    "metalpoint",
-    "mezzotint",
-    "mixed media",
-    "mixed technique",
-    "mosaic",
-    "mosaïque",
-    "mural",
-    "music",
-    "music paper",
-    "nails",
-    "oak",
-    "objet trouve",
-    "obsidian",
-    "oil",
-    "oilcloth",
-    "onyx",
-    "paint",
-    "painted metal",
-    "panel",
-    "paper",
-    "papier-pelle",
-    "papyrus",
-    "parchment",
-    "pastel",
-    "pebbles",
-    "pen",
-    "pencil",
-    "pergament",
-    "photogram",
-    "photographic paper",
-    "photography",
-    "photogravure",
-    "photomontage",
-    "photomosaic",
-    "piano",
-    "pigment",
-    "plaster",
-    "plastic",
-    "plates",
-    "plexiglas",
-    "plug socket",
-    "plywood",
-    "polyester",
-    "polymer",
-    "polymer paint",
-    "polystyrene",
-    "poplar",
-    "porcelain",
-    "postcard",
-    "print",
-    "printed brochure",
-    "pyroxylin",
-    "ready-made",
-    "recorder with cassette",
-    "resin",
-    "rubber",
-    "sand",
-    "sandstone",
-    "sanguine",
-    "satin",
-    "scrapings",
-    "screenprint",
-    "sepia",
-    "shell",
-    "silk",
-    "silkscreen",
-    "silver",
-    "silverpoint",
-    "sound",
-    "sponge",
-    "spray paint",
-    "stained glass",
-    "steel",
-    "stencil",
-    "stone",
-    "string",
-    "stucco",
-    "stump",
-    "tapestry",
-    "tar",
-    "tempera",
-    "terracotta",
-    "textile",
-    "tin",
-    "travertine",
-    "turquoise",
-    "tusche",
-    "twine",
-    "varnish",
-    "vellum",
-    "video",
-    "vinyl",
-    "vitrage",
-    "wall",
-    "wallpaper",
-    "wash",
-    "watercolor",
-    "wax",
-    "wax pastel",
-    "white",
-    "whitewash",
-    "wine",
-    "wire",
-    "wood",
-    "wood engraving",
-    "woodblock print",
-    "woodcut",
-    "wooden chair",
-    "wooden sled",
-    "wool",
-    "zinc"
+    {
+      "label": "Acrylic",
+      "value": "acrylic"
+    },
+    {
+      "label": "Albumen Silver",
+      "value": "albumen silver"
+    },
+    {
+      "label": "Aluminium",
+      "value": "aluminium"
+    },
+    {
+      "label": "Appropriation",
+      "value": "appropriation"
+    },
+    {
+      "label": "Aquatint",
+      "value": "aquatint"
+    },
+    {
+      "label": "Assemblage",
+      "value": "assemblage"
+    },
+    {
+      "label": "Augmented Reality",
+      "value": "augmented reality"
+    },
+    {
+      "label": "Basalt",
+      "value": "basalt"
+    },
+    {
+      "label": "Bas-relief",
+      "value": "bas-relief"
+    },
+    {
+      "label": "Binder",
+      "value": "binder"
+    },
+    {
+      "label": "Blockchain",
+      "value": "blockchain"
+    },
+    {
+      "label": "Board",
+      "value": "board"
+    },
+    {
+      "label": "Brass",
+      "value": "brass"
+    },
+    {
+      "label": "Bronze",
+      "value": "bronze"
+    },
+    {
+      "label": "Brush",
+      "value": "brush"
+    },
+    {
+      "label": "Burlap",
+      "value": "burlap"
+    },
+    {
+      "label": "Cable",
+      "value": "cable"
+    },
+    {
+      "label": "Cameo",
+      "value": "cameo"
+    },
+    {
+      "label": "Canvas",
+      "value": "canvas"
+    },
+    {
+      "label": "Carbon Fiber",
+      "value": "carbon fiber"
+    },
+    {
+      "label": "Card",
+      "value": "card"
+    },
+    {
+      "label": "Cardboard",
+      "value": "cardboard"
+    },
+    {
+      "label": "Casein",
+      "value": "casein"
+    },
+    {
+      "label": "Cement",
+      "value": "cement"
+    },
+    {
+      "label": "Ceramics",
+      "value": "ceramics"
+    },
+    {
+      "label": "Chalk",
+      "value": "chalk"
+    },
+    {
+      "label": "Charcoal",
+      "value": "charcoal"
+    },
+    {
+      "label": "Chisel",
+      "value": "chisel"
+    },
+    {
+      "label": "Clay",
+      "value": "clay"
+    },
+    {
+      "label": "Cliché-verre",
+      "value": "cliché-verre"
+    },
+    {
+      "label": "Cloth",
+      "value": "cloth"
+    },
+    {
+      "label": "Coal",
+      "value": "coal"
+    },
+    {
+      "label": "Collage",
+      "value": "collage"
+    },
+    {
+      "label": "Collotype",
+      "value": "collotype"
+    },
+    {
+      "label": "Color Varnish",
+      "value": "color varnish"
+    },
+    {
+      "label": "Colored Markers",
+      "value": "colored markers"
+    },
+    {
+      "label": "Colored Pencils",
+      "value": "colored pencils"
+    },
+    {
+      "label": "Concrete",
+      "value": "concrete"
+    },
+    {
+      "label": "Copper",
+      "value": "copper"
+    },
+    {
+      "label": "Cotton",
+      "value": "cotton"
+    },
+    {
+      "label": "Crayon",
+      "value": "crayon"
+    },
+    {
+      "label": "Digital",
+      "value": "digital"
+    },
+    {
+      "label": "Drawing",
+      "value": "drawing"
+    },
+    {
+      "label": "Drypoint",
+      "value": "drypoint"
+    },
+    {
+      "label": "Dust",
+      "value": "dust"
+    },
+    {
+      "label": "Elephant Dung",
+      "value": "elephant dung"
+    },
+    {
+      "label": "Embroidery",
+      "value": "embroidery"
+    },
+    {
+      "label": "Emulsion",
+      "value": "emulsion"
+    },
+    {
+      "label": "Enamel",
+      "value": "enamel"
+    },
+    {
+      "label": "Encaustic",
+      "value": "encaustic"
+    },
+    {
+      "label": "Engraving",
+      "value": "engraving"
+    },
+    {
+      "label": "Etching",
+      "value": "etching"
+    },
+    {
+      "label": "Fabric",
+      "value": "fabric"
+    },
+    {
+      "label": "Fabric Straps",
+      "value": "fabric straps"
+    },
+    {
+      "label": "Fat",
+      "value": "fat"
+    },
+    {
+      "label": "Feather",
+      "value": "feather"
+    },
+    {
+      "label": "Felt",
+      "value": "felt"
+    },
+    {
+      "label": "Felt-tip Pen",
+      "value": "felt-tip pen"
+    },
+    {
+      "label": "Fiberboard",
+      "value": "fiberboard"
+    },
+    {
+      "label": "Fiberglass",
+      "value": "fiberglass"
+    },
+    {
+      "label": "Flashlight",
+      "value": "flashlight"
+    },
+    {
+      "label": "Fluorescent Paint",
+      "value": "fluorescent paint"
+    },
+    {
+      "label": "Fresco",
+      "value": "fresco"
+    },
+    {
+      "label": "Frottage",
+      "value": "frottage"
+    },
+    {
+      "label": "Gelatin Silver Print",
+      "value": "gelatin silver print"
+    },
+    {
+      "label": "Gesso",
+      "value": "gesso"
+    },
+    {
+      "label": "Gilt",
+      "value": "gilt"
+    },
+    {
+      "label": "Glass",
+      "value": "glass"
+    },
+    {
+      "label": "Glitter",
+      "value": "glitter"
+    },
+    {
+      "label": "Gloss",
+      "value": "gloss"
+    },
+    {
+      "label": "Gold",
+      "value": "gold"
+    },
+    {
+      "label": "Gold Leaf",
+      "value": "gold leaf"
+    },
+    {
+      "label": "Gouache",
+      "value": "gouache"
+    },
+    {
+      "label": "Graffiti",
+      "value": "graffiti"
+    },
+    {
+      "label": "Granite",
+      "value": "granite"
+    },
+    {
+      "label": "Graphite",
+      "value": "graphite"
+    },
+    {
+      "label": "Graphite Pencil",
+      "value": "graphite pencil"
+    },
+    {
+      "label": "Grattage",
+      "value": "grattage"
+    },
+    {
+      "label": "Greenstone",
+      "value": "greenstone"
+    },
+    {
+      "label": "Grisaille",
+      "value": "grisaille"
+    },
+    {
+      "label": "Gum Arabic",
+      "value": "gum arabic"
+    },
+    {
+      "label": "Hematite",
+      "value": "hematite"
+    },
+    {
+      "label": "Hemp",
+      "value": "hemp"
+    },
+    {
+      "label": "Hologram",
+      "value": "hologram"
+    },
+    {
+      "label": "Horns",
+      "value": "horns"
+    },
+    {
+      "label": "Indian Ink",
+      "value": "indian ink"
+    },
+    {
+      "label": "Ink",
+      "value": "ink"
+    },
+    {
+      "label": "Intaglio",
+      "value": "intaglio"
+    },
+    {
+      "label": "Ipad",
+      "value": "ipad"
+    },
+    {
+      "label": "Iron",
+      "value": "iron"
+    },
+    {
+      "label": "Iron Plate",
+      "value": "iron plate"
+    },
+    {
+      "label": "Ivory",
+      "value": "ivory"
+    },
+    {
+      "label": "Japanese Paper",
+      "value": "japanese paper"
+    },
+    {
+      "label": "Jute",
+      "value": "jute"
+    },
+    {
+      "label": "Lacquer",
+      "value": "lacquer"
+    },
+    {
+      "label": "Laid Paper",
+      "value": "laid paper"
+    },
+    {
+      "label": "Latex",
+      "value": "latex"
+    },
+    {
+      "label": "Lavis",
+      "value": "lavis"
+    },
+    {
+      "label": "Leadpoint",
+      "value": "leadpoint"
+    },
+    {
+      "label": "Leather",
+      "value": "leather"
+    },
+    {
+      "label": "Lemon",
+      "value": "lemon"
+    },
+    {
+      "label": "Light Box",
+      "value": "light box"
+    },
+    {
+      "label": "Light Bulb",
+      "value": "light bulb"
+    },
+    {
+      "label": "Limestone",
+      "value": "limestone"
+    },
+    {
+      "label": "Linen",
+      "value": "linen"
+    },
+    {
+      "label": "Linocut",
+      "value": "linocut"
+    },
+    {
+      "label": "Linocut B&w",
+      "value": "linocut b&w"
+    },
+    {
+      "label": "Linocut Color",
+      "value": "linocut color"
+    },
+    {
+      "label": "Linoleum",
+      "value": "linoleum"
+    },
+    {
+      "label": "Lithography",
+      "value": "lithography"
+    },
+    {
+      "label": "Magna",
+      "value": "magna"
+    },
+    {
+      "label": "Magnets",
+      "value": "magnets"
+    },
+    {
+      "label": "Mahogany Panel",
+      "value": "mahogany panel"
+    },
+    {
+      "label": "Majolica",
+      "value": "majolica"
+    },
+    {
+      "label": "Map Pins",
+      "value": "map pins"
+    },
+    {
+      "label": "Marble",
+      "value": "marble"
+    },
+    {
+      "label": "Masking Tape",
+      "value": "masking tape"
+    },
+    {
+      "label": "Masonite",
+      "value": "masonite"
+    },
+    {
+      "label": "Metal",
+      "value": "metal"
+    },
+    {
+      "label": "Metalpoint",
+      "value": "metalpoint"
+    },
+    {
+      "label": "Mezzotint",
+      "value": "mezzotint"
+    },
+    {
+      "label": "Mixed Media",
+      "value": "mixed media"
+    },
+    {
+      "label": "Mixed Technique",
+      "value": "mixed technique"
+    },
+    {
+      "label": "Mosaic",
+      "value": "mosaic"
+    },
+    {
+      "label": "Mosaïque",
+      "value": "mosaïque"
+    },
+    {
+      "label": "Mural",
+      "value": "mural"
+    },
+    {
+      "label": "Music",
+      "value": "music"
+    },
+    {
+      "label": "Music Paper",
+      "value": "music paper"
+    },
+    {
+      "label": "Nails",
+      "value": "nails"
+    },
+    {
+      "label": "Oak",
+      "value": "oak"
+    },
+    {
+      "label": "Objet Trouve",
+      "value": "objet trouve"
+    },
+    {
+      "label": "Obsidian",
+      "value": "obsidian"
+    },
+    {
+      "label": "Oil",
+      "value": "oil"
+    },
+    {
+      "label": "Oilcloth",
+      "value": "oilcloth"
+    },
+    {
+      "label": "Onyx",
+      "value": "onyx"
+    },
+    {
+      "label": "Paint",
+      "value": "paint"
+    },
+    {
+      "label": "Painted Metal",
+      "value": "painted metal"
+    },
+    {
+      "label": "Panel",
+      "value": "panel"
+    },
+    {
+      "label": "Paper",
+      "value": "paper"
+    },
+    {
+      "label": "Papier-pelle",
+      "value": "papier-pelle"
+    },
+    {
+      "label": "Papyrus",
+      "value": "papyrus"
+    },
+    {
+      "label": "Parchment",
+      "value": "parchment"
+    },
+    {
+      "label": "Pastel",
+      "value": "pastel"
+    },
+    {
+      "label": "Pebbles",
+      "value": "pebbles"
+    },
+    {
+      "label": "Pen",
+      "value": "pen"
+    },
+    {
+      "label": "Pencil",
+      "value": "pencil"
+    },
+    {
+      "label": "Pergament",
+      "value": "pergament"
+    },
+    {
+      "label": "Photogram",
+      "value": "photogram"
+    },
+    {
+      "label": "Photographic Paper",
+      "value": "photographic paper"
+    },
+    {
+      "label": "Photography",
+      "value": "photography"
+    },
+    {
+      "label": "Photogravure",
+      "value": "photogravure"
+    },
+    {
+      "label": "Photomontage",
+      "value": "photomontage"
+    },
+    {
+      "label": "Photomosaic",
+      "value": "photomosaic"
+    },
+    {
+      "label": "Piano",
+      "value": "piano"
+    },
+    {
+      "label": "Pigment",
+      "value": "pigment"
+    },
+    {
+      "label": "Plaster",
+      "value": "plaster"
+    },
+    {
+      "label": "Plastic",
+      "value": "plastic"
+    },
+    {
+      "label": "Plates",
+      "value": "plates"
+    },
+    {
+      "label": "Plexiglas",
+      "value": "plexiglas"
+    },
+    {
+      "label": "Plug Socket",
+      "value": "plug socket"
+    },
+    {
+      "label": "Plywood",
+      "value": "plywood"
+    },
+    {
+      "label": "Polyester",
+      "value": "polyester"
+    },
+    {
+      "label": "Polymer",
+      "value": "polymer"
+    },
+    {
+      "label": "Polymer Paint",
+      "value": "polymer paint"
+    },
+    {
+      "label": "Polystyrene",
+      "value": "polystyrene"
+    },
+    {
+      "label": "Poplar",
+      "value": "poplar"
+    },
+    {
+      "label": "Porcelain",
+      "value": "porcelain"
+    },
+    {
+      "label": "Postcard",
+      "value": "postcard"
+    },
+    {
+      "label": "Print",
+      "value": "print"
+    },
+    {
+      "label": "Printed Brochure",
+      "value": "printed brochure"
+    },
+    {
+      "label": "Pyroxylin",
+      "value": "pyroxylin"
+    },
+    {
+      "label": "Ready-made",
+      "value": "ready-made"
+    },
+    {
+      "label": "Recorder With Cassette",
+      "value": "recorder with cassette"
+    },
+    {
+      "label": "Resin",
+      "value": "resin"
+    },
+    {
+      "label": "Rubber",
+      "value": "rubber"
+    },
+    {
+      "label": "Sand",
+      "value": "sand"
+    },
+    {
+      "label": "Sandstone",
+      "value": "sandstone"
+    },
+    {
+      "label": "Sanguine",
+      "value": "sanguine"
+    },
+    {
+      "label": "Satin",
+      "value": "satin"
+    },
+    {
+      "label": "Scrapings",
+      "value": "scrapings"
+    },
+    {
+      "label": "Screenprint",
+      "value": "screenprint"
+    },
+    {
+      "label": "Sepia",
+      "value": "sepia"
+    },
+    {
+      "label": "Shell",
+      "value": "shell"
+    },
+    {
+      "label": "Silk",
+      "value": "silk"
+    },
+    {
+      "label": "Silkscreen",
+      "value": "silkscreen"
+    },
+    {
+      "label": "Silver",
+      "value": "silver"
+    },
+    {
+      "label": "Silverpoint",
+      "value": "silverpoint"
+    },
+    {
+      "label": "Sound",
+      "value": "sound"
+    },
+    {
+      "label": "Sponge",
+      "value": "sponge"
+    },
+    {
+      "label": "Spray Paint",
+      "value": "spray paint"
+    },
+    {
+      "label": "Stained Glass",
+      "value": "stained glass"
+    },
+    {
+      "label": "Steel",
+      "value": "steel"
+    },
+    {
+      "label": "Stencil",
+      "value": "stencil"
+    },
+    {
+      "label": "Stone",
+      "value": "stone"
+    },
+    {
+      "label": "String",
+      "value": "string"
+    },
+    {
+      "label": "Stucco",
+      "value": "stucco"
+    },
+    {
+      "label": "Stump",
+      "value": "stump"
+    },
+    {
+      "label": "Tapestry",
+      "value": "tapestry"
+    },
+    {
+      "label": "Tar",
+      "value": "tar"
+    },
+    {
+      "label": "Tempera",
+      "value": "tempera"
+    },
+    {
+      "label": "Terracotta",
+      "value": "terracotta"
+    },
+    {
+      "label": "Textile",
+      "value": "textile"
+    },
+    {
+      "label": "Tin",
+      "value": "tin"
+    },
+    {
+      "label": "Travertine",
+      "value": "travertine"
+    },
+    {
+      "label": "Turquoise",
+      "value": "turquoise"
+    },
+    {
+      "label": "Tusche",
+      "value": "tusche"
+    },
+    {
+      "label": "Twine",
+      "value": "twine"
+    },
+    {
+      "label": "Varnish",
+      "value": "varnish"
+    },
+    {
+      "label": "Vellum",
+      "value": "vellum"
+    },
+    {
+      "label": "Video",
+      "value": "video"
+    },
+    {
+      "label": "Vinyl",
+      "value": "vinyl"
+    },
+    {
+      "label": "Vitrage",
+      "value": "vitrage"
+    },
+    {
+      "label": "Wall",
+      "value": "wall"
+    },
+    {
+      "label": "Wallpaper",
+      "value": "wallpaper"
+    },
+    {
+      "label": "Wash",
+      "value": "wash"
+    },
+    {
+      "label": "Watercolor",
+      "value": "watercolor"
+    },
+    {
+      "label": "Wax",
+      "value": "wax"
+    },
+    {
+      "label": "Wax Pastel",
+      "value": "wax pastel"
+    },
+    {
+      "label": "White",
+      "value": "white"
+    },
+    {
+      "label": "Whitewash",
+      "value": "whitewash"
+    },
+    {
+      "label": "Wine",
+      "value": "wine"
+    },
+    {
+      "label": "Wire",
+      "value": "wire"
+    },
+    {
+      "label": "Wood",
+      "value": "wood"
+    },
+    {
+      "label": "Wood Engraving",
+      "value": "wood engraving"
+    },
+    {
+      "label": "Woodblock Print",
+      "value": "woodblock print"
+    },
+    {
+      "label": "Woodcut",
+      "value": "woodcut"
+    },
+    {
+      "label": "Wooden Chair",
+      "value": "wooden chair"
+    },
+    {
+      "label": "Wooden Sled",
+      "value": "wooden sled"
+    },
+    {
+      "label": "Wool",
+      "value": "wool"
+    },
+    {
+      "label": "Zinc",
+      "value": "zinc"
+    }
   ]
 }

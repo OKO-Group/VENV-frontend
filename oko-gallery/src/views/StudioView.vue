@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 
-import { mdiCamera, mdiMagnify, mdiPlusCircle, mdiTwoFactorAuthentication } from '@mdi/js'
+import { mdiAccount, mdiCamera, mdiEyeOutline, mdiEyeSettings, mdiSecurity } from '@mdi/js'
 import cloneDeep from 'lodash.clonedeep'
 import { getChangedFields } from '@/utils/utils.ts'
 import {
@@ -11,20 +11,23 @@ import {
   type ChangePasswordPayload,
   type MFAInfo,
   type MFAListInfo,
-  MFAMethod, type SessionInfo
+  MFAMethod,
+  type SessionInfo
 } from '@/types/auth.ts'
 import type { Level, RenderAs } from 'qrcode.vue'
 import QrcodeVue from 'qrcode.vue'
 import { HttpStatusCode } from 'axios'
 import {
-  passwordMinLengthRule,
-  requiredRule,
+  ensureHttp,
   minLengthRule,
-  portfolioLinkRule
+  passwordMinLengthRule,
+  portfolioLinkRule,
+  requiredRule
 } from '@/utils/validation.ts'
 import ReauthForm from '@/components/dialogs/ReauthForm.vue'
 import { useRouter } from 'vue-router'
-import { ensureHttp } from '@/utils/validation.ts'
+import SearchEngine from '@/components/SearchEngine.vue'
+import StandardPage from '@/components/main/StandardPage.vue'
 
 const valid = ref(false)
 
@@ -103,8 +106,8 @@ const resetDialog = async (dialog: AccountActionDialog, action: AccountAction, c
   authStore.resetErrors()
 }
 
-const openDialog = async (dialog: AccountActionDialog, step: AccountAction) => {
-  if (authStore.requiresReAuth()) {
+const openDialog = async (dialog: AccountActionDialog, step: AccountAction, reauth: boolean = true) => {
+  if (reauth && authStore.requiresReAuth()) {
     accActionDialog.value.reAuthStep = step
     await resetDialog(dialog, AccountAction.REAUTH)
   } else {
@@ -122,10 +125,14 @@ const changePasswordPayload = ref<ChangePasswordPayload>({
   new_password_confirm: ''
 })
 
-const updateUserAccount = async () => {
-  const user = authStore.user as Record<string, any>
-  const changedFields = getChangedFields(originalUserData, user)
-  await authStore.updateUserAccount(changedFields)
+const updateUserAccount = async (avatar: boolean = false) => {
+  if (avatar) {
+    await authStore.updateUserAccount({ profile_picture: authStore.user?.profile_picture })
+  } else {
+    const user = authStore.user as Record<string, any>
+    const changedFields = getChangedFields(originalUserData, user)
+    await authStore.updateUserAccount(changedFields)
+  }
   originalUserData = cloneDeep(authStore.user) as Record<string, any>
   if (authStore.statusCode !== HttpStatusCode.Ok) {
     notificationBar.value.text = 'Error updating account'
@@ -212,21 +219,11 @@ const handleTOTPAuth = async () => {
 const logoutSession = async (session: SessionInfo['data']) => {
   await authStore.logoutSessions([session])
   if (authStore.statusCode === HttpStatusCode.Unauthorized || session.is_current) {
-      await router.push('/')
+    await router.push('/')
   } else {
     accActionDialog.value.error = true
   }
 }
-
-const handleLogoutSessions = async (session: SessionInfo['data']) => {
-  if (authStore.requiresReAuth()) {
-    accActionDialog.value.reAuthStep = AccountAction.LOGOUT_ALL
-    await resetDialog(AccountActionDialog.LOGOUT_ALL, AccountAction.REAUTH)
-  } else {
-    await logoutSession(session)
-  }
-}
-
 
 const formatDate = (timestamp: number) => {
   return new Date(timestamp * 1000).toLocaleString()
@@ -235,94 +232,44 @@ const formatDate = (timestamp: number) => {
 const codeErrorMessages = computed(() =>
   accActionDialog.value.error ? [authStore.errors.code ?? 'Invalid code.'] : []
 )
-const passwordErrorMessages = computed(() =>
-  accActionDialog.value.error ? [authStore.errors.password ?? 'Input error.'] : [])
-
-const clearError = (field: string) => {
-  authStore.errors[field] = '' // Remove the error message
-  authStore.message = ''
-}
-
 const matchPasswordRule =
   () => changePasswordPayload.value.new_password === changePasswordPayload.value.new_password_confirm
     || 'Passwords do not match.'
 
-
-const selectedArtwork = ref<Artwork | null>(null)
-const isUploadingNew = ref(false)
-
-// Filters
-const sortBy = ref('date')
-const filters = ref({
-  style: [] as string[],
-  genre: [] as string[],
-  media: [] as string[]
-})
-
-
-const searchQuery = ref('')
-const styleOptions = ref([]) // load from static file or API
-const genreOptions = ref([])
-const mediaOptions = ref([])
-
-const filteredArtworks = computed(() => {
-  return artworks.value
-    .filter(a =>
-      a.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      a.description.toLowerCase().includes(searchQuery.value.toLowerCase())
-    )
-    .filter(a =>
-      filters.value.style.length === 0 || filters.value.style.includes(a.style)
-    )
-    .filter(a =>
-      filters.value.genre.length === 0 || filters.value.genre.includes(a.genre)
-    )
-    .filter(a =>
-      filters.value.media.length === 0 || filters.value.media.includes(a.media)
-    )
-    .sort((a, b) => {
-      if (sortBy.value === 'title') return a.title.localeCompare(b.title)
-      if (sortBy.value === 'date') return new Date(b.date) - new Date(a.date)
-      return 0
-    })
-})
-
-// Artwork mock data
-const artworks = ref<Artwork[]>([])
-
-function generateMockArtworks(count: number) {
-  const start = artworks.value.length
-  for (let i = 0; i < count; i++) {
-    artworks.value.push({
-      title: `Artwork ${start + i + 1}`,
-      description: `Description for artwork ${start + i + 1}`,
-      date: new Date().toLocaleDateString(),
-      thumbnail: '/favicon.ico',
-      files: {
-        painting: '/favicon.ico',
-        study: '/favicon.ico',
-        sketch: '/favicon.ico'
-      }
-    })
+const avatarSrc = computed(() => {
+    const pic = authStore.user?.profile_picture
+    return (pic && 'file_thumbnail' in pic ? pic.file_thumbnail : null) || undefined
   }
+)
+const MAX_FILE_SIZE = 3 * 1024 * 1024 // 3MB
+
+const fileInput = ref<HTMLInputElement | null>(null)
+
+
+function triggerFilePicker() {
+  fileInput.value?.click()
 }
 
-onMounted(() => {
-  generateMockArtworks(33)
-})
+function onFileChange(e: Event) {
+  const file = (e.target as HTMLInputElement).files?.[0]
+  if (!file) return
 
-const avatarRules = [
-  (value: File[] | undefined) => {
-    return !value || !value.length || value[0].size < 2000000 || 'Avatar size should be less than 2 MB!'
+  if (file.size > MAX_FILE_SIZE) {
+    alert('Image must be under 3MB')
+    return
   }
-]
+  authStore.user!.profile_picture = file
+  updateUserAccount(true)
+}
+
 
 //TODO UPLOAD button inside the v-img
 </script>
 
 
 <template>
-  <v-container fluid class="full-screen-container">
+  <StandardPage>
+
     <v-snackbar v-model="notificationBar.show" :timeout="notificationBar.timeout">
       {{ notificationBar.text }}
     </v-snackbar>
@@ -534,59 +481,40 @@ const avatarRules = [
                 class="pa-3"
                 style="background-color: #f9f9f9; border-radius: 4px; margin-bottom: 10px;"
               >
-                <v-list-item-content>
-                  <v-list-item-title class="font-weight-medium">
-                    {{ session.user_agent.substring(0, 50) }} ...
-                  </v-list-item-title>
-                  <v-list-item-subtitle>
-                    <v-row no-gutters>
-                      <v-col  class="flex-column text-caption text-grey-darken-1 font-italic mt-1">
-                        Created: {{ session.created_at ? formatDate(session.created_at) : 'N/A' }}<br />
-                        Last used: {{ session.last_used_at ? formatDate(session.last_used_at) : 'N/A' }}<br />
-                        IP: {{ session.ip }} |
-                        Current: <strong>{{ session.is_current ? 'Yes' : 'No' }}</strong>
-                      </v-col>
-                      <v-col class="d-flex pa-1  align-end justify-end"
-                      >
-                        <v-btn
-                          color="red"
-                          variant="outlined"
-                          @click="handleLogoutSessions(session)"
-                        >
-                          Logout
-                        </v-btn>
-                      </v-col>
-                    </v-row>
-
-
-                  </v-list-item-subtitle>
-
-                  <!-- Bottom-right button -->
-
-                </v-list-item-content>
-
+                <v-list-item-title class="font-weight-medium">
+                  {{ session.user_agent.substring(0, 50) }} ...
+                </v-list-item-title>
+                <v-list-item-subtitle>
+                  <v-row no-gutters>
+                    <v-col class="flex-column text-caption text-grey-darken-1 font-italic mt-1">
+                      Created: {{ session.created_at ? formatDate(session.created_at) : 'N/A'
+                      }}<br />
+                      Last used:
+                      {{ session.last_used_at ? formatDate(session.last_used_at) : 'N/A' }}<br />
+                      IP: {{ session.ip }} |
+                      Current: <strong>{{ session.is_current ? 'Yes' : 'No' }}</strong>
+                    </v-col>
+                    <v-col class="d-flex pa-1  align-end justify-end">
+                      <v-btn
+                        color="red"
+                        variant="outlined"
+                        @click="logoutSession(session)">
+                        Logout
+                      </v-btn>
+                    </v-col>
+                  </v-row>
+                </v-list-item-subtitle>
               </v-list-item>
             </v-list>
-
-          </div>
-          <div v-else-if="isStep(AccountAction.REAUTH)">
-            <ReauthForm
-              v-model="accActionDialog.password"
-              @modeChange="accActionDialog.reauthMode = $event"
-            />
           </div>
         </v-card-text>
         <v-card-actions>
           <v-spacer />
           <v-btn variant="text" @click="closeDialog">Cancel</v-btn>
-          <v-btn v-if="isStep(AccountAction.REAUTH)" color="green"
-                 @click="reauthenticateUser">OK
-          </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
 
-    <v-card class="dashboard-card">
       <!-- Fixed Full-Width Tabs -->
       <v-tabs
         v-model="tab"
@@ -595,50 +523,74 @@ const avatarRules = [
         height="50"
         class="main-tabs"
       >
-        <v-tab :value="1">Profile</v-tab>
-        <v-tab :value="2">Gallery</v-tab>
+        <v-tab :value="1">Gallery</v-tab>
+        <v-tab :value="2">Profile</v-tab>
       </v-tabs>
-
       <v-tabs-window v-model="tab" class="tabs-window">
+        <!-- GALLERY TAB -->
         <v-tabs-window-item :value="1" class="tabs-window-item">
+          <v-container class="pa-4 gallery-container" fluid>
+
+            <SearchEngine use-own-artworks show-upload />
+
+          </v-container>
+        </v-tabs-window-item>
+        <v-tabs-window-item :value="2" class="tabs-window-item">
           <div class="tab-scroll-content">
             <v-container class="pa-6" fluid>
               <v-row>
                 <v-col cols="12" md="6">
-                  <h3> EDIT PROFILE</h3>
+                  <h3>
+                    <v-icon :icon="mdiAccount" size="20"></v-icon>
+                    PROFILE
+                  </h3>
                   <v-divider class="mt-1"></v-divider>
-                  <v-confirm-edit v-if="authStore.user" ok-text="UPDATE" cancel-text="UNDO"
-                                  v-model="authStore.user" @save="updateUserAccount">
+                  <v-confirm-edit v-if="authStore.user" ok-text="UPDATE" cancel-text="RESET"
+                                  v-model="authStore.user" @save="() => updateUserAccount()">
                     <template v-slot:default="{ model: proxy, actions }">
 
                       <div class="d-flex flex-column mt-4" style="align-items:center">
-                        <v-card class="pa-4 mb-6">
-                          <v-avatar size="200">
-                            <img src="/favicon.ico" alt="avatar" class="profile-img"
-                                 width="200px" />
-                          </v-avatar>
+                        <input
+                          ref="fileInput"
+                          type="file"
+                          accept="image/png, image/jpeg, image/bmp, image/jpg"
+                          style="display: none"
+                          @change="onFileChange"
+                        />
+                        <!-- Clickable avatar card -->
+                        <v-card @click="triggerFilePicker" class="pa-4 mb-6 avatar-card"
+                                elevation="10">
+                          <v-hover v-slot="{ isHovering, props }">
+                            <v-avatar
+                              size="200"
+                              class="avatar-hover"
+                              v-bind="props"
+                            >
+                              <img
+                                v-if="avatarSrc"
+                                :src="avatarSrc"
+                                alt="avatar"
+                                class="profile-img"
+                                width="200"
+                              />
+                              <v-icon v-else size="133">{{ mdiEyeOutline }}</v-icon>
+                              <v-fade-transition>
+                                <div
+                                  v-if="isHovering"
+                                  class="avatar-overlay d-flex align-center justify-center"
+                                >
+                                  <v-icon size="48" color="white">{{ mdiCamera }}</v-icon>
+                                </div>
+                              </v-fade-transition>
+                            </v-avatar>
+                          </v-hover>
                         </v-card>
-                        <v-file-input
-                          :rules="avatarRules"
-                          accept="image/png, image/jpeg, image/bmp"
-                          label=""
-                          variant='outlined'
-                          class="mt-4 centered-file-input"
-                          style="width: 50px;"
-                          prepend-icon=""
-                          v-model="proxy.value.profile_picture"
-                          density="compact"
-                        >
-                          <template #prepend-inner>
-                            <v-icon :icon="mdiCamera"></v-icon>
-                          </template>
-                        </v-file-input>
                       </div>
-                      <v-text-field  density="compact" label="Username"
+                      <v-text-field density="compact" label="Username"
                                     :model-value="authStore.user.username" disabled />
-                      <v-text-field  density="compact" label="Email"
+                      <v-text-field density="compact" label="Email"
                                     :model-value="authStore.user.email" disabled />
-                      <v-text-field  density="compact" label="First Name"
+                      <v-text-field density="compact" label="First Name"
                                     v-model="proxy.value.first_name" :rules="[minLengthRule]" />
                       <v-text-field density="compact" label="Last Name"
                                     v-model="proxy.value.last_name" :rules="[minLengthRule]" />
@@ -653,7 +605,7 @@ const avatarRules = [
                           topCountry="DE"
                           countryName
                           class="country-select"
-                        />
+                        />hidden
                       </v-sheet>
                       <v-text-field :rules="[requiredRule, portfolioLinkRule]"
                                     label="Portfolio Link"
@@ -663,7 +615,6 @@ const avatarRules = [
                       <v-switch
                         label="Account Visible"
                         color="black"
-                        class=""
                         v-model="proxy.value.is_visible"
                       />
                       <div class="d-flex justify-end gap-1 ">
@@ -676,7 +627,10 @@ const avatarRules = [
 
                 <v-col cols="12" md="6" class="d-flex flex-column">
                   <div>
-                    <h3> PASSWORD & SECURITY</h3>
+                    <h3>
+                      <v-icon :icon="mdiSecurity" size="20"></v-icon>
+                      PASSWORD & SECURITY
+                    </h3>
                     <v-divider class="mt-1"></v-divider>
                     <div>
                       <v-btn color="cyan" variant="outlined" class="mt-3" style="width: 260px"
@@ -696,16 +650,19 @@ const avatarRules = [
                              style="width: 260px"
                              @click="() => {
                                authStore.listActiveSessions();
-                               openDialog(AccountActionDialog.LOGOUT_ALL, AccountAction.LOGOUT_ALL)
+                               openDialog(AccountActionDialog.LOGOUT_ALL, AccountAction.LOGOUT_ALL, false)
                              }">
                         Logout sessions
                       </v-btn>
                     </div>
                   </div>
                   <div>
-                    <h3> MANAGEMENT</h3>
+                    <h3>
+                      <v-icon :icon="mdiEyeSettings" size="20"></v-icon>
+                      MANAGEMENT
+                    </h3>
                     <v-divider class="mt-1"></v-divider>
-                    <v-btn color="#ff0067" variant="outlined" class="mt-3"
+                    <v-btn color="red" variant="outlined" class="mt-3"
                            style="width: 260px"
                            @click="openDialog(AccountActionDialog.DELETE_ACCOUNT,
                            AccountAction.DELETE_ACCOUNT)">
@@ -717,189 +674,40 @@ const avatarRules = [
             </v-container>
           </div>
         </v-tabs-window-item>
-
-        <!-- GALLERY TAB -->
-        <v-tabs-window-item :value="2" class="tabs-window-item">
-          <v-container class="pa-4 gallery-container" fluid>
-            <v-row>
-              <!-- Left: Filter/Sort Panel -->
-              <v-col cols="2" class="pr-4">
-                <v-card class="pa-4 d-flex flex-column ">
-                  <v-select
-                    v-model="sortBy"
-                    :items="['Date', 'Title']"
-                    label="Sort by"
-                    variant="outlined"
-                    density="compact"
-                    class="mb-4"
-                  />
-                  <v-autocomplete
-                    v-model="filters.style"
-                    :items="styleOptions"
-                    multiple
-                    chips
-                    closable-chips
-                    label="Style"
-                    variant="outlined"
-                    density="compact"
-                    class="mb-4"
-                  />
-
-                  <v-autocomplete
-                    v-model="filters.genre"
-                    :items="genreOptions"
-                    multiple
-                    chips
-                    closable-chips
-                    label="Genre"
-                    variant="outlined"
-                    density="compact"
-                    class="mb-4"
-                  />
-
-                  <v-autocomplete
-                    v-model="filters.media"
-                    :items="mediaOptions"
-                    multiple
-                    chips
-                    closable-chips
-                    label="Media"
-                    variant="outlined"
-                    density="compact"
-                  />
-                </v-card>
-              </v-col>
-
-              <!-- Right: Search + Virtual Scroller -->
-              <v-col cols="5">
-                <v-card class="pa-4 d-flex flex-column " height="74vh">
-                  <!-- Search bar -->
-                  <v-text-field
-                    v-model="searchQuery"
-                    label="Search artworks..."
-                    variant="outlined"
-                    density="comfortable"
-                    class="mb-4"
-                  >
-                    <template #prepend-inner>
-                      <v-icon :icon="mdiMagnify" />
-                    </template>
-                  </v-text-field>
-                  <v-btn icon color="black" @click="isUploadingNew = true; selectedArtwork = null"
-                         class="mb-4 mx-auto">
-                    <v-icon :icon="mdiPlusCircle"></v-icon>
-                  </v-btn>
-                  <!-- Virtual scroll list -->
-                  <v-virtual-scroll
-                    :items="filteredArtworks"
-                    item-height="150px"
-                    height="calc(100vh - 260px)"
-                  >
-                    <template #default="{ item, index }">
-                      <v-card
-                        class="d-flex pa-3 mb-2 align-center"
-                        @click="selectedArtwork = item; isUploadingNew = false"
-                        elevation="1"
-                      >
-                        <div class="mr-4 font-weight-bold">{{ index + 1 }}</div>
-                        <v-img :src="item.thumbnail" height="80" width="80" class="mr-4 rounded" />
-                        <div>
-                          <div class="font-weight-medium">{{ item.title }}</div>
-                          <div class="text-grey">{{ item.description }}</div>
-                          <div class="text-caption text-grey-darken-1 mt-1">
-                            Added: {{ item.date }}
-                          </div>
-                        </div>
-                      </v-card>
-                    </template>
-                  </v-virtual-scroll>
-                </v-card>
-              </v-col>
-
-              <!-- Right Panel -->
-              <v-col cols="5" class="artwork-panel">
-                <v-card class="pa-5 d-flex flex-column justify-space-between">
-                  <v-tabs v-model="subTab" align-tabs="center" bg-color="grey" height="40">
-                    <v-tab value="painting">Painting</v-tab>
-                    <v-tab value="study">Study</v-tab>
-                    <v-tab value="sketch">Sketch</v-tab>
-                  </v-tabs>
-
-                  <!-- Scrollable content below the tabs -->
-                  <div class="scroll-area pa-6">
-                    <v-tabs-window v-model="subTab" class="mb-4">
-                      <v-tabs-window-item value="painting">
-                        <v-img :src="selectedArtwork?.files.painting" height="600"
-                               class="rounded mb-2" />
-                        <div class="mx-auto d-flex justify-center pa-2">
-                          <v-btn variant="outlined" color="black" width="180px">Upload / Replace
-                          </v-btn>
-                        </div>
-                      </v-tabs-window-item>
-                      <v-tabs-window-item value="study">
-                        <v-img :src="selectedArtwork?.files.study" height="600"
-                               class="rounded mb-2" />
-                        <div class="mx-auto d-flex justify-center pa-2">
-                          <v-btn variant="outlined" color="black" width="180px">Upload / Replace
-                          </v-btn>
-                        </div>
-                      </v-tabs-window-item>
-                      <v-tabs-window-item value="sketch">
-                        <v-img :src="selectedArtwork?.files.sketch" height="600"
-                               class="rounded mb-2" />
-                        <div class="mx-auto d-flex justify-center pa-2">
-                          <v-btn variant="outlined" color="black" width="180px">Upload / Replace
-                          </v-btn>
-                        </div>
-
-                      </v-tabs-window-item>
-                    </v-tabs-window>
-
-                    <v-divider class="my-4" />
-                    <v-text-field label="Title" density="compact" variant="outlined" />
-                    <v-autocomplete label="Style" :items="[]" variant="outlined"
-                                    density="compact" />
-                    <v-autocomplete label="Genre" :items="[]" variant="outlined"
-                                    density="compact" />
-                    <v-autocomplete label="Media" :items="[]" variant="outlined"
-                                    density="compact" />
-                    <v-date-picker></v-date-picker>
-                    <v-textarea label="Description" rows="3" variant="outlined" density="compact" />
-                    <v-text-field label="Soundtrack URL" variant="outlined" density="compact" />
-                    <v-btn color="black" variant="outlined" class="mt-4">UPDATE</v-btn>
-                  </div>
-                </v-card>
-              </v-col>
-
-            </v-row>
-          </v-container>
-        </v-tabs-window-item>
       </v-tabs-window>
-    </v-card>
-  </v-container>
+  </StandardPage>
+
 </template>
 
 <style scoped>
-.full-screen-container {
-  z-index: 90;
-  height: 85vh;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: stretch;
-}
-
-.dashboard-card {
-  width: 100vw;
-  height: 83vh;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
 
 .main-tabs {
   border-bottom: 1px solid #ccc;
   justify-content: center;
+}
+
+.avatar-card {
+  width: fit-content;
+  cursor: pointer;
+}
+
+.avatar-card:hover {
+  transition: transform 1.5s ease;
+  transform: scale(1.05);
+}
+
+.avatar-hover:hover {
+  transition: transform 0.5s ease;
+  transform: scale(1.05);
+}
+
+.avatar-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200px;
+  height: 200px;
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .tabs-window {
@@ -907,7 +715,7 @@ const avatarRules = [
   display: flex;
   overflow: hidden;
   flex-direction: column;
-  height: 76vh;
+  height: 82vh;
 }
 
 /* Make window item scrollable internally */
@@ -957,28 +765,17 @@ const avatarRules = [
   pointer-events: none;
 }
 
-
-.artwork-panel {
-  height: 77vh;
-  display: flex;
-  flex-direction: column;
-}
-
-
 .scroll-area {
   overflow-y: auto;
   flex: 1;
   max-height: calc(76vh - 48px); /* subtract height of tabs */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 /* Optional scroll hiding */
 .scroll-area::-webkit-scrollbar {
   display: none;
-}
-
-.scroll-area {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
 }
 
 
@@ -999,6 +796,7 @@ const avatarRules = [
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  position: absolute
 }
 
 .text-grey {

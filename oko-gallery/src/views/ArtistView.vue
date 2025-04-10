@@ -3,8 +3,9 @@ import StandardPage from '@/components/main/StandardPage.vue'
 </script>
 
 <template>
-  <StandardPage>
-  </StandardPage>
+<StandardPage>
+  <h1>Artist</h1>
+</StandardPage>
 </template>
 
 <style scoped>

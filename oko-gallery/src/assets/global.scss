@@ -47,9 +47,20 @@
   color: var(--color-text) !important;
   backdrop-filter: blur(10px); /* Adds a nice frosted-glass effect */
 }
-.v-text-field {
-  variant: "solo-filled"
+
+
+/* Remove number input arrows in all browsers */
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
+
+input[type='number'] {
+  -moz-appearance: textfield; /* Firefox */
+}
+
+
 /* Global Layout Fix */
 html, body {
   font-family: 'Lato', sans-serif;

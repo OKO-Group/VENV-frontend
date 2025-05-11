@@ -1,10 +1,10 @@
 import { useInfiniteQuery } from '@tanstack/vue-query'
 import api from '@/api/api'
 import type { Artwork, ArtworkSearchQuery, PaginatedResponse } from '@/types/oko.ts'
-import { computed, type Ref } from 'vue'
+import { computed, type ComputedRef, type Ref } from 'vue'
 
 //TODO media caching
-export function useArtworksInfinite(queryParams: Readonly<Ref<ArtworkSearchQuery>>) {
+export function useArtworksInfinite(queryParams: Readonly<Ref<ArtworkSearchQuery>> | ComputedRef) {
   return useInfiniteQuery({
     queryKey: computed(() => ['artworks', queryParams.value]),
     queryFn: async ({ pageParam = 1 }) => {

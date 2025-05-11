@@ -60,13 +60,12 @@ export const useAuthStore = defineStore('auth', {
       try {
         const response = await api.get('users/_allauth/browser/v1/auth/session')
         this.authTimestamp = response.data.data.methods.pop().at
+        this.id= response.data.data.user.id
       } catch (error) {
         console.log('Authentication check failed.')
         return false
       }
-      if (this.user === null) {
-        await this.fetchUser()
-      }
+      await this.fetchUser()
       return true
     },
 
@@ -348,7 +347,6 @@ export const useAuthStore = defineStore('auth', {
         this.statusCode = statusCode
         this.errors = errors
       }
-      await this.fetchUser()
     },
     async changeUserPassword(data: ChangePasswordPayload) {
       this.resetErrors()

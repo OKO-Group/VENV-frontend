@@ -49,8 +49,8 @@ const clearError = (field: string) => {
 </script>
 
 <template>
-  <v-container class="d-flex justify-center align-center" style="min-height: 100vh">
-    <v-card class="pa-6" width="400">
+  <v-container class="login d-flex justify-center align-center" style="min-height: 100vh">
+    <v-card>
       <v-card-title class="d-flex justify-center">LOGIN</v-card-title>
       <v-card-text>
         <v-form v-if="!mfa_authenticating" v-model="valid">
@@ -62,7 +62,7 @@ const clearError = (field: string) => {
                         required autocomplete="password"
                         :rules="[requiredRule]" @update:modelValue="clearError('password')"
                         :error-messages="authStore.errors.password" />
-          <v-btn :disabled="!valid"  block @click="login"
+          <v-btn :disabled="!valid" @click="login"
                  :loading="authStore.loading" :icon="mdiLogin">
           </v-btn>
         </v-form>
@@ -83,3 +83,11 @@ const clearError = (field: string) => {
     </v-card>
   </v-container>
 </template>
+
+<style scoped>
+
+.login{
+  z-index: 100;
+}
+
+</style>

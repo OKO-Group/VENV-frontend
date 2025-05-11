@@ -4,7 +4,7 @@ export interface UserCoreData {
   last_name: string,
 }
 
-export interface UserBasicData<Picture = ProfilePicture> extends UserCoreData {
+export interface UserBasicData<Picture = MediaFile> extends UserCoreData {
   username: string,
   email: string,
   profile_picture: Picture | File | null,
@@ -26,9 +26,6 @@ export interface MediaFile {
   file: string | null,
   file_thumbnail: string | null,
 }
-
-export interface ProfilePicture extends MediaFile {
-} //for clarity
 
 export interface ArtworkFile extends MediaFile {
   category: string;

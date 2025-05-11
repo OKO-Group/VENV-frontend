@@ -42,12 +42,16 @@
 
 
 /* Apply a semi-transparent background to all Vuetify containers */
-.v-card, .v-sheet, .v-toolbar, .v-navigation-drawer {
-  background: rgba(220, 219, 219, 0.85) !important; /* Slightly grey with 85% opacity */
+.v-sheet, .v-toolbar, .v-navigation-drawer {
+  background: rgba(220, 219, 219, 0.8) !important; /* Slightly grey with 85% opacity */
   color: var(--color-text) !important;
   backdrop-filter: blur(10px); /* Adds a nice frosted-glass effect */
 }
-
+.v-card {
+  background: rgba(220, 219, 219, 0.2) !important;
+  color: var(--color-text) !important;
+  backdrop-filter: blur(5px); /* Adds a nice frosted-glass effect */
+}
 
 /* Remove number input arrows in all browsers */
 input[type='number']::-webkit-outer-spin-button,
@@ -60,6 +64,13 @@ input[type='number'] {
   -moz-appearance: textfield; /* Firefox */
 }
 
+.v-dialog {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.9) !important; /* Slightly grey with 85% opacity */
+  backdrop-filter: blur(10px); /* Adds a nice frosted-glass effect */
+}
 
 /* Global Layout Fix */
 html, body {
@@ -72,4 +83,18 @@ html, body {
   height: 100%;
   overflow-x: hidden !important;
   overflow-y: hidden !important;
+}
+
+.v-overlay__content.v-autocomplete-match-width {
+  width: var(--v-field-width) !important;
+  max-width: 100% !important;
+}
+
+.tooltip {
+  background-color: rgba(50, 50, 50, 0.85); /* dark bg with opacity */
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: all 0.2s ease-in-out;
 }

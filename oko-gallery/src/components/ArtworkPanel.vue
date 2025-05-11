@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, shallowRef, type Ref, watch, nextTick, toRaw } from 'vue'
+import { ref, computed, shallowRef, type Ref, watch, nextTick, toRaw, onBeforeMount } from 'vue'
 import {
   mdiEyeOutline,
   mdiUndo,
@@ -19,7 +19,7 @@ import {
 import { type Artwork, ArtworkFileCategory } from '@/types/oko'
 import { fileCategories } from '@/types/oko.ts'
 import {
-  useFileDialog,
+  useFileDialog, useMediaQuery,
   useObjectUrl,
   watchPausable
 } from '@vueuse/core'
@@ -74,6 +74,7 @@ const emit = defineEmits<{
   (e: 'updateArtwork', artwork: Artwork): void
   (e: 'uploadArtwork', artwork: Artwork): void
   (e: 'deleteArtwork'): void
+  (e: 'close'): void
 }>()
 
 const editState = ref({
@@ -114,10 +115,10 @@ function fetchSelectedFile(category: ArtworkFileCategory) {
 
 function getArtworkImageSrc(category: ArtworkFileCategory): string | undefined {
   // Priority 1: local
-  if (!editState.value.artwork) return undefined
+  if (!props.artwork) return undefined
 
   //editing/viewing own
-  if (editState.value.artwork.user.id === authStore.user?.id) {
+  if (props.artwork.user.id === authStore.user?.id) {
     const f = selectedArtworkUploadFiles[category].value
     return f ? selectedArtworkUploadURLS[category].value :
       (!stagedFileDeletions.value.has(category) ? fetchSelectedFile(category) : undefined)
@@ -141,7 +142,7 @@ const aspectLockSize = (val: number | undefined) => {
   }
 }
 
-const { open, onChange } = useFileDialog({
+const { open, onChange, onCancel } = useFileDialog({
   multiple: false,
   reset: true,
   accept: 'image/png, image/jpeg, image/bmp, image/jpg'
@@ -158,6 +159,12 @@ onChange((files) => {
   }
   const category = fileCategories[fileInput.value.fid]
   selectedArtworkUploadFiles[category].value = file
+})
+
+onCancel(() => {
+  if (!isModifiedArtwork.value) {
+    resetArtwork()
+  }
 })
 
 function triggerFilePicker(fid: number) {
@@ -256,6 +263,8 @@ function closeImageViewer() {
   fullscreenImage.value = undefined
 }
 
+const isMobile = useMediaQuery('(max-width: 768px)')
+
 </script>
 
 <template>
@@ -266,12 +275,20 @@ function closeImageViewer() {
       </div>
     </template>
   </v-dialog>
-  <v-col v-if="artwork" cols="4" class="artwork-panel">
-    <v-card class="pa-5 d-flex flex-column justify-space-between" height="80vh">
-      <v-tabs v-model="subTab" align-tabs="center" bg-color="grey" height="40">
-        <v-tab value="painting">Painting</v-tab>
-        <v-tab value="study">Study</v-tab>
-        <v-tab value="sketch">Sketch</v-tab>
+
+    <v-card class="pa-1 d-flex flex-column justify-space-between" height="80vh">
+      <v-col v-if="artwork" :cols="!isMobile ? 4 : undefined" class="artwork-panel">
+
+      <v-tabs v-model="subTab" align-tabs="center" height="40">
+        <v-tab v-if="canEditSelected || artworkImageSources[ArtworkFileCategory.PAINTING]"
+               :value="ArtworkFileCategory.PAINTING">Painting
+        </v-tab>
+        <v-tab v-if="canEditSelected || artworkImageSources[ArtworkFileCategory.STUDY]"
+               :value="ArtworkFileCategory.STUDY">Study
+        </v-tab>
+        <v-tab v-if="canEditSelected || artworkImageSources[ArtworkFileCategory.SKETCH]"
+               :value="ArtworkFileCategory.SKETCH">Sketch
+        </v-tab>
       </v-tabs>
       <div class="scroll-area">
         <!-- Image tabs -->
@@ -287,19 +304,21 @@ function closeImageViewer() {
                 <v-img
                   v-if="artworkImageSources[category]"
                   :src="artworkImageSources[category]"
-                  height="500"
                   class="artwork-img"
                   @click="openImageViewer(artworkImageSources[category])"
                 />
                 <div v-else class="icon-container">
-                  <v-icon :icon="mdiEyeOutline" color="grey" size="500" class="artwork-img" />
+                  <v-icon :icon="mdiEyeOutline" color="grey" class="artwork-img" />
                 </div>
               </div>
             </v-hover>
             <div v-if="artworkImageSources[category]" class="image-buttons">
-              <v-btn class="description-edit-btn" icon
-                     @click="openImageViewer(artworkImageSources[category])">
-                <v-icon :icon="mdiEye" />
+              <v-btn
+                v-if="!isCreatingNew && canEditSelected && artwork"
+                :icon="mdiPencilCircle"
+                class="description-edit-btn opacity-70"
+                @click="resetArtwork(true)"
+              >
               </v-btn>
               <v-btn class="description-edit-btn" v-if="canEditSelected" icon @click="() =>
                      {if (!isEditMode) resetArtwork(true);
@@ -403,22 +422,12 @@ function closeImageViewer() {
             :prepend-inner-icon="mdiSoundcloud"
             :append-inner-icon="mdiAlbum"
           />
-
           <v-switch v-model="editState.artwork.visible" color="black" label="Visible" />
         </template>
 
         <!-- View Mode -->
 
         <template v-else>
-          <div class="description-edit-container">
-            <v-btn
-              v-if="!isCreatingNew && canEditSelected && artwork"
-              :icon="mdiPencilCircle"
-              class="description-edit-btn opacity-70"
-              @click="resetArtwork(true)"
-            >
-            </v-btn>
-          </div>
           <div class="description-container">
             <div class="text-subtitle-2 font-weight-medium mb-2">{{ artwork.title }}</div>
             <div class="text-caption">Style: {{ artwork.style }}</div>
@@ -427,14 +436,15 @@ function closeImageViewer() {
             <div class="text-caption">
               Created At: {{ new Date(artwork.uploaded_at).toLocaleDateString() }}
             </div>
-            <div class="text-caption">Description: {{ artwork.description }}</div>
-            <div class="text-caption">Soundtrack: {{ artwork.soundtracks }}</div>
+            <div v-if="artwork.description" class="text-caption">Description: {{ artwork.description }}</div>
+            <div v-if="artwork.soundtracks?.side_a" class="text-caption">Soundtrack: {{ artwork.soundtracks }}</div>
           </div>
         </template>
 
       </div>
+      </v-col>
+
     </v-card>
-  </v-col>
 </template>
 
 <style scoped>
@@ -443,6 +453,12 @@ function closeImageViewer() {
   display: flex;
   flex-direction: column;
 }
+
+.v-tab {
+  font-size: clamp(0.5rem, 2vw, 0.9rem);
+  white-space: nowrap;
+}
+
 
 .scroll-area {
   overflow-y: auto;
@@ -491,7 +507,7 @@ function closeImageViewer() {
 
 .avatar-card {
   cursor: pointer;
-  padding: 1rem;
+  padding: 0rem;
 }
 
 .flip-horizontal {
@@ -507,8 +523,14 @@ function closeImageViewer() {
 }
 
 .artwork-img {
+  max-width: calc(100%); /* leaves space on left/right */
+  max-height: 100%;
+  height: auto;
+  width: auto;
+  object-fit: contain;
   transition: transform 0.8s ease;
 }
+
 
 .image-wrapper:hover .artwork-img {
   transform: scale(1.03);
@@ -520,7 +542,6 @@ function closeImageViewer() {
   align-items: center;
   transition: opacity 0.25s ease;
   z-index: 1;
-  backdrop-filter: blur(4px);
   gap: 20px; /* this will work now */
 }
 
@@ -551,7 +572,6 @@ function closeImageViewer() {
   align-items: center;
   transition: opacity 0.25s ease;
   z-index: 1;
-  backdrop-filter: blur(4px);
   gap: 20px; /* this will work now */
 }
 
@@ -580,7 +600,7 @@ function closeImageViewer() {
 }
 
 .update-icon-btn {
-  color: #4caf50; /* medium bright green */
+  color: rgba(76, 175, 80, 0.82); /* medium bright green */
 }
 
 

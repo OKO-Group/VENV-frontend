@@ -64,7 +64,7 @@ const filteredArtworks = computed(() => {
 </script>
 
 <template>
-  <v-card class="d-flex flex-column" height="75vh">
+  <v-card class="pa-4 d-flex flex-column" height="75vh">
     <div v-if="useOwnArtworks" class="pa-2 pt-10 pb-10 search-bar-wrapper">
       <v-tooltip v-if="!searchActive" text="Search" location="top">
         <template #activator="{ props }">

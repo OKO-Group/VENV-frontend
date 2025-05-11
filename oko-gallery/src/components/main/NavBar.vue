@@ -288,7 +288,7 @@ nav a.active::after {
 /* User Menu (Top Right) */
 .user-menu {
   position: fixed;
-  z-index: 100;
+  z-index: 1000;
   top: 0.5rem;
   right: 2rem;
   display: flex;
@@ -298,7 +298,7 @@ nav a.active::after {
 }
 .user-menu-content {
   opacity: 0.7;
-  background-color: rgb(1,1,1,0.1)
+  background-color: rgba(1, 1, 1, 0)
 }
 
 /* Center the button */
@@ -314,7 +314,7 @@ nav a.active::after {
 
 .user-dropdown {
   text-align: left;
-  opacity: 0.8;
+  opacity: 0.95;
 }
 
 .user-dropdown .v-list-item-title {

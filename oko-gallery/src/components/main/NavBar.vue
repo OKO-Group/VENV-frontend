@@ -1,16 +1,19 @@
 <script setup lang="ts">
-import { ref, watchEffect, computed } from 'vue'
+import { computed, ref, watchEffect } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth.ts'
 import { useArtworkStore } from '@/stores/artworks.ts'
 import {
+  mdiAccount,
+  mdiAccountGroup,
+  mdiDomain,
   mdiEyeOutline,
-  mdiMicrosoftInternetExplorer,
-  mdiSearchWeb,
-  mdiBeakerQuestion,
-  mdiFrequentlyAskedQuestions,
-  mdiMessageQuestionOutline, mdiInformation, mdiLogin, mdiFormTextbox, mdiLogout, mdiDomain
+  mdiFormTextbox, mdiInformation,
+  mdiLogin,
+  mdiLogout,
+  mdiSearchWeb, mdiCompass
 } from '@mdi/js'
+import { useMediaQuery } from '@vueuse/core'
 
 
 const route = useRoute()
@@ -26,6 +29,7 @@ const artworkStore = useArtworkStore()
 const isLoggedIn = computed(() => !!authStore.user)
 const isApproved = computed(() => authStore.user?.is_approved === true)
 
+const isMobile = useMediaQuery('(max-width: 768px)')
 
 // Watch for route changes and update state
 watchEffect(() => {
@@ -60,102 +64,145 @@ function focusInput() {
   const el = searchInput.value?.$el?.querySelector('input')
   if (el) el.focus()
 }
+
 </script>
 <template>
-  <RouterLink to="/" exact-active-class="active">
-    <v-icon
-      :icon="mdiEyeOutline"
-      class="top-left-icon cursor-pointer"
-    />
-  </RouterLink>
-  <v-container class="d-flex flex-column align-center mt-4">
-    <div class="search-wrapper">
-      <v-text-field
-        v-model="artworkStore.search"
-        class="mx-auto align-content-center align-center"
-        style="width: 33vw; opacity: 0.5;"
-        placeholder="SEARCH"
-        @mouseenter="focusInput"
-        @keyup.enter="() => router.push('/search')"
-      >
-        <template #append-inner>
-          <v-icon
-            :icon="mdiSearchWeb"
-            class="clickable-icon"
-            @click="() => router.push('/search')"
-          />
-        </template>
-      </v-text-field>
-    </div>
+  <v-row>
+    <v-col cols="2" md="3">
+      <RouterLink to="/" exact-active-class="active">
+        <v-icon
+          :icon="mdiEyeOutline"
+          class="top-left-icon cursor-pointer"
+          :style="{position: isMobile? 'absolute' : 'fixed',
+          top: isMobile ? 0 : '1rem'}"
+        />
+      </RouterLink>
 
-    <transition name="nav-transition" mode="out-in">
-      <nav :class="{ home: isHome, cornered: !isHome }"
-           v-if="isLoaded" :key="isHome">
-        <RouterLink to="/explore" exact-active-class="active">
-          EXPLORE
-        </RouterLink>
-        <RouterLink to="/artists" exact-active-class="active">
-          ARTISTS
-        </RouterLink>
-        <RouterLink to="/about" exact-active-class="active">
-          ABOUT
-        </RouterLink>
-      </nav>
-    </transition>
-  </v-container>
+    </v-col>
+    <v-col cols="12" md="6" class="d-flex flex-column align-center mt-1">
+      <transition name="nav-transition" mode="out-in">
+        <nav :class="{ home: isHome, cornered: !isHome}"
+             :style="{
+    position: 'fixed',
+    marginTop: isMobile && !isHome ? '0rem' : '',
+    top: isMobile && !isHome ? '4rem' : '',
+    left: !isMobile && !isHome ? '6rem' : ''}"
+             v-if="isLoaded" :key="isHome">
+          <!-- Explore -->
+          <v-tooltip v-if="!isMobile" text="Explore" :location="isHome ? 'right' : 'bottom'">
+            <template #activator="{ props }">
+              <RouterLink to="/explore" exact-active-class="active" v-bind="props">
+                <v-icon :icon="mdiCompass" size="50" />
+              </RouterLink>
+            </template>
+          </v-tooltip>
+          <RouterLink v-else to="/explore" exact-active-class="active">
+            <span>EXPLORE</span>
+          </RouterLink>
 
-  <div class="user-menu">
-    <v-menu
-      offset-y
-      transition="scale-transition"
-      :location="'bottom center'"
-      attach
-      open-on-hover>
-      <template v-slot:activator="{ props }">
-        <v-btn v-bind="props" icon class="user-menu-button">
-          <v-avatar :image="avatarSrc"></v-avatar>
-        </v-btn>
-      </template>
-      <v-list class="user-dropdown" density="compact">
-        <v-list-item v-if="!isLoggedIn" @click="router.push('/login')">
-          <v-list-item-title>
-            <v-icon :icon="mdiLogin" class="tight-icon" />
-            LOGIN
-          </v-list-item-title>
-        </v-list-item>
-        <v-list-item v-if="!isLoggedIn" @click="router.push('/signup')">
-          <v-list-item-title>
-            <v-icon :icon="mdiFormTextbox" class="tight-icon" />
-            APPLY
-          </v-list-item-title>
-        </v-list-item>
-        <v-list-item v-if="isApproved" @click="router.push('/studio')">
-          <v-list-item-title>
-            <v-icon :icon="mdiDomain" class="tight-icon" />
-            STUDIO
-          </v-list-item-title>
-        </v-list-item>
-        <v-list-item v-if="isLoggedIn" @click="logoutDialog = true">
-          <v-list-item-title>
-            <v-icon :icon="mdiLogout" class="tight-icon" />
-            LOGOUT
-          </v-list-item-title>
-        </v-list-item>
-      </v-list>
-    </v-menu>
-  </div>
-  <!-- Logout Confirmation Dialog -->
-  <v-dialog v-model="logoutDialog" max-width="400px">
-    <v-card>
-      <v-card-title>Confirm Logout</v-card-title>
-      <v-card-text>Are you sure you want to log out?</v-card-text>
-      <v-card-actions>
-        <v-btn text="" @click="logoutDialog = false">Cancel</v-btn>
-        <v-btn color="red" text="" @click="confirmLogout">Log Out</v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+          <!-- Artists -->
+          <v-tooltip v-if="!isMobile" text="Artists" :location="isHome ? 'right' : 'bottom'">
+            <template #activator="{ props }">
+              <RouterLink to="/artists" exact-active-class="active" v-bind="props">
+                <v-icon :icon="mdiAccountGroup" size="50" />
+              </RouterLink>
+            </template>
+          </v-tooltip>
+          <RouterLink v-else to="/artists" exact-active-class="active">
+            <span>ARTISTS</span>
+          </RouterLink>
 
+          <!-- About -->
+          <v-tooltip v-if="!isMobile" text="About" :location="isHome ? 'right' : 'bottom'">
+            <template #activator="{ props }">
+              <RouterLink to="/about" exact-active-class="active" v-bind="props">
+                <v-icon :icon="mdiInformation" size="50" />
+              </RouterLink>
+            </template>
+          </v-tooltip>
+          <RouterLink v-else to="/about" exact-active-class="active">
+            <span>ABOUT</span>
+          </RouterLink>
+
+        </nav>
+      </transition>
+    </v-col>
+
+    <v-col class="d-flex flex-column align-center mt-4" md="6">
+      <div class="search-wrapper">
+        <v-text-field
+          v-model="artworkStore.search"
+          class="mx-auto align-content-center align-center"
+          style="width: 33vw; opacity: 0.5;"
+          placeholder="SEARCH"
+          @mouseenter="focusInput"
+          @keyup.enter="() => router.push('/search')"
+        >
+          <template #append-inner>
+            <v-icon
+              :icon="mdiSearchWeb"
+              class="clickable-icon"
+              @click="() => router.push('/search')"
+            />
+          </template>
+        </v-text-field>
+      </div>
+    </v-col>
+    <v-col cols="1" md="6">
+      <div class="user-menu">
+        <v-menu
+          class="user-menu-content"
+          offset-y
+          transition="scale-transition"
+          :location="'bottom center'"
+          attach>
+          <template v-slot:activator="{ props }">
+            <v-btn v-bind="props" icon class="user-menu-button" variant="text">
+              <v-avatar v-if="avatarSrc" :image="avatarSrc"></v-avatar>
+              <v-icon v-else :icon="mdiAccount"/>
+            </v-btn>
+          </template>
+          <v-list class="user-dropdown" density="compact">
+            <v-list-item v-if="!isLoggedIn" @click="router.push('/login')">
+              <v-list-item-title>
+                <v-icon :icon="mdiLogin" class="tight-icon" />
+                LOGIN
+              </v-list-item-title>
+            </v-list-item>
+            <v-list-item v-if="!isLoggedIn" @click="router.push('/signup')">
+              <v-list-item-title>
+                <v-icon :icon="mdiFormTextbox" class="tight-icon" />
+                APPLY
+              </v-list-item-title>
+            </v-list-item>
+            <v-list-item v-if="isApproved" @click="router.push('/studio')">
+              <v-list-item-title>
+                <v-icon :icon="mdiDomain" class="tight-icon" />
+                STUDIO
+              </v-list-item-title>
+            </v-list-item>
+            <v-list-item v-if="isLoggedIn" @click="logoutDialog = true">
+              <v-list-item-title>
+                <v-icon :icon="mdiLogout" class="tight-icon" />
+                LOGOUT
+              </v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+      </div>
+    </v-col>
+    <!-- Logout Confirmation Dialog -->
+    <v-dialog v-model="logoutDialog" max-width="400px">
+      <v-card>
+        <v-card-title>Confirm Logout</v-card-title>
+        <v-card-text>Are you sure you want to log out?</v-card-text>
+        <v-card-actions>
+          <v-btn text="" @click="logoutDialog = false">Cancel</v-btn>
+          <v-btn color="red" text="" @click="confirmLogout">Log Out</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </v-row>
 </template>
 
 <style scoped>
@@ -169,41 +216,37 @@ function focusInput() {
 }
 
 nav {
-  position: fixed;
-  gap: 1rem;
-  font-size: 2rem;
+  font-size: clamp(0.7rem, 5vw, 1.8rem); /* responsive font scaling */
   transition: opacity 0.5s ease-in-out;
 }
 
 .top-left-icon {
-  position: fixed;
-  top: 16px;
-  left: 16px;
+  position: absolute;
   font-size: 65px;
+  left: 1.5rem;
   color: #ffffff;
   z-index: 1000;
 }
 
 /* Home page: centered vertical navigation */
 .home {
-  top: 50%;
+  position: absolute;
+  top: 65%;
   left: 50%;
   transform: translate(-50%, -50%);
   text-align: center;
   display: flex;
   flex-direction: column;
+  z-index: 100;
 }
 
 /* Other pages: top-left horizontal navigation */
 .cornered {
   top: 1rem;
-  left: 5rem;
   transform: none;
-  text-align: left;
   display: flex;
   flex-direction: row;
-  padding-left: 2rem;
-
+  z-index: 100;
 }
 
 /* Fade In/Out Animation */
@@ -221,7 +264,7 @@ nav a {
   color: white;
   padding: 0.5rem 1rem;
   position: relative;
-  overflow: hidden;
+  overflow: auto;
 }
 
 /* Ensure the underline is always there but starts at width 0 */
@@ -244,14 +287,18 @@ nav a.active::after {
 
 /* User Menu (Top Right) */
 .user-menu {
-  z-index: 100;
   position: fixed;
-  top: 1.5rem;
-  right: 4rem;
+  z-index: 100;
+  top: 0.5rem;
+  right: 2rem;
   display: flex;
   justify-content: center;
   align-items: flex-start;
   text-align: left;
+}
+.user-menu-content {
+  opacity: 0.7;
+  background-color: rgb(1,1,1,0.1)
 }
 
 /* Center the button */

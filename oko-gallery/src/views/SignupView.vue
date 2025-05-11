@@ -10,6 +10,7 @@ import {
   requiredRule
 } from '@/utils/validation.ts'
 import type { SignupPayload } from '@/types/auth.ts'
+import { useMediaQuery } from '@vueuse/core'
 
 const authStore = useAuthStore();
 const router = useRouter();
@@ -54,13 +55,16 @@ const redirectToHome = () => {
   dialog.value = false;
   router.push('/'); // Redirect to home
 };
+
+const isMobile = useMediaQuery('(max-width: 768px)')
+
 </script>
 
 <template>
   <div class="signup-container">
     <v-container class="d-flex justify-center align-center fill-height">
-      <v-card class="pa-6" width="400">
-        <v-card-title>OKO Artist Application</v-card-title>
+      <v-card class="signup-card">
+        <v-card-title>VENV Artist Application</v-card-title>
         <v-card-text>
           <v-form v-model="valid">
             <v-text-field v-model="userData.username" :rules="[requiredRule, minLengthRule]"
@@ -118,7 +122,7 @@ const redirectToHome = () => {
           </v-form>
         </v-card-text>
         <v-card-actions>
-          <router-link to="/login">Already have an OKO account? Login</router-link>
+          <router-link to="/login">Already have an VENV account? Login</router-link>
         </v-card-actions>
       </v-card>
 
@@ -146,15 +150,14 @@ const redirectToHome = () => {
   justify-content: center;
   align-items: center;
   height: 80vh;
-
+  z-index: 100;
 }
 
+.signup-card{
+
+}
 /* Center the dialog */
-.v-dialog {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+
 
 /* Fix text alignment issue */
 .v-card {

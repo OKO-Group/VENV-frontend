@@ -1,29 +1,34 @@
 import { defineStore } from 'pinia'
+import { computed, type ComputedRef, ref, type Ref } from 'vue'
 import api from '@/api/api'
-import { AxiosError, type AxiosResponse, HttpStatusCode } from 'axios'
-import { handleBadRequest, handleGenericError } from '@/utils/requests.ts'
+import { AxiosError, type AxiosResponse } from 'axios'
+import { handleGenericError } from '@/utils/requests.ts'
 import {
   type Artwork,
   ArtworkFileCategory,
-  type ArtworkSearchQuery, type ArtworkUploadFiles, createArtworkCanvas, type User,
+  type ArtworkSearchQuery,
+  createArtworkCanvas,
+  type User,
   type UserCoreData
 } from '@/types/oko.ts'
-import type { MFAInfo } from '@/types/auth.ts'
-
 
 export const useArtworkStore = defineStore('artworks', {
   state: () => ({
     userArtworks: [] as Artwork[] | [],
     searchArtworks: [] as Artwork[] | [],
-    searchQuery: null as ArtworkSearchQuery | null,
+    searchQuery: null as  Readonly<Ref<ArtworkSearchQuery>> | null,
     artworkDraft: null as Artwork | null,
     search: '' as string,
     searchOwn: '' as string,
     statusCode: null as number | null, // Store response status code
     errors: {} as Record<string, string>, // Stores field-specific errors
     artists: [] as UserCoreData[],
+    artists_graph: [] as User[],
+    cameraPos: [0, 0, 0] as [number, number, number],
+    isCameraFree: true as boolean,
   }),
-  getters: {},
+  getters: {
+  },
   persist: {
     pick: ['artworkDraft', 'artworkFilesDraft']
   },
@@ -36,12 +41,20 @@ export const useArtworkStore = defineStore('artworks', {
     resetArtworkDraft(user: User) { //TODO check persistence
       this.artworkDraft = createArtworkCanvas(user)
     },
-    async getArtists() {
+    async getArtists(graph: boolean = false): Promise<User[] | UserCoreData[]> {
       try {
-        const response: AxiosResponse<UserCoreData[]> = await api.get(`users/artist/?field_set=id`)
-        this.statusCode = response.status
-        this.artists = response.data
-        return response.data as UserCoreData[]
+        const q = `users/artist/?field_set=${graph ? 'full' : 'id'}`
+        if (graph) {
+          const response: AxiosResponse<User[]> = await api.get(q)
+          this.artists_graph = response.data
+          this.statusCode = response.status
+          return this.artists_graph as User[]
+        } else {
+          const response: AxiosResponse<UserCoreData[]> = await api.get(q)
+          this.artists = response.data
+          this.statusCode = response.status
+          return this.artists as UserCoreData[]
+        }
       } catch (error) {
         await this._handleError(error as AxiosError)
       }

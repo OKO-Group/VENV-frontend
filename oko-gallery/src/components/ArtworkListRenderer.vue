@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { computed, nextTick, onMounted, ref, shallowRef, watch } from 'vue'
+import { computed, ref, shallowRef } from 'vue'
 import { mdiEyeOutline } from '@mdi/js'
 import type { Artwork } from '@/types/oko'
 import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
-import { useDebounceFn, useIntersectionObserver } from '@vueuse/core'
+import { useIntersectionObserver } from '@vueuse/core'
+import { useArtworkStore } from '@/stores/artworks.ts'
 
+const artworkStore = useArtworkStore()
 const scrollbarOptions = {
   wheelPropagation: false,
   suppressScrollX: true,
@@ -77,7 +79,6 @@ const artworksWithIndex = computed(() =>
 )
 
 
-
 // Handle bottom visibility to trigger fetch
 const isFetching = shallowRef(false)
 const tableRef = ref<HTMLElement | null>(null)
@@ -92,12 +93,7 @@ useIntersectionObserver(
         isFetching.value = false
       })
     }
-  },
-  {
-    root: tableRef,
-    threshold: 1.0
-  }
-)
+  })
 
 </script>
 
@@ -107,93 +103,92 @@ useIntersectionObserver(
     :options="scrollbarOptions"
     ref="tableRef"
   >
-  <div class="artwork-list">
-    <!-- Grid layout -->
-    <v-row v-if="viewMode === 'grid'" dense>
-      <v-col
-        v-for="(item, index) in artworks"
-        :key="item.id"
-        v-show="useOwnArtworks || hasImage(item)"
-        cols="12"
-        sm="6"
-        md="4"
-        lg="3"
-      >
-        <v-card
-          class="pa-2 mb-2 text-center"
-
-          :elevation="selectedArtworkId === item.id ? 5 : 1"
-          @click="handleClick(item)"
+    <div class="artwork-list">
+      <!-- Grid layout -->
+      <v-row v-if="viewMode === 'grid'" dense>
+        <v-col
+          v-for="(item, index) in artworks"
+          :key="item.id"
+          v-show="useOwnArtworks || hasImage(item)"
+          cols="12"
+          sm="6"
+          md="4"
+          lg="3"
         >
-          <v-img
-            v-if="hasImage(item)"
-            :src="getThumb(item)"
-            height="160"
-            class="mb-2"
-          />
-          <v-icon
-            v-else
-            :icon="mdiEyeOutline"
-            size="160"
-            class="mb-2"
-          />
-          <div class="text-body-2 font-weight-medium">{{ item.title }}</div>
-          <div class="text-caption grey--text">
-            {{ new Date(item.uploaded_at).toLocaleDateString() }}
-          </div>
-        </v-card>
-      </v-col>
-    </v-row>
-
-
-    <!-- Scrollable table wrapper -->
-    <v-data-table-virtual
-      v-else
-      :headers="tableHeaders"
-      :items="artworksWithIndex"
-      :key="artworksWithIndex.length"
-      class="artwork-table text-caption"
-
-      density="compact"
-      hide-default-footer
-      hide-no-data
-      hover
-      hide-default-header
-    >
-      <template #item="{ item }">
-        <tr
-          @click="handleClick(item.raw)"
-          :class="['artwork-row', { 'is-selected': selectedArtworkId === item.raw.id }]"
-        >
-          <td class="text-center index-col">
-            {{ item.index }}
-          </td>
-          <td class="text-left title-col pl-8">
-            <span :class="titleClass(viewMode)">{{ item.title }}</span>
-          </td>
-          <td class="text-center thumb-col">
+          <v-card
+            class="pa-2 mb-2 text-center"
+            :elevation="selectedArtworkId === item.id ? 5 : 1"
+            @click="handleClick(item)"
+          >
             <v-img
-              v-if="item.artwork"
-              :src="item.artwork"
-              :height="imageSize(viewMode)"
-              class="rounded"
-              style="margin: 4px"
+              v-if="hasImage(item)"
+              :src="getThumb(item)"
+              height="160"
+              class="mb-2 artwork"
             />
             <v-icon
               v-else
               :icon="mdiEyeOutline"
-              :size="imageSize(viewMode)"
-              class="rounded"
+              size="160"
+              class="mb-2"
             />
-          </td>
-          <td class="text-end date-col">
-            {{ item.created_at }}
-          </td>
-        </tr>
-      </template>
+            <div class="text-body-2 font-weight-medium">{{ item.title }}</div>
+            <div class="text-caption grey--text">
+              {{ new Date(item.uploaded_at).toLocaleDateString() }}
+            </div>
+          </v-card>
+        </v-col>
+      </v-row>
 
-    </v-data-table-virtual>
-  </div>
+
+      <!-- Scrollable table wrapper -->
+      <v-data-table-virtual
+        v-else
+        :headers="tableHeaders"
+        :items="artworksWithIndex"
+        :key="artworksWithIndex.length"
+        class="artwork-table text-caption"
+
+        density="compact"
+        hide-default-footer
+        hide-no-data
+        hover
+        hide-default-header
+      >
+        <template #item="{ item }">
+          <tr
+            @click="handleClick(item.raw)"
+            :class="['artwork-row', { 'is-selected': selectedArtworkId === item.raw.id }]"
+          >
+            <td class="text-center index-col">
+              {{ item.index }}
+            </td>
+            <td class="text-left title-col pl-8">
+              <span :class="titleClass(viewMode)">{{ item.title }}</span>
+            </td>
+            <td class="text-center thumb-col">
+              <v-img
+                v-if="item.artwork"
+                :src="item.artwork"
+                :height="imageSize(viewMode)"
+                class="rounded artwork"
+                style="margin: 4px"
+              />
+              <v-icon
+                v-else
+                :icon="mdiEyeOutline"
+                :size="imageSize(viewMode)"
+                class="rounded"
+              />
+            </td>
+            <td class="text-end date-col">
+              {{ item.created_at }}
+            </td>
+          </tr>
+        </template>
+
+      </v-data-table-virtual>
+    </div>
     <tr>
       <td :colspan="4" class="text-center">
         <div ref="loadMoreTrigger" style="height: 1px;"></div>
@@ -209,6 +204,7 @@ useIntersectionObserver(
   overflow: auto; /* perfect-scrollbar manages overflow itself */
   display: flex;
   flex-direction: column;
+  background-color: rgba(220, 220, 220, 0);
 }
 
 .artwork-list {
@@ -221,6 +217,11 @@ useIntersectionObserver(
 
 .artwork-list::-webkit-scrollbar {
   display: none;
+}
+
+.artwork-table {
+  background-color: rgba(220, 220, 220, 0.2);
+
 }
 
 .artwork-table ::v-deep(tbody td) {
@@ -239,29 +240,26 @@ useIntersectionObserver(
   background-color: rgba(0, 0, 0, 0.03);
 }
 
-.artwork-table {
-  background-color: #e8e8e8;
-}
-
 .artwork-table ::v-deep(.v-table__wrapper) {
   overflow-x: hidden;
   overflow-y: hidden;
 }
 
 .artwork-row {
-  background-color: rgba(220, 219, 219, 0.85);
-  transition: box-shadow 0.2s ease, background-color 0.4s ease, transform 0.4s ease;
+  background-color: rgba(220, 219, 219, 0.6);
+  transition: box-shadow 0.5s ease, background-color 0.5s ease, transform 0.5s ease;
 }
 
 .artwork-row:hover {
-  background-color: #eeeeee;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  background-color: rgba(238, 238, 238, 0.71);
   transform: scaleX(1.008) scaleY(1.008);
-  transition: transform 0.2s ease;
+  transition: box-shadow 0.5s ease, transform 0.5s ease;
 }
 
 .artwork-row.is-selected {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  background-color: #d0d8e0; /* soft blue for selection */
+  background-color: rgba(208, 216, 224, 0.82); /* soft blue for selection */
   border-left: 4px solid #92b7dc;
 }
 

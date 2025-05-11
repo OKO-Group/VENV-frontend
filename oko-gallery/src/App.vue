@@ -1,17 +1,25 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
 import NavBar from '@/components/main/NavBar.vue'
-</script>
+import ControlPanel from '@/components/main/ControlPanel.vue'
+import GalleryView from '@/views/GalleryView.vue'
 
+</script>
 <template>
   <header>
   </header>
   <NavBar />
+
   <RouterView v-slot="{ Component }">
     <transition name="fade" mode="out-in">
-      <component :is="Component" />
+      <component v-if="Component" :is="Component" />
     </transition>
   </RouterView>
+
+  <GalleryView/>
+<!--  <ControlPanel/>-->
+  <div id="gui-container" style="position: fixed; bottom: 1rem; right: 1rem; z-index: 9999;"></div>
+
 </template>
 
 <style scoped>
@@ -40,7 +48,7 @@ header {
   opacity: 0;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 390px) {
   header {
     display: flex;
     place-items: center;

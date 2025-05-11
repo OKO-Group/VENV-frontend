@@ -28,24 +28,12 @@ import ReauthForm from '@/components/dialogs/ReauthForm.vue'
 import { useRouter } from 'vue-router'
 import SearchEngine from '@/components/SearchEngine.vue'
 import StandardPage from '@/components/main/StandardPage.vue'
+import { useMediaQuery } from '@vueuse/core'
 
 const valid = ref(false)
 
 const level = ref<Level>('M')
 const renderAs = ref<RenderAs>('svg')
-
-// Artwork type
-interface Artwork {
-  title: string
-  description: string
-  date: string
-  thumbnail: string
-  files: {
-    painting: string
-    study: string
-    sketch: string
-  }
-}
 
 //Router
 const router = useRouter()
@@ -131,6 +119,10 @@ const updateUserAccount = async (avatar: boolean = false) => {
   } else {
     const user = authStore.user as Record<string, any>
     const changedFields = getChangedFields(originalUserData, user)
+    delete changedFields.media //TODO proper filter for readonly
+    delete changedFields.styles
+    delete changedFields.genres
+    delete changedFields.profile_picture
     await authStore.updateUserAccount(changedFields)
   }
   originalUserData = cloneDeep(authStore.user) as Record<string, any>
@@ -261,6 +253,8 @@ function onFileChange(e: Event) {
   authStore.user!.profile_picture = file
   updateUserAccount(true)
 }
+
+const isMobile = useMediaQuery('(max-width: 768px)')
 
 
 //TODO UPLOAD button inside the v-img
@@ -529,9 +523,9 @@ function onFileChange(e: Event) {
       <v-tabs-window v-model="tab" class="tabs-window">
         <!-- GALLERY TAB -->
         <v-tabs-window-item :value="1" class="tabs-window-item">
-          <v-container class="pa-4 gallery-container" fluid>
+          <v-container class="pa-1 gallery-container" fluid>
 
-            <SearchEngine use-own-artworks show-upload />
+          <SearchEngine :style="{padding: isMobile ? 0 : 4}" use-own-artworks show-upload />
 
           </v-container>
         </v-tabs-window-item>
@@ -605,7 +599,7 @@ function onFileChange(e: Event) {
                           topCountry="DE"
                           countryName
                           class="country-select"
-                        />hidden
+                        />
                       </v-sheet>
                       <v-text-field :rules="[requiredRule, portfolioLinkRule]"
                                     label="Portfolio Link"

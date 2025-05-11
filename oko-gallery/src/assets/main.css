@@ -1,16 +1,19 @@
 @import './base.css';
+@import '@vue-flow/core/dist/style.css';
+@import '@vue-flow/core/dist/theme-default.css';
 
 #app {
   max-width: 100vw;
   max-height: 100vh;
   margin: 0 auto;
   font-weight: normal;
+  scroll-behavior: smooth;
 }
 
 a,
 .green {
   text-decoration: none;
-  color: hsl(153, 24%, 66%);
+  color: hsl(49, 91%, 87%);
   transition: 0.4s;
   padding: 3px;
 }
@@ -21,7 +24,7 @@ a,
   }
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 350px) {
   body {
     display: flex;
     place-items: center;
@@ -30,7 +33,11 @@ a,
   #app {
     display: grid;
     grid-template-columns: 1fr;
-    padding: 0 2rem;
   }
 }
 
+
+/* global-tooltip.css */
+.v-tooltip .v-overlay__content {
+  background-color: rgba(187, 172, 172, 0.13) !important;
+}

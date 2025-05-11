@@ -24,9 +24,9 @@ defineProps<{
 
 .dashboard-card {
   width: 100vw;
-  height: 88vh;
+  height: 86vh;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow: auto;
 }
 </style>

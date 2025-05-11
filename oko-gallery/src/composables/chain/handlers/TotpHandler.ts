@@ -4,7 +4,10 @@ import { useAuthStore } from '@/stores/auth.ts'
 
 const authStore = useAuthStore()
 export class TotpHandler extends BaseHandler {
-  constructor(private code: string, private onFail?: () => void) {
+  constructor(
+    private code: string,
+    private onFail?: () => void,
+  ) {
     super()
   }
 
@@ -15,4 +18,3 @@ export class TotpHandler extends BaseHandler {
     return false
   }
 }
-

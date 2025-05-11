@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import { ref, onBeforeMount } from 'vue'
 import { useAuthStore } from '@/stores/auth'
-import type {
-  CompletePasswordResetPayload
-} from '@/types/auth'
+import type { CompletePasswordResetPayload } from '@/types/auth'
 import { useRoute } from 'vue-router'
 import { requiredRule, passwordMinLengthRule } from '@/utils/validation.ts'
 import LandingMessage from '@/components/LandingMessage.vue'
@@ -19,7 +17,7 @@ const errorMessage = ref('')
 const credentials = ref<CompletePasswordResetPayload>({
   key: '',
   password: '',
-  password_confirmation: ''
+  password_confirmation: '',
 })
 
 onBeforeMount(async () => {
@@ -48,12 +46,13 @@ const reset_password = async () => {
   credentials.value = {
     key: '',
     password: '',
-    password_confirmation: ''
+    password_confirmation: '',
   }
 }
 
-const matchPasswordRule = () => credentials.value.password === credentials.value.password_confirmation || 'Passwords do not match.'
-
+const matchPasswordRule = () =>
+  credentials.value.password === credentials.value.password_confirmation ||
+  'Passwords do not match.'
 </script>
 
 <template>
@@ -76,29 +75,40 @@ const matchPasswordRule = () => credentials.value.password === credentials.value
   <LandingMessage v-else :show-slot-instead-of-message="true">
     <v-card-title>RESET</v-card-title>
     <v-form v-model="valid">
-      <v-text-field v-model="credentials.password" label="NEW PASSWORD" type="password" outlined
-                    required
-                    autocomplete="new-password"
-                    :rules="[requiredRule, passwordMinLengthRule]"
-                    @update:modelValue="clearError('password')"
-                    :error-messages="authStore.errors.password" />
-      <v-text-field v-model="credentials.password_confirmation" label="CONFIRM PASSWORD"
-                    type="password" outlined required
-                    :rules="[requiredRule, matchPasswordRule]"
-                    @update:modelValue="clearError('password_confirmation')" />
+      <v-text-field
+        v-model="credentials.password"
+        label="NEW PASSWORD"
+        type="password"
+        outlined
+        required
+        autocomplete="new-password"
+        :rules="[requiredRule, passwordMinLengthRule]"
+        @update:modelValue="clearError('password')"
+        :error-messages="authStore.errors.password"
+      />
+      <v-text-field
+        v-model="credentials.password_confirmation"
+        label="CONFIRM PASSWORD"
+        type="password"
+        outlined
+        required
+        :rules="[requiredRule, matchPasswordRule]"
+        @update:modelValue="clearError('password_confirmation')"
+      />
       <v-btn :disabled="!valid" color="primary" @click="reset_password">Reset</v-btn>
     </v-form>
   </LandingMessage>
 </template>
 
-
 <style scoped>
 /* Fade transition */
-.fade-enter-active, .fade-leave-active {
+.fade-enter-active,
+.fade-leave-active {
   transition: opacity 0.5s ease;
 }
 
-.fade-enter-from, .fade-leave-to {
+.fade-enter-from,
+.fade-leave-to {
   opacity: 0;
 }
 </style>

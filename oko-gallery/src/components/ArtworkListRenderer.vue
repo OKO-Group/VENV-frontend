@@ -12,7 +12,7 @@ const scrollbarOptions = {
   suppressScrollX: true,
   scrollYMarginOffset: -1,
   maxScrollbarLength: 100,
-  wheelSpeed: 0.2
+  wheelSpeed: 0.2,
 }
 
 const props = defineProps<{
@@ -29,11 +29,11 @@ const emit = defineEmits<{
 }>()
 
 function hasImage(artwork: Artwork): boolean {
-  return !!artwork.files.find(f => f.category === 'painting')
+  return !!artwork.files.find((f) => f.category === 'painting')
 }
 
 function getThumb(artwork: Artwork): string | undefined {
-  return artwork.files.find(f => f.category === 'painting')?.file_thumbnail || undefined
+  return artwork.files.find((f) => f.category === 'painting')?.file_thumbnail || undefined
 }
 
 async function handleClick(item: Artwork) {
@@ -48,7 +48,6 @@ function imageSize(mode: string): number {
   return mode === 'compact' ? 40 : mode === 'relaxed' ? 80 : 160
 }
 
-
 const tableHeaders = [
   { title: '#', key: 'index', width: 40, sortable: false },
   { title: 'Title', key: 'title', align: 'center', sortable: true },
@@ -57,52 +56,44 @@ const tableHeaders = [
     key: 'artwork',
     width: 100,
     sortable: false,
-    align: 'center'
+    align: 'center',
   },
-  { title: 'Date', key: 'created_at', align: 'end' }
+  { title: 'Date', key: 'created_at', align: 'end' },
 ]
-
 
 function formatDate(dateStr: string) {
   return new Date(dateStr).toLocaleDateString()
 }
 
 const artworksWithIndex = computed(() =>
-  (props.useOwnArtworks ? props.artworks : props.artworks.filter(a => getThumb(a)))
-    .map((a, i) => ({
+  (props.useOwnArtworks ? props.artworks : props.artworks.filter((a) => getThumb(a))).map(
+    (a, i) => ({
       raw: a,
       index: i + 1,
       title: a.title,
       artwork: getThumb(a),
-      created_at: formatDate(a.created_at)
-    }))
+      created_at: formatDate(a.created_at),
+    }),
+  ),
 )
-
 
 // Handle bottom visibility to trigger fetch
 const isFetching = shallowRef(false)
 const tableRef = ref<HTMLElement | null>(null)
 const loadMoreTrigger = ref<HTMLElement | null>(null)
 
-useIntersectionObserver(
-  loadMoreTrigger,
-  ([{ isIntersecting }]) => {
-    if (isIntersecting && !isFetching.value && props.hasNextPage) {
-      isFetching.value = true
-      props.fetchNextPage().finally(() => {
-        isFetching.value = false
-      })
-    }
-  })
-
+useIntersectionObserver(loadMoreTrigger, ([{ isIntersecting }]) => {
+  if (isIntersecting && !isFetching.value && props.hasNextPage) {
+    isFetching.value = true
+    props.fetchNextPage().finally(() => {
+      isFetching.value = false
+    })
+  }
+})
 </script>
 
 <template>
-  <PerfectScrollbar
-    class="ps"
-    :options="scrollbarOptions"
-    ref="tableRef"
-  >
+  <PerfectScrollbar class="ps" :options="scrollbarOptions" ref="tableRef">
     <div class="artwork-list">
       <!-- Grid layout -->
       <v-row v-if="viewMode === 'grid'" dense>
@@ -120,18 +111,8 @@ useIntersectionObserver(
             :elevation="selectedArtworkId === item.id ? 5 : 1"
             @click="handleClick(item)"
           >
-            <v-img
-              v-if="hasImage(item)"
-              :src="getThumb(item)"
-              height="160"
-              class="mb-2 artwork"
-            />
-            <v-icon
-              v-else
-              :icon="mdiEyeOutline"
-              size="160"
-              class="mb-2"
-            />
+            <v-img v-if="hasImage(item)" :src="getThumb(item)" height="160" class="mb-2 artwork" />
+            <v-icon v-else :icon="mdiEyeOutline" size="160" class="mb-2" />
             <div class="text-body-2 font-weight-medium">{{ item.title }}</div>
             <div class="text-caption grey--text">
               {{ new Date(item.uploaded_at).toLocaleDateString() }}
@@ -140,7 +121,6 @@ useIntersectionObserver(
         </v-col>
       </v-row>
 
-
       <!-- Scrollable table wrapper -->
       <v-data-table-virtual
         v-else
@@ -148,7 +128,6 @@ useIntersectionObserver(
         :items="artworksWithIndex"
         :key="artworksWithIndex.length"
         class="artwork-table text-caption"
-
         density="compact"
         hide-default-footer
         hide-no-data
@@ -174,29 +153,22 @@ useIntersectionObserver(
                 class="rounded artwork"
                 style="margin: 4px"
               />
-              <v-icon
-                v-else
-                :icon="mdiEyeOutline"
-                :size="imageSize(viewMode)"
-                class="rounded"
-              />
+              <v-icon v-else :icon="mdiEyeOutline" :size="imageSize(viewMode)" class="rounded" />
             </td>
             <td class="text-end date-col">
               {{ item.created_at }}
             </td>
           </tr>
         </template>
-
       </v-data-table-virtual>
     </div>
     <tr>
       <td :colspan="4" class="text-center">
-        <div ref="loadMoreTrigger" style="height: 1px;"></div>
+        <div ref="loadMoreTrigger" style="height: 1px"></div>
       </td>
     </tr>
   </PerfectScrollbar>
 </template>
-
 
 <style scoped>
 .ps {
@@ -221,7 +193,6 @@ useIntersectionObserver(
 
 .artwork-table {
   background-color: rgba(220, 220, 220, 0.2);
-
 }
 
 .artwork-table ::v-deep(tbody td) {
@@ -247,14 +218,19 @@ useIntersectionObserver(
 
 .artwork-row {
   background-color: rgba(220, 219, 219, 0.6);
-  transition: box-shadow 0.5s ease, background-color 0.5s ease, transform 0.5s ease;
+  transition:
+    box-shadow 0.5s ease,
+    background-color 0.5s ease,
+    transform 0.5s ease;
 }
 
 .artwork-row:hover {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   background-color: rgba(238, 238, 238, 0.71);
   transform: scaleX(1.008) scaleY(1.008);
-  transition: box-shadow 0.5s ease, transform 0.5s ease;
+  transition:
+    box-shadow 0.5s ease,
+    transform 0.5s ease;
 }
 
 .artwork-row.is-selected {
@@ -262,7 +238,6 @@ useIntersectionObserver(
   background-color: rgba(208, 216, 224, 0.82); /* soft blue for selection */
   border-left: 4px solid #92b7dc;
 }
-
 
 .index-col {
   width: 2vw;

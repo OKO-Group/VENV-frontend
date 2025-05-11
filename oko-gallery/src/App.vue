@@ -1,13 +1,11 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
 import NavBar from '@/components/main/NavBar.vue'
-import ControlPanel from '@/components/main/ControlPanel.vue'
+// import ControlPanel from '@/components/main/ControlPanel.vue'
 import GalleryView from '@/views/GalleryView.vue'
-
 </script>
 <template>
-  <header>
-  </header>
+  <header></header>
   <NavBar />
 
   <RouterView v-slot="{ Component }">
@@ -16,14 +14,12 @@ import GalleryView from '@/views/GalleryView.vue'
     </transition>
   </RouterView>
 
-  <GalleryView/>
-<!--  <ControlPanel/>-->
-  <div id="gui-container" style="position: fixed; bottom: 1rem; right: 1rem; z-index: 9999;"></div>
-
+  <GalleryView />
+  <!--  <ControlPanel/>-->
+  <div id="gui-container" style="position: fixed; bottom: 1rem; right: 1rem; z-index: 9999"></div>
 </template>
 
 <style scoped>
-
 header {
   position: fixed;
   top: 0;
@@ -40,11 +36,13 @@ header {
 }
 
 /* Fade In/Out Animation */
-.fade-enter-active, .fade-leave-active {
+.fade-enter-active,
+.fade-leave-active {
   transition: opacity 0.5s ease-in-out;
 }
 
-.fade-enter-from, .fade-leave-to {
+.fade-enter-from,
+.fade-leave-to {
   opacity: 0;
 }
 
@@ -64,6 +62,5 @@ header {
     place-items: flex-start;
     flex-wrap: wrap;
   }
-
 }
 </style>

@@ -9,14 +9,14 @@ import {
   type ArtworkSearchQuery,
   createArtworkCanvas,
   type User,
-  type UserCoreData
+  type UserCoreData,
 } from '@/types/oko.ts'
 
 export const useArtworkStore = defineStore('artworks', {
   state: () => ({
     userArtworks: [] as Artwork[] | [],
     searchArtworks: [] as Artwork[] | [],
-    searchQuery: null as  Readonly<Ref<ArtworkSearchQuery>> | null,
+    searchQuery: null as Readonly<Ref<ArtworkSearchQuery>> | null,
     artworkDraft: null as Artwork | null,
     search: '' as string,
     searchOwn: '' as string,
@@ -27,10 +27,9 @@ export const useArtworkStore = defineStore('artworks', {
     cameraPos: [0, 0, 0] as [number, number, number],
     isCameraFree: true as boolean,
   }),
-  getters: {
-  },
+  getters: {},
   persist: {
-    pick: ['artworkDraft', 'artworkFilesDraft']
+    pick: ['artworkDraft', 'artworkFilesDraft'],
   },
   actions: {
     async _handleError(error: AxiosError) {
@@ -38,7 +37,8 @@ export const useArtworkStore = defineStore('artworks', {
       this.statusCode = statusCode
       this.errors = errors
     },
-    resetArtworkDraft(user: User) { //TODO check persistence
+    resetArtworkDraft(user: User) {
+      //TODO check persistence
       this.artworkDraft = createArtworkCanvas(user)
     },
     async getArtists(graph: boolean = false): Promise<User[] | UserCoreData[]> {
@@ -94,12 +94,11 @@ export const useArtworkStore = defineStore('artworks', {
     },
     async updateArtwork(id: number, data: Record<string, any>) {
       try {
-        const response: AxiosResponse = await api.patch(`artworks/${id}/`, data,
-          {
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            }
-          })
+        const response: AxiosResponse = await api.patch(`artworks/${id}/`, data, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        })
         this.statusCode = response.status
         return response.data as Artwork
       } catch (error) {
@@ -111,8 +110,8 @@ export const useArtworkStore = defineStore('artworks', {
       try {
         const response: AxiosResponse = await api.post(`artworks/`, data, {
           headers: {
-            'Content-Type': 'multipart/form-data'
-          }
+            'Content-Type': 'multipart/form-data',
+          },
         })
         this.statusCode = response.status
         return response.data as Artwork
@@ -134,7 +133,7 @@ export const useArtworkStore = defineStore('artworks', {
     async deleteArtworkFiles(id: number, categories: ArtworkFileCategory[]) {
       try {
         const response: AxiosResponse = await api.delete(`artworks/${id}/files/`, {
-          data: { categories }
+          data: { categories },
         })
         this.statusCode = response.status
         return response.data as Artwork
@@ -142,6 +141,6 @@ export const useArtworkStore = defineStore('artworks', {
         await this._handleError(error as AxiosError)
         return null
       }
-    }
-  }
+    },
+  },
 })

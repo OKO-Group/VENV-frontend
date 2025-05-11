@@ -34,9 +34,8 @@ const dialogOpen = computed({
   get: () => clickedUser.value !== null,
   set: (val) => {
     if (!val) clickedUser.value = null
-  }
+  },
 })
-
 </script>
 
 <template>
@@ -45,20 +44,20 @@ const dialogOpen = computed({
       v-model:nodes="nodes"
       v-model:edges="edges"
       class="artist-graph"
-      :node-types="{ artistNode: markRaw(ArtistNode)}"
-      :default-viewport="{ x: 0, y: 0, zoom: 1}"
+      :node-types="{ artistNode: markRaw(ArtistNode) }"
+      :default-viewport="{ x: 0, y: 0, zoom: 1 }"
       :edges-updatable="false"
       :connectable="false"
       :zoom-on-double-click="false"
       :style="{ background: 'rgba(240,240,240,0)' }"
-
-      @node-click="({ node }) => clickedUser = node.data"
-      @node-mouse-enter="({ event , node }) => {
-        hoveredUser = node.data;
-        hoverPosition = { x: node.position.x, y: node.position.y}
-      }"
-      @node-mouse-leave="() => hoveredUser = null"
-
+      @node-click="({ node }) => (clickedUser = node.data)"
+      @node-mouse-enter="
+        ({ event, node }) => {
+          hoveredUser = node.data
+          hoverPosition = { x: node.position.x, y: node.position.y }
+        }
+      "
+      @node-mouse-leave="() => (hoveredUser = null)"
     >
       <Background bg-color="rgba(240,240,240,0.21)" />
     </VueFlow>
@@ -69,8 +68,10 @@ const dialogOpen = computed({
       class="hover-card"
       :style="{ top: `${hoverPosition.y + 10}px`, left: `${hoverPosition.x + 10}px` }"
     >
-      <strong>{{ hoveredUser.first_name }} {{ hoveredUser.last_name }}</strong><br />
-      <span class="text-caption">{{ hoveredUser.email }}</span><br />
+      <strong>{{ hoveredUser.first_name }} {{ hoveredUser.last_name }}</strong
+      ><br />
+      <span class="text-caption">{{ hoveredUser.email }}</span
+      ><br />
       <a :href="hoveredUser.portfolio_link" class="text-caption" target="_blank">
         {{ hoveredUser.portfolio_link }}
       </a>
@@ -78,7 +79,7 @@ const dialogOpen = computed({
 
     <!-- Clicked Artist Dialog -->
     <v-dialog v-model="dialogOpen" max-width="480" transition="fade-transition">
-      <v-card v-if="clickedUser" class="user-card elevation-10 pa-4" style="border-radius: 16px;">
+      <v-card v-if="clickedUser" class="user-card elevation-10 pa-4" style="border-radius: 16px">
         <v-card-text class="text-center">
           <!-- Avatar or fallback icon -->
           <div class="d-flex justify-center mb-4">
@@ -88,13 +89,7 @@ const dialogOpen = computed({
                 :src="clickedUser.profile_picture.file_thumbnail"
                 cover
               />
-              <v-icon
-                v-else
-                :icon="mdiEyeOutline"
-                size="56"
-                color="grey"
-                class="ma-auto"
-              />
+              <v-icon v-else :icon="mdiEyeOutline" size="56" color="grey" class="ma-auto" />
             </v-avatar>
           </div>
 
@@ -129,14 +124,13 @@ const dialogOpen = computed({
 
           <!-- Biography -->
           <div v-if="clickedUser.biography" class="mt-3 text-left">
-            <p class="text-caption font-italic" style="white-space: pre-wrap;">
+            <p class="text-caption font-italic" style="white-space: pre-wrap">
               “{{ clickedUser.biography }}”
             </p>
           </div>
         </v-card-text>
       </v-card>
     </v-dialog>
-
   </StandardPage>
 </template>
 
@@ -146,7 +140,6 @@ const dialogOpen = computed({
   display: flex;
   justify-content: center;
   align-items: center;
-
 
   border: 1px solid rgba(0, 0, 0, 0.1);
   box-sizing: border-box;

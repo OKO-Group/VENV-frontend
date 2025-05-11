@@ -1,31 +1,31 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue';
-import { useRouter } from 'vue-router';
+import { onMounted, ref, watch } from 'vue'
+import { useRouter } from 'vue-router'
 
 const props = defineProps<{
-  successMessage?: string;
-  errorMessage?: string;
-  isError?: boolean;
-  redirectAfter?: number; // in seconds
-  showSlotInsteadOfMessage?: boolean;
-  startCountdown?: boolean;
-  redirectRoute?: string;
-}>();
+  successMessage?: string
+  errorMessage?: string
+  isError?: boolean
+  redirectAfter?: number // in seconds
+  showSlotInsteadOfMessage?: boolean
+  startCountdown?: boolean
+  redirectRoute?: string
+}>()
 
-const router = useRouter();
-const countdown = ref(props.redirectAfter || 5);
+const router = useRouter()
+const countdown = ref(props.redirectAfter || 5)
 
 onMounted(() => {
-  if (!props.startCountdown) return;
+  if (!props.startCountdown) return
 
   const interval = setInterval(() => {
-    countdown.value -= 1;
+    countdown.value -= 1
     if (countdown.value === 0) {
-      clearInterval(interval);
-      router.push(props.redirectRoute || '/');
+      clearInterval(interval)
+      router.push(props.redirectRoute || '/')
     }
-  }, 1000);
-});
+  }, 1000)
+})
 </script>
 
 <template>
@@ -36,7 +36,9 @@ onMounted(() => {
       </template>
       <template v-else>
         <h2>{{ isError ? errorMessage : successMessage }}</h2>
-        <p>You will be automatically redirected in <strong>{{ countdown }}</strong> seconds</p>
+        <p>
+          You will be automatically redirected in <strong>{{ countdown }}</strong> seconds
+        </p>
       </template>
     </v-card>
   </div>

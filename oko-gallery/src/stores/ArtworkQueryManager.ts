@@ -2,11 +2,7 @@ import { unref, type ComputedRef, type Ref, ref, shallowRef } from 'vue'
 import { QueryClient } from '@tanstack/vue-query'
 import { useArtworksInfinite } from '@/stores/useArtworkQuery.ts'
 
-import type {
-  Artwork,
-  ArtworkSearchQuery,
-  PaginatedResponse
-} from '@/types/oko.ts'
+import type { Artwork, ArtworkSearchQuery, PaginatedResponse } from '@/types/oko.ts'
 import type { InfiniteData } from '@tanstack/vue-query'
 
 export class ArtworkQueryManager {
@@ -15,9 +11,7 @@ export class ArtworkQueryManager {
   searchArtworks = shallowRef<Artwork[]>([])
   qClient = undefined as QueryClient | undefined
 
-
-  constructor() {
-  }
+  constructor() {}
 
   query(queryParams: Readonly<Ref<ArtworkSearchQuery>> | ComputedRef) {
     this.q = useArtworksInfinite(queryParams)
@@ -44,15 +38,13 @@ export class ArtworkQueryManager {
       (oldData) =>
         oldData
           ? {
-            ...oldData,
-            pages: oldData.pages.map((page) => ({
-              ...page,
-              results: page.results.map((a) =>
-                a.id === updated.id ? updated : a
-              )
-            }))
-          }
-          : oldData
+              ...oldData,
+              pages: oldData.pages.map((page) => ({
+                ...page,
+                results: page.results.map((a) => (a.id === updated.id ? updated : a)),
+              })),
+            }
+          : oldData,
     )
   }
 
@@ -64,13 +56,13 @@ export class ArtworkQueryManager {
         const firstPage = oldData.pages[0]
         const newFirstPage = {
           ...firstPage,
-          results: [uploaded, ...firstPage.results]
+          results: [uploaded, ...firstPage.results],
         }
         return {
           ...oldData,
-          pages: [newFirstPage, ...oldData.pages.slice(1)]
+          pages: [newFirstPage, ...oldData.pages.slice(1)],
         }
-      }
+      },
     )
   }
 
@@ -80,13 +72,13 @@ export class ArtworkQueryManager {
       (oldData) =>
         oldData
           ? {
-            ...oldData,
-            pages: oldData.pages.map((page) => ({
-              ...page,
-              results: page.results.filter((a) => a.id !== id)
-            }))
-          }
-          : oldData
+              ...oldData,
+              pages: oldData.pages.map((page) => ({
+                ...page,
+                results: page.results.filter((a) => a.id !== id),
+              })),
+            }
+          : oldData,
     )
   }
 }

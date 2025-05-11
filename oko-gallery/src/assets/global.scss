@@ -1,5 +1,3 @@
-
-
 .v-btn {
   font-size: 16px;
   font-weight: 600;
@@ -19,7 +17,6 @@
   &:hover {
     transform: scale(1.05);
     filter: brightness(1.1);
-
   }
 }
 .v-btn + .v-btn {
@@ -29,7 +26,6 @@
 .centered-file-input .v-input__control {
   justify-content: center !important;
   text-align: center;
-
 }
 .centered-file-input .v-label,
 .centered-file-input .v-file-input__text {
@@ -40,9 +36,10 @@
   text-overflow: clip;
 }
 
-
 /* Apply a semi-transparent background to all Vuetify containers */
-.v-sheet, .v-toolbar, .v-navigation-drawer {
+.v-sheet,
+.v-toolbar,
+.v-navigation-drawer {
   background: rgba(220, 219, 219, 0.8) !important; /* Slightly grey with 85% opacity */
   color: var(--color-text) !important;
   backdrop-filter: blur(10px); /* Adds a nice frosted-glass effect */
@@ -73,9 +70,10 @@ input[type='number'] {
 }
 
 /* Global Layout Fix */
-html, body {
+html,
+body {
   font-family: 'Lato', sans-serif;
-  font-weight: 100 ;
+  font-weight: 100;
   font-style: normal;
   margin: 0;
   padding: 0;

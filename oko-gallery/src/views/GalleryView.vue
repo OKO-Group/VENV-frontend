@@ -16,17 +16,18 @@ const artworkStore = useArtworkStore()
 const artworkManager = useArtworkQueryManager()
 
 const router = useRouter()
-const {
-  data
-} = artworkManager.query(query)
+const { data } = artworkManager.query(query)
 
 function hasImage(artwork: Artwork): boolean {
-  return !!artwork.files.find(f => f.category === 'painting')
+  return !!artwork.files.find((f) => f.category === 'painting')
 }
 
 const updateArtworks = useDebounceFn((newData) => {
   if (newData?.pages) {
-    artworkManager.searchArtworks.value = data.value?.pages.flatMap((page) => page.results).filter(a => a.files.length > 0 && hasImage(a)) ?? []
+    artworkManager.searchArtworks.value =
+      data.value?.pages
+        .flatMap((page) => page.results)
+        .filter((a) => a.files.length > 0 && hasImage(a)) ?? []
   }
 }, 150) // debounce delay in ms
 
@@ -41,7 +42,7 @@ watch(
       artworkManager.searchArtworks.value = fallbackArtworks
     }
   },
-  { immediate: true }
+  { immediate: true },
 )
 
 const explore = () => {
@@ -57,15 +58,18 @@ function replaceArtwork(id: number) {
 </script>
 
 <template>
-  <TresCanvas v-if="artworkManager.searchArtworks.value"
-              window-size
-              preset="realistic"
-              class="canvas-component">
-    <TresPerspectiveCamera :position="[0,0,0]" />
+  <TresCanvas
+    v-if="artworkManager.searchArtworks.value"
+    window-size
+    preset="realistic"
+    class="canvas-component"
+  >
+    <TresPerspectiveCamera :position="[0, 0, 0]" />
     <CorridorScene
-                   :artworks="artworkManager.searchArtworks.value"
-                   @replace-artwork="replaceArtwork"
-                   @clicked-artwork="explore" />
+      :artworks="artworkManager.searchArtworks.value"
+      @replace-artwork="replaceArtwork"
+      @clicked-artwork="explore"
+    />
   </TresCanvas>
 </template>
 

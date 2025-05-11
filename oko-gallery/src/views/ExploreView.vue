@@ -17,8 +17,7 @@ onUnmounted(() => {
 })
 </script>
 
-<template>
-</template>
+<template></template>
 
 <style scoped>
 .canvas-component {

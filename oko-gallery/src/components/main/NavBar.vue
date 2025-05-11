@@ -8,13 +8,14 @@ import {
   mdiAccountGroup,
   mdiDomain,
   mdiEyeOutline,
-  mdiFormTextbox, mdiInformation,
+  mdiFormTextbox,
+  mdiInformation,
   mdiLogin,
   mdiLogout,
-  mdiSearchWeb, mdiCompass
+  mdiSearchWeb,
+  mdiCompass,
 } from '@mdi/js'
 import { useMediaQuery } from '@vueuse/core'
-
 
 const route = useRoute()
 const router = useRouter()
@@ -54,17 +55,15 @@ const confirmLogout = async () => {
 }
 
 const avatarSrc = computed(() => {
-    const pic = authStore.user?.profile_picture
-    return (pic && 'file_thumbnail' in pic ? pic.file_thumbnail : null) || undefined
-  }
-)
+  const pic = authStore.user?.profile_picture
+  return (pic && 'file_thumbnail' in pic ? pic.file_thumbnail : null) || undefined
+})
 const searchInput = ref()
 
 function focusInput() {
   const el = searchInput.value?.$el?.querySelector('input')
   if (el) el.focus()
 }
-
 </script>
 <template>
   <v-row>
@@ -73,21 +72,23 @@ function focusInput() {
         <v-icon
           :icon="mdiEyeOutline"
           class="top-left-icon cursor-pointer"
-          :style="{position: isMobile? 'absolute' : 'fixed',
-          top: isMobile ? 0 : '1rem'}"
+          :style="{ position: isMobile ? 'absolute' : 'fixed', top: isMobile ? 0 : '1rem' }"
         />
       </RouterLink>
-
     </v-col>
     <v-col cols="12" md="6" class="d-flex flex-column align-center mt-1">
       <transition name="nav-transition" mode="out-in">
-        <nav :class="{ home: isHome, cornered: !isHome}"
-             :style="{
-    position: 'fixed',
-    marginTop: isMobile && !isHome ? '0rem' : '',
-    top: isMobile && !isHome ? '4rem' : '',
-    left: !isMobile && !isHome ? '6rem' : ''}"
-             v-if="isLoaded" :key="isHome">
+        <nav
+          :class="{ home: isHome, cornered: !isHome }"
+          :style="{
+            position: 'fixed',
+            marginTop: isMobile && !isHome ? '0rem' : '',
+            top: isMobile && !isHome ? '4rem' : '',
+            left: !isMobile && !isHome ? '6rem' : '',
+          }"
+          v-if="isLoaded"
+          :key="isHome"
+        >
           <!-- Explore -->
           <v-tooltip v-if="!isMobile" text="Explore" :location="isHome ? 'right' : 'bottom'">
             <template #activator="{ props }">
@@ -123,7 +124,6 @@ function focusInput() {
           <RouterLink v-else to="/about" exact-active-class="active">
             <span>ABOUT</span>
           </RouterLink>
-
         </nav>
       </transition>
     </v-col>
@@ -133,7 +133,7 @@ function focusInput() {
         <v-text-field
           v-model="artworkStore.search"
           class="mx-auto align-content-center align-center"
-          style="width: 33vw; opacity: 0.5;"
+          style="width: 33vw; opacity: 0.5"
           placeholder="SEARCH"
           @mouseenter="focusInput"
           @keyup.enter="() => router.push('/search')"
@@ -155,11 +155,12 @@ function focusInput() {
           offset-y
           transition="scale-transition"
           :location="'bottom center'"
-          attach>
+          attach
+        >
           <template v-slot:activator="{ props }">
             <v-btn v-bind="props" icon class="user-menu-button" variant="text">
               <v-avatar v-if="avatarSrc" :image="avatarSrc"></v-avatar>
-              <v-icon v-else :icon="mdiAccount"/>
+              <v-icon v-else :icon="mdiAccount" />
             </v-btn>
           </template>
           <v-list class="user-dropdown" density="compact">
@@ -250,11 +251,13 @@ nav {
 }
 
 /* Fade In/Out Animation */
-.nav-transition-enter-active, .nav-transition-leave-active {
+.nav-transition-enter-active,
+.nav-transition-leave-active {
   transition: opacity 0.5s ease-in-out;
 }
 
-.nav-transition-enter-from, .nav-transition-leave-to {
+.nav-transition-enter-from,
+.nav-transition-leave-to {
   opacity: 0;
 }
 
@@ -276,7 +279,9 @@ nav a::after {
   width: 0;
   height: 2px;
   background-color: white;
-  transition: width 0.3s ease-in-out, left 0.3s ease-in-out;
+  transition:
+    width 0.3s ease-in-out,
+    left 0.3s ease-in-out;
 }
 
 /* When active, the underline smoothly expands */

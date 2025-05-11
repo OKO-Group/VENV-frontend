@@ -6,7 +6,10 @@ import { MFAMethod } from '@/types/auth.ts'
 const authStore = useAuthStore()
 
 export class ReauthHandler extends BaseHandler {
-  constructor(private password: string, private onFail?: () => void) {
+  constructor(
+    private password: string,
+    private onFail?: () => void,
+  ) {
     super()
   }
 

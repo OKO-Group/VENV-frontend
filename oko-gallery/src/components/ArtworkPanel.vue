@@ -14,15 +14,11 @@ import {
   mdiBrush,
   mdiPencilCircle,
   mdiDeleteForever,
-  mdiDeleteCircle
+  mdiDeleteCircle,
 } from '@mdi/js'
 import { type Artwork, ArtworkFileCategory } from '@/types/oko'
 import { fileCategories } from '@/types/oko.ts'
-import {
-  useFileDialog, useMediaQuery,
-  useObjectUrl,
-  watchPausable
-} from '@vueuse/core'
+import { useFileDialog, useMediaQuery, useObjectUrl, watchPausable } from '@vueuse/core'
 import { useArtworkStore } from '@/stores/artworks.ts'
 import { useAuthStore } from '@/stores/auth.ts'
 import clonedeep from 'lodash.clonedeep'
@@ -48,20 +44,27 @@ const authStore = useAuthStore()
 const subTab = ref<ArtworkFileCategory>(ArtworkFileCategory.PAINTING)
 const aspectLocked = ref(true)
 const fileInput = ref<{
-  fid: number | null,
+  fid: number | null
   el: HTMLInputElement | null
 }>({ fid: null, el: null })
 const isEditMode = shallowRef(false)
 
-const selectedArtworkUploadFiles = fileCategories.reduce((acc, category) => { //overkill
-  acc[category] = shallowRef()
-  return acc
-}, {} as Record<ArtworkFileCategory, Ref<File | undefined>>)
+const selectedArtworkUploadFiles = fileCategories.reduce(
+  (acc, category) => {
+    //overkill
+    acc[category] = shallowRef()
+    return acc
+  },
+  {} as Record<ArtworkFileCategory, Ref<File | undefined>>,
+)
 
-const selectedArtworkUploadURLS = fileCategories.reduce((acc, category) => {
-  acc[category] = useObjectUrl(selectedArtworkUploadFiles[category])
-  return acc
-}, {} as Record<ArtworkFileCategory, Ref<string | undefined>>)
+const selectedArtworkUploadURLS = fileCategories.reduce(
+  (acc, category) => {
+    acc[category] = useObjectUrl(selectedArtworkUploadFiles[category])
+    return acc
+  },
+  {} as Record<ArtworkFileCategory, Ref<string | undefined>>,
+)
 
 const canEditSelected = computed(() => {
   if (!props.artwork) return false
@@ -80,17 +83,20 @@ const emit = defineEmits<{
 const editState = ref({
   artwork: props.artwork,
   files: selectedArtworkUploadFiles,
-  stagedDeletions: stagedFileDeletions
+  stagedDeletions: stagedFileDeletions,
 } as {
   artwork: Artwork
   files: Record<ArtworkFileCategory, Ref<File | undefined>>
   stagedDeletions: Ref<Set<ArtworkFileCategory>>
 })
 const isModifiedArtwork = shallowRef(false)
-const { pause, resume } = watchPausable(editState, () => {
-  isModifiedArtwork.value = true
-}, { deep: true })
-
+const { pause, resume } = watchPausable(
+  editState,
+  () => {
+    isModifiedArtwork.value = true
+  },
+  { deep: true },
+)
 
 function purgeInMemoryFiles() {
   for (const category of fileCategories) {
@@ -110,7 +116,7 @@ async function resetArtwork(editMode = false) {
 }
 
 function fetchSelectedFile(category: ArtworkFileCategory) {
-  return props.artwork.files.find(f => f.category === category)?.file || undefined
+  return props.artwork.files.find((f) => f.category === category)?.file || undefined
 }
 
 function getArtworkImageSrc(category: ArtworkFileCategory): string | undefined {
@@ -120,20 +126,18 @@ function getArtworkImageSrc(category: ArtworkFileCategory): string | undefined {
   //editing/viewing own
   if (props.artwork.user.id === authStore.user?.id) {
     const f = selectedArtworkUploadFiles[category].value
-    return f ? selectedArtworkUploadURLS[category].value :
-      (!stagedFileDeletions.value.has(category) ? fetchSelectedFile(category) : undefined)
+    return f
+      ? selectedArtworkUploadURLS[category].value
+      : !stagedFileDeletions.value.has(category)
+        ? fetchSelectedFile(category)
+        : undefined
   }
   //foreign
   return fetchSelectedFile(category)
 }
 
 const artworkImageSources = computed(() =>
-  Object.fromEntries(
-    fileCategories.map(category => [
-      category,
-      getArtworkImageSrc(category)
-    ])
-  )
+  Object.fromEntries(fileCategories.map((category) => [category, getArtworkImageSrc(category)])),
 )
 
 const aspectLockSize = (val: number | undefined) => {
@@ -145,9 +149,8 @@ const aspectLockSize = (val: number | undefined) => {
 const { open, onChange, onCancel } = useFileDialog({
   multiple: false,
   reset: true,
-  accept: 'image/png, image/jpeg, image/bmp, image/jpg'
+  accept: 'image/png, image/jpeg, image/bmp, image/jpg',
 })
-
 
 onChange((files) => {
   const file = files?.[0]
@@ -213,7 +216,10 @@ const commitArtworkUpdate = async () => {
     const changedFields = getChangedFields(toRaw(props.artwork), toRaw(editState.value.artwork))
     delete changedFields.user
     delete changedFields.files
-    artworkData = await artworkStore.updateArtwork(editState.value.artwork.id, loadFileUpdates(changedFields))
+    artworkData = await artworkStore.updateArtwork(
+      editState.value.artwork.id,
+      loadFileUpdates(changedFields),
+    )
   }
   if (artworkData) {
     if (artworkStore.statusCode === HttpStatusCode.Ok) {
@@ -241,7 +247,7 @@ const deleteArtwork = async () => {
 watch(
   () => props.artwork,
   () => resetArtwork(props.isCreatingNew),
-  { immediate: true }
+  { immediate: true },
 )
 const createdAtProxy = computed<Date | null>({
   get() {
@@ -250,7 +256,7 @@ const createdAtProxy = computed<Date | null>({
   },
   set(date: Date | null) {
     editState.value.artwork.created_at = date?.toISOString() ?? Date.now().toString()
-  }
+  },
 })
 
 const fullscreenImage = ref<string | undefined>(undefined)
@@ -264,7 +270,6 @@ function closeImageViewer() {
 }
 
 const isMobile = useMediaQuery('(max-width: 768px)')
-
 </script>
 
 <template>
@@ -276,18 +281,22 @@ const isMobile = useMediaQuery('(max-width: 768px)')
     </template>
   </v-dialog>
   <v-col v-if="artwork" :cols="!isMobile ? 4 : undefined" class="artwork-panel">
-
     <v-card class="pa-5 d-flex flex-column justify-space-between" height="80vh">
-
       <v-tabs v-model="subTab" align-tabs="center" height="40">
-        <v-tab v-if="canEditSelected || artworkImageSources[ArtworkFileCategory.PAINTING]"
-               :value="ArtworkFileCategory.PAINTING">Painting
+        <v-tab
+          v-if="canEditSelected || artworkImageSources[ArtworkFileCategory.PAINTING]"
+          :value="ArtworkFileCategory.PAINTING"
+          >Painting
         </v-tab>
-        <v-tab v-if="canEditSelected || artworkImageSources[ArtworkFileCategory.STUDY]"
-               :value="ArtworkFileCategory.STUDY">Study
+        <v-tab
+          v-if="canEditSelected || artworkImageSources[ArtworkFileCategory.STUDY]"
+          :value="ArtworkFileCategory.STUDY"
+          >Study
         </v-tab>
-        <v-tab v-if="canEditSelected || artworkImageSources[ArtworkFileCategory.SKETCH]"
-               :value="ArtworkFileCategory.SKETCH">Sketch
+        <v-tab
+          v-if="canEditSelected || artworkImageSources[ArtworkFileCategory.SKETCH]"
+          :value="ArtworkFileCategory.SKETCH"
+          >Sketch
         </v-tab>
       </v-tabs>
       <div class="scroll-area">
@@ -320,31 +329,52 @@ const isMobile = useMediaQuery('(max-width: 768px)')
                 @click="resetArtwork(true)"
               >
               </v-btn>
-              <v-btn class="description-edit-btn" v-if="canEditSelected" icon @click="() =>
-                     {if (!isEditMode) resetArtwork(true);
-                      triggerFilePicker(index)}">
+              <v-btn
+                class="description-edit-btn"
+                v-if="canEditSelected"
+                icon
+                @click="
+                  () => {
+                    if (!isEditMode) resetArtwork(true)
+                    triggerFilePicker(index)
+                  }
+                "
+              >
                 <v-icon :icon="mdiBrush" />
               </v-btn>
               <v-btn
                 class="description-edit-btn"
                 v-if="canEditSelected"
                 icon
-                @click="() =>
-                     {if (!isEditMode) resetArtwork(true);
-                       stageFileDelete(category)}">
+                @click="
+                  () => {
+                    if (!isEditMode) resetArtwork(true)
+                    stageFileDelete(category)
+                  }
+                "
+              >
                 <v-icon :icon="mdiDeleteCircle" />
               </v-btn>
             </div>
             <div v-else class="image-buttons" v-if="canEditSelected">
-              <v-btn class="description-edit-btn" icon @click="() =>
-                     {if (!isEditMode) resetArtwork(true);
-                      triggerFilePicker(index)}">
+              <v-btn
+                class="description-edit-btn"
+                icon
+                @click="
+                  () => {
+                    if (!isEditMode) resetArtwork(true)
+                    triggerFilePicker(index)
+                  }
+                "
+              >
                 <v-icon :icon="mdiBrush" />
               </v-btn>
-              <v-btn class="description-edit-btn"
-                     v-if="!isCreatingNew && isEditMode && stagedFilePresent(category)"
-                     icon
-                     @click="undoStageFileDelete(category)">
+              <v-btn
+                class="description-edit-btn"
+                v-if="!isCreatingNew && isEditMode && stagedFilePresent(category)"
+                icon
+                @click="undoStageFileDelete(category)"
+              >
                 <v-icon :icon="mdiUndo" />
               </v-btn>
             </div>
@@ -356,12 +386,18 @@ const isMobile = useMediaQuery('(max-width: 768px)')
         <!-- Edit Mode -->
         <template v-if="isEditMode && editState.artwork">
           <div class="description-edit-container mb-4">
-            <v-btn v-if="!isCreatingNew" @click="resetArtwork(false)"
-                   class="flip-horizontal description-edit-btn opacity-70"
-                   :icon="mdiLocationExit" />
-            <v-btn v-if="!isCreatingNew" @click="deleteArtwork"
-                   class="description-edit-btn opacity-70"
-                   :icon="mdiDeleteForever" />
+            <v-btn
+              v-if="!isCreatingNew"
+              @click="resetArtwork(false)"
+              class="flip-horizontal description-edit-btn opacity-70"
+              :icon="mdiLocationExit"
+            />
+            <v-btn
+              v-if="!isCreatingNew"
+              @click="deleteArtwork"
+              class="description-edit-btn opacity-70"
+              :icon="mdiDeleteForever"
+            />
             <v-btn
               v-if="isEditMode"
               icon
@@ -369,18 +405,35 @@ const isMobile = useMediaQuery('(max-width: 768px)')
               :disabled="!isModifiedArtwork"
               @click="commitArtworkUpdate"
             >
-              <v-icon :icon="computed(()=> isCreatingNew?mdiUpload:mdiCheckBold).value"
-                      class="update-icon-btn" />
+              <v-icon
+                :icon="computed(() => (isCreatingNew ? mdiUpload : mdiCheckBold)).value"
+                class="update-icon-btn"
+              />
             </v-btn>
           </div>
           <v-text-field v-model="editState.artwork.title" label="Title" />
 
-          <v-autocomplete v-model="editState.artwork.style" :items="filterdb.styles"
-                          item-title="label" item-value="value" label="Style" />
-          <v-autocomplete v-model="editState.artwork.genre" :items="filterdb.genres"
-                          item-title="label" item-value="value" label="Genre" />
-          <v-autocomplete v-model="editState.artwork.media" :items="filterdb.media"
-                          item-title="label" item-value="value" label="Media" />
+          <v-autocomplete
+            v-model="editState.artwork.style"
+            :items="filterdb.styles"
+            item-title="label"
+            item-value="value"
+            label="Style"
+          />
+          <v-autocomplete
+            v-model="editState.artwork.genre"
+            :items="filterdb.genres"
+            item-title="label"
+            item-value="value"
+            label="Genre"
+          />
+          <v-autocomplete
+            v-model="editState.artwork.media"
+            :items="filterdb.media"
+            item-title="label"
+            item-value="value"
+            label="Media"
+          />
 
           <v-row class="align-top justify-center" dense>
             <v-col cols="3">
@@ -392,8 +445,16 @@ const isMobile = useMediaQuery('(max-width: 768px)')
               />
             </v-col>
             <v-col cols="1" class="justify-center">
-              <v-btn icon variant="text"
-                     @click="() => { aspectLocked = !aspectLocked; if (aspectLocked) aspectLockSize(editState.artwork.parameters.w) }">
+              <v-btn
+                icon
+                variant="text"
+                @click="
+                  () => {
+                    aspectLocked = !aspectLocked
+                    if (aspectLocked) aspectLockSize(editState.artwork.parameters.w)
+                  }
+                "
+              >
                 <v-icon :icon="aspectLocked ? mdiLink : mdiLinkOff" />
               </v-btn>
             </v-col>
@@ -436,16 +497,17 @@ const isMobile = useMediaQuery('(max-width: 768px)')
             <div class="text-caption">
               Created At: {{ new Date(artwork.uploaded_at).toLocaleDateString() }}
             </div>
-            <div v-if="artwork.description" class="text-caption">Description: {{ artwork.description }}</div>
-            <div v-if="artwork.soundtracks?.side_a" class="text-caption">Soundtrack: {{ artwork.soundtracks }}</div>
+            <div v-if="artwork.description" class="text-caption">
+              Description: {{ artwork.description }}
+            </div>
+            <div v-if="artwork.soundtracks?.side_a" class="text-caption">
+              Soundtrack: {{ artwork.soundtracks }}
+            </div>
           </div>
         </template>
-
       </div>
-
     </v-card>
   </v-col>
-
 </template>
 
 <style scoped>
@@ -459,7 +521,6 @@ const isMobile = useMediaQuery('(max-width: 768px)')
   font-size: clamp(0.5rem, 2vw, 0.9rem);
   white-space: nowrap;
 }
-
 
 .scroll-area {
   overflow-y: auto;
@@ -496,7 +557,9 @@ const isMobile = useMediaQuery('(max-width: 768px)')
 /* Smooth enter/leave */
 .fade-expand-enter-active,
 .fade-expand-leave-active {
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
 }
 
 .fade-expand-enter-from,
@@ -531,7 +594,6 @@ const isMobile = useMediaQuery('(max-width: 768px)')
   object-fit: contain;
   transition: transform 0.8s ease;
 }
-
 
 .image-wrapper:hover .artwork-img {
   transform: scale(1.03);
@@ -603,6 +665,4 @@ const isMobile = useMediaQuery('(max-width: 768px)')
 .update-icon-btn {
   color: rgba(76, 175, 80, 0.82); /* medium bright green */
 }
-
-
 </style>

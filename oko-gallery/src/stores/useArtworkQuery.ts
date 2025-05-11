@@ -9,7 +9,7 @@ export function useArtworksInfinite(queryParams: Readonly<Ref<ArtworkSearchQuery
     queryKey: computed(() => ['artworks', queryParams.value]),
     queryFn: async ({ pageParam = 1 }) => {
       const response = await api.get<PaginatedResponse<Artwork>>('artworks/', {
-        params: { ...queryParams.value, page: pageParam }
+        params: { ...queryParams.value, page: pageParam },
       })
       return response.data
     },
@@ -21,8 +21,6 @@ export function useArtworksInfinite(queryParams: Readonly<Ref<ArtworkSearchQuery
       return !firstPage.previous ? undefined : firstPageParam - 1
     },
     staleTime: 1000 * 60 * 30, // 1 hour = how long data is "fresh"
-    gcTime: 1000 * 60 * 60 // 1 hour
+    gcTime: 1000 * 60 * 60, // 1 hour
   })
 }
-
-

@@ -296,9 +296,9 @@ nav a.active::after {
   align-items: flex-start;
   text-align: left;
 }
+
 .user-menu-content {
-  opacity: 0.7;
-  background-color: rgba(1, 1, 1, 0)
+  background-color: rgba(1, 1, 1, 0);
 }
 
 /* Center the button */
@@ -314,7 +314,6 @@ nav a.active::after {
 
 .user-dropdown {
   text-align: left;
-  opacity: 0.95;
 }
 
 .user-dropdown .v-list-item-title {

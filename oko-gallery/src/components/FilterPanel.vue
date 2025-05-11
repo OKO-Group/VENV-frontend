@@ -3,12 +3,11 @@ import { ref } from 'vue'
 import { mdiChevronUp, mdiChevronDown, mdiFilter } from '@mdi/js'
 
 defineProps<{
-  filters: any,
-  filterdb: any,
-  artists: any,
+  filters: any
+  filterdb: any
+  artists: any
   enableUserFilter: boolean
 }>()
-
 
 const isExpanded = ref(false)
 </script>
@@ -17,10 +16,7 @@ const isExpanded = ref(false)
   <v-card class="filter-card d-flex flex-column align-center pa-2">
     <transition name="collapse">
       <div v-show="isExpanded" class="w-100">
-        <div
-          class="toggle-wrapper"
-          @click="isExpanded = !isExpanded"
-        >
+        <div class="toggle-wrapper" @click="isExpanded = !isExpanded">
           <v-icon class="mb-2 mt-2 text-center w-100">{{ mdiFilter }}</v-icon>
         </div>
         <v-autocomplete
@@ -28,7 +24,9 @@ const isExpanded = ref(false)
           :items="filterdb.styles"
           item-title="label"
           item-value="value"
-          multiple chips closable-chips
+          multiple
+          chips
+          closable-chips
           label="Style"
           variant="outlined"
           density="compact"
@@ -39,7 +37,9 @@ const isExpanded = ref(false)
           :items="filterdb.genres"
           item-title="label"
           item-value="value"
-          multiple chips closable-chips
+          multiple
+          chips
+          closable-chips
           label="Genre"
           variant="outlined"
           density="compact"
@@ -50,7 +50,9 @@ const isExpanded = ref(false)
           :items="filterdb.media"
           item-title="label"
           item-value="value"
-          multiple chips closable-chips
+          multiple
+          chips
+          closable-chips
           label="Media"
           variant="outlined"
           density="compact"
@@ -62,7 +64,8 @@ const isExpanded = ref(false)
           :items="artists"
           :item-title="(item) => `${item.first_name} ${item.last_name}`"
           item-value="id"
-          chips closable-chips
+          chips
+          closable-chips
           label="Artist"
           variant="outlined"
           density="compact"
@@ -71,17 +74,13 @@ const isExpanded = ref(false)
     </transition>
 
     <!-- Toggle Icon -->
-    <div
-      class="toggle-wrapper"
-      @click="isExpanded = !isExpanded"
-    >
+    <div class="toggle-wrapper" @click="isExpanded = !isExpanded">
       <v-icon>
         {{ isExpanded ? mdiChevronUp : mdiFilter }}
       </v-icon>
     </div>
   </v-card>
 </template>
-
 
 <style scoped>
 .filter-card {

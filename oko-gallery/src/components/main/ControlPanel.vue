@@ -18,24 +18,13 @@ function retractPanel() {
 <template>
   <div class="site-panel-wrapper" @mouseleave="retractPanel">
     <!-- Floating Toggle -->
-    <v-btn
-      icon
-      variant="tonal"
-      class="toggle-button"
-      color="grey-darken-3"
-      @click="togglePanel"
-    >
+    <v-btn icon variant="tonal" class="toggle-button" color="grey-darken-3" @click="togglePanel">
       <v-icon>{{ isExpanded ? mdiChevronLeft : mdiTune }}</v-icon>
     </v-btn>
 
     <!-- Panel -->
     <transition name="slide-fade">
-      <v-card
-        v-if="isExpanded"
-        class="panel-content pa-3"
-        elevation="10"
-        density="compact"
-      >
+      <v-card v-if="isExpanded" class="panel-content pa-3" elevation="10" density="compact">
         <div class="settings-header">SETTINGS</div>
 
         <v-switch
@@ -105,7 +94,6 @@ function retractPanel() {
   padding-bottom: 0px;
   font-weight: 300;
   letter-spacing: 0.04em;
-
 }
 
 /* Animations */
@@ -120,4 +108,3 @@ function retractPanel() {
   transform: translateX(-30px);
 }
 </style>
-

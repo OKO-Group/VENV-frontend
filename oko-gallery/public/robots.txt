@@ -38,3 +38,5 @@ Disallow: /
 
 User-Agent: omgilibot
 Disallow: /
+
+Sitemap: https://venv.co/sitemap.xml

@@ -4,19 +4,15 @@ import { Position } from '@vue-flow/core'
 import type { ArtistNodeData } from '@/utils/generate_artist_graph.ts'
 import { mdiEyeOutline } from '@mdi/js'
 
-
 const props = defineProps<NodeProps<ArtistNodeData>>()
-
 </script>
-
 
 <template>
   <div class="artist-node">
-      <img v-if="data.thumbnail" :src="data.thumbnail" alt="Avatar" class="avatar" />
+    <img v-if="data.thumbnail" :src="data.thumbnail" alt="Avatar" class="avatar" />
     <v-avatar v-else :icon="mdiEyeOutline"> </v-avatar>
   </div>
 </template>
-
 
 <style scoped>
 .artist-node {
@@ -34,5 +30,4 @@ const props = defineProps<NodeProps<ArtistNodeData>>()
   height: 100%;
   object-fit: cover;
 }
-
 </style>

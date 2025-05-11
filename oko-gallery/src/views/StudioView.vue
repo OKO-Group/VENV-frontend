@@ -12,7 +12,7 @@ import {
   type MFAInfo,
   type MFAListInfo,
   MFAMethod,
-  type SessionInfo
+  type SessionInfo,
 } from '@/types/auth.ts'
 import type { Level, RenderAs } from 'qrcode.vue'
 import QrcodeVue from 'qrcode.vue'
@@ -22,7 +22,7 @@ import {
   minLengthRule,
   passwordMinLengthRule,
   portfolioLinkRule,
-  requiredRule
+  requiredRule,
 } from '@/utils/validation.ts'
 import ReauthForm from '@/components/dialogs/ReauthForm.vue'
 import { useRouter } from 'vue-router'
@@ -56,7 +56,7 @@ const accActionDialog = ref({
   code: '',
   qrCode: '',
   error: false,
-  password: ''
+  password: '',
 })
 
 function isStep(step: AccountAction) {
@@ -70,7 +70,7 @@ function useDialog(dialog: AccountActionDialog) {
       if (!val && accActionDialog.value.show === dialog) {
         accActionDialog.value.show = AccountActionDialog.NULL
       }
-    }
+    },
   })
 }
 
@@ -79,9 +79,15 @@ const showDeleteAccountDialog = useDialog(AccountActionDialog.DELETE_ACCOUNT)
 const showMFADialog = useDialog(AccountActionDialog.MFA)
 const showLogoutDialog = useDialog(AccountActionDialog.LOGOUT_ALL)
 
-const resetDialog = async (dialog: AccountActionDialog, action: AccountAction, check_totp: boolean = true) => {
+const resetDialog = async (
+  dialog: AccountActionDialog,
+  action: AccountAction,
+  check_totp: boolean = true,
+) => {
   if (check_totp) {
-    accActionDialog.value.reauthMode = await authStore.checkTOTP() ? MFAMethod.TOTP : MFAMethod.PASSWORD
+    accActionDialog.value.reauthMode = (await authStore.checkTOTP())
+      ? MFAMethod.TOTP
+      : MFAMethod.PASSWORD
   }
   accActionDialog.value.show = dialog
   accActionDialog.value.step = action
@@ -94,7 +100,11 @@ const resetDialog = async (dialog: AccountActionDialog, action: AccountAction, c
   authStore.resetErrors()
 }
 
-const openDialog = async (dialog: AccountActionDialog, step: AccountAction, reauth: boolean = true) => {
+const openDialog = async (
+  dialog: AccountActionDialog,
+  step: AccountAction,
+  reauth: boolean = true,
+) => {
   if (reauth && authStore.requiresReAuth()) {
     accActionDialog.value.reAuthStep = step
     await resetDialog(dialog, AccountAction.REAUTH)
@@ -110,7 +120,7 @@ const closeDialog = async () => {
 const changePasswordPayload = ref<ChangePasswordPayload>({
   current_password: '',
   new_password: '',
-  new_password_confirm: ''
+  new_password_confirm: '',
 })
 
 const updateUserAccount = async (avatar: boolean = false) => {
@@ -185,7 +195,8 @@ const handleTOTPAction = async (method: MFAInfo['data']) => {
   const nextStep = isMfaActive ? AccountAction.MFA_DEACTIVATE : AccountAction.MFA_ACTIVATE
   accActionDialog.value.reAuthStep = nextStep
   if (!isMfaActive) await getTOTPSecret()
-  if (authStore.requiresReAuth()) { // if auth_timestamp older than 200 seconds -> request reauth
+  if (authStore.requiresReAuth()) {
+    // if auth_timestamp older than 200 seconds -> request reauth
     accActionDialog.value.step = AccountAction.REAUTH
   } else {
     accActionDialog.value.step = nextStep
@@ -222,21 +233,19 @@ const formatDate = (timestamp: number) => {
 }
 
 const codeErrorMessages = computed(() =>
-  accActionDialog.value.error ? [authStore.errors.code ?? 'Invalid code.'] : []
+  accActionDialog.value.error ? [authStore.errors.code ?? 'Invalid code.'] : [],
 )
-const matchPasswordRule =
-  () => changePasswordPayload.value.new_password === changePasswordPayload.value.new_password_confirm
-    || 'Passwords do not match.'
+const matchPasswordRule = () =>
+  changePasswordPayload.value.new_password === changePasswordPayload.value.new_password_confirm ||
+  'Passwords do not match.'
 
 const avatarSrc = computed(() => {
-    const pic = authStore.user?.profile_picture
-    return (pic && 'file_thumbnail' in pic ? pic.file_thumbnail : null) || undefined
-  }
-)
+  const pic = authStore.user?.profile_picture
+  return (pic && 'file_thumbnail' in pic ? pic.file_thumbnail : null) || undefined
+})
 const MAX_FILE_SIZE = 3 * 1024 * 1024 // 3MB
 
 const fileInput = ref<HTMLInputElement | null>(null)
-
 
 function triggerFilePicker() {
   fileInput.value?.click()
@@ -256,14 +265,11 @@ function onFileChange(e: Event) {
 
 const isMobile = useMediaQuery('(max-width: 768px)')
 
-
 //TODO UPLOAD button inside the v-img
 </script>
 
-
 <template>
   <StandardPage>
-
     <v-snackbar v-model="notificationBar.show" :timeout="notificationBar.timeout">
       {{ notificationBar.text }}
     </v-snackbar>
@@ -287,8 +293,8 @@ const isMobile = useMediaQuery('(max-width: 768px)')
         <v-card-actions>
           <v-spacer />
           <v-btn variant="text" @click="closeDialog">Cancel</v-btn>
-          <v-btn v-if="isStep(AccountAction.REAUTH)" color="green"
-                 @click="reauthenticateUser">OK
+          <v-btn v-if="isStep(AccountAction.REAUTH)" color="green" @click="reauthenticateUser"
+            >OK
           </v-btn>
           <v-btn
             v-if="isStep(AccountAction.DELETE_ACCOUNT)"
@@ -351,15 +357,16 @@ const isMobile = useMediaQuery('(max-width: 768px)')
         <v-card-actions>
           <v-spacer />
           <v-btn variant="text" @click="closeDialog">Cancel</v-btn>
-          <v-btn v-if="isStep(AccountAction.REAUTH)" color="green"
-                 @click="reauthenticateUser">OK
+          <v-btn v-if="isStep(AccountAction.REAUTH)" color="green" @click="reauthenticateUser"
+            >OK
           </v-btn>
           <v-btn
             v-if="isStep(AccountAction.CHANGE_PASSWORD)"
             color="green"
             variant="outlined"
             :disabled="!valid"
-            @click="updateUserPassword">
+            @click="updateUserPassword"
+          >
             Update
           </v-btn>
           <p v-if="authStore.errors.error" class="text-error">{{ authStore.errors.error }}</p>
@@ -368,32 +375,30 @@ const isMobile = useMediaQuery('(max-width: 768px)')
     </v-dialog>
 
     <v-dialog v-model="showMFADialog" max-width="500" autofocus>
-      <v-card class="mx-auto"
-              min-width="500">
+      <v-card class="mx-auto" min-width="500">
         <v-card-title>Two-Factor Authentication</v-card-title>
         <v-card-text>
           <!-- Step 1: List of methods -->
           <div v-if="isStep(AccountAction.MFA_INIT)">
             <p>Select an authentication method:</p>
 
-            <v-list density="compact" lines="three"
-                    style="background-color: #e7e6e6;"
-            >
+            <v-list density="compact" lines="three" style="background-color: #e7e6e6">
               <v-list-item
                 v-for="method in authStore.twoFAs?.data || []"
                 :key="method.type"
                 class="pa-3"
-                style="background-color: #f9f9f9; border-radius: 4px; margin-bottom: 10px;"
+                style="background-color: #f9f9f9; border-radius: 4px; margin-bottom: 10px"
               >
                 <v-list-item-title class="font-weight-medium">
                   {{ method.type.toUpperCase() }} (Authenticator App)
                 </v-list-item-title>
 
                 <v-list-item-subtitle class="text-caption text-grey-darken-1 font-italic mt-1">
-                  Created: {{ method.created_at ? formatDate(method.created_at) : 'N/A' }}<br>
-                  Last used: {{ method.last_used_at ? formatDate(method.last_used_at) : 'N/A' }}<br>
-                  Status: <strong>{{ isMFAMethodActive(method.type) ? 'Active' : 'Inactive'
-                  }}</strong>
+                  Created: {{ method.created_at ? formatDate(method.created_at) : 'N/A' }}<br />
+                  Last used: {{ method.last_used_at ? formatDate(method.last_used_at) : 'N/A'
+                  }}<br />
+                  Status:
+                  <strong>{{ isMFAMethodActive(method.type) ? 'Active' : 'Inactive' }}</strong>
                 </v-list-item-subtitle>
                 <template v-slot:append class="mt-4">
                   <v-btn
@@ -415,9 +420,7 @@ const isMobile = useMediaQuery('(max-width: 768px)')
           </div>
           <!-- Step 2: TOTP Activation or Deactivation -->
           <div v-else-if="isStep(AccountAction.MFA_ACTIVATE)">
-            <p>
-              Scan the QR code with your authenticator app and enter the code below:
-            </p>
+            <p>Scan the QR code with your authenticator app and enter the code below:</p>
             <div class="text-center mb-4">
               <qrcode-vue
                 :value="accActionDialog.qrCode"
@@ -429,7 +432,10 @@ const isMobile = useMediaQuery('(max-width: 768px)')
                 v-model="accActionDialog.code"
                 :rules="[requiredRule]"
                 :error="accActionDialog.error"
-                :length="6" outlined required autofocus
+                :length="6"
+                outlined
+                required
+                autofocus
                 :error-messages="codeErrorMessages"
                 @update:modelValue="accActionDialog.error = false"
               />
@@ -439,17 +445,20 @@ const isMobile = useMediaQuery('(max-width: 768px)')
             <p>You are about to deactivate Two-Factor Authentication.</p>
             <p>Are you sure?</p>
           </div>
-          <p v-if="authStore.errors.error"> {{ authStore.errors.error }}</p>
-
+          <p v-if="authStore.errors.error">{{ authStore.errors.error }}</p>
         </v-card-text>
         <v-card-actions>
           <v-spacer />
           <v-btn variant="text" @click="closeDialog">Cancel</v-btn>
-          <v-btn v-if="isStep(AccountAction.REAUTH)" color="green"
-                 @click="reauthenticateUser">OK
+          <v-btn v-if="isStep(AccountAction.REAUTH)" color="green" @click="reauthenticateUser"
+            >OK
           </v-btn>
           <v-btn
-            v-if="[AccountAction.MFA_ACTIVATE, AccountAction.MFA_DEACTIVATE].includes(accActionDialog.step)"
+            v-if="
+              [AccountAction.MFA_ACTIVATE, AccountAction.MFA_DEACTIVATE].includes(
+                accActionDialog.step,
+              )
+            "
             :color="isStep(AccountAction.MFA_DEACTIVATE) ? 'red' : 'green'"
             variant="outlined"
             @click="handleTOTPAuth"
@@ -461,19 +470,18 @@ const isMobile = useMediaQuery('(max-width: 768px)')
     </v-dialog>
 
     <v-dialog v-model="showLogoutDialog" width="600">
-      <v-card class="d-flex mx-auto justify-center"
-              width="600">
+      <v-card class="d-flex mx-auto justify-center" width="600">
         <v-card-title>DEVICE SESSIONS</v-card-title>
         <v-card-text>
           <!-- Step 1: List of methods -->
           <div v-if="isStep(AccountAction.LOGOUT_ALL)">
             <p>Manage sessions</p>
-            <v-list lines="three" style="background-color: #e7e6e6;">
+            <v-list lines="three" style="background-color: #e7e6e6">
               <v-list-item
                 v-for="session in authStore.sessions?.data || []"
                 :key="session.id"
                 class="pa-3"
-                style="background-color: #f9f9f9; border-radius: 4px; margin-bottom: 10px;"
+                style="background-color: #f9f9f9; border-radius: 4px; margin-bottom: 10px"
               >
                 <v-list-item-title class="font-weight-medium">
                   {{ session.user_agent.substring(0, 50) }} ...
@@ -485,14 +493,11 @@ const isMobile = useMediaQuery('(max-width: 768px)')
                       }}<br />
                       Last used:
                       {{ session.last_used_at ? formatDate(session.last_used_at) : 'N/A' }}<br />
-                      IP: {{ session.ip }} |
-                      Current: <strong>{{ session.is_current ? 'Yes' : 'No' }}</strong>
+                      IP: {{ session.ip }} | Current:
+                      <strong>{{ session.is_current ? 'Yes' : 'No' }}</strong>
                     </v-col>
-                    <v-col class="d-flex pa-1  align-end justify-end">
-                      <v-btn
-                        color="red"
-                        variant="outlined"
-                        @click="logoutSession(session)">
+                    <v-col class="d-flex pa-1 align-end justify-end">
+                      <v-btn color="red" variant="outlined" @click="logoutSession(session)">
                         Logout
                       </v-btn>
                     </v-col>
@@ -509,172 +514,212 @@ const isMobile = useMediaQuery('(max-width: 768px)')
       </v-card>
     </v-dialog>
 
-      <!-- Fixed Full-Width Tabs -->
-      <v-tabs
-        v-model="tab"
-        color="black"
-        align-tabs="center"
-        height="50"
-        class="main-tabs"
-      >
-        <v-tab :value="1">Gallery</v-tab>
-        <v-tab :value="2">Profile</v-tab>
-      </v-tabs>
-      <v-tabs-window v-model="tab" class="tabs-window">
-        <!-- GALLERY TAB -->
-        <v-tabs-window-item :value="1" class="tabs-window-item">
-          <v-container class="pa-1 gallery-container" fluid>
+    <!-- Fixed Full-Width Tabs -->
+    <v-tabs v-model="tab" color="black" align-tabs="center" height="50" class="main-tabs">
+      <v-tab :value="1">Gallery</v-tab>
+      <v-tab :value="2">Profile</v-tab>
+    </v-tabs>
+    <v-tabs-window v-model="tab" class="tabs-window">
+      <!-- GALLERY TAB -->
+      <v-tabs-window-item :value="1" class="tabs-window-item">
+        <v-container class="pa-1 gallery-container" fluid>
+          <SearchEngine :style="{ padding: isMobile ? 0 : 4 }" use-own-artworks show-upload />
+        </v-container>
+      </v-tabs-window-item>
+      <v-tabs-window-item :value="2" class="tabs-window-item">
+        <div class="tab-scroll-content">
+          <v-container class="pa-6" fluid>
+            <v-row>
+              <v-col cols="12" md="6">
+                <h3>
+                  <v-icon :icon="mdiAccount" size="20"></v-icon>
+                  PROFILE
+                </h3>
+                <v-divider class="mt-1"></v-divider>
+                <v-confirm-edit
+                  v-if="authStore.user"
+                  ok-text="UPDATE"
+                  cancel-text="RESET"
+                  v-model="authStore.user"
+                  @save="() => updateUserAccount()"
+                >
+                  <template v-slot:default="{ model: proxy, actions }">
+                    <div class="d-flex flex-column mt-4" style="align-items: center">
+                      <input
+                        ref="fileInput"
+                        type="file"
+                        accept="image/png, image/jpeg, image/bmp, image/jpg"
+                        style="display: none"
+                        @change="onFileChange"
+                      />
+                      <!-- Clickable avatar card -->
+                      <v-card
+                        @click="triggerFilePicker"
+                        class="pa-4 mb-6 avatar-card"
+                        elevation="10"
+                      >
+                        <v-hover v-slot="{ isHovering, props }">
+                          <v-avatar size="200" class="avatar-hover" v-bind="props">
+                            <img
+                              v-if="avatarSrc"
+                              :src="avatarSrc"
+                              alt="avatar"
+                              class="profile-img"
+                              width="200"
+                            />
+                            <v-icon v-else size="133">{{ mdiEyeOutline }}</v-icon>
+                            <v-fade-transition>
+                              <div
+                                v-if="isHovering"
+                                class="avatar-overlay d-flex align-center justify-center"
+                              >
+                                <v-icon size="48" color="white">{{ mdiCamera }}</v-icon>
+                              </div>
+                            </v-fade-transition>
+                          </v-avatar>
+                        </v-hover>
+                      </v-card>
+                    </div>
+                    <v-text-field
+                      density="compact"
+                      label="Username"
+                      :model-value="authStore.user.username"
+                      disabled
+                    />
+                    <v-text-field
+                      density="compact"
+                      label="Email"
+                      :model-value="authStore.user.email"
+                      disabled
+                    />
+                    <v-text-field
+                      density="compact"
+                      label="First Name"
+                      v-model="proxy.value.first_name"
+                      :rules="[minLengthRule]"
+                    />
+                    <v-text-field
+                      density="compact"
+                      label="Last Name"
+                      v-model="proxy.value.last_name"
+                      :rules="[minLengthRule]"
+                    />
+                    <v-textarea label="Biography" v-model="proxy.value.biography" />
+                    <v-sheet
+                      class="country-select-wrapper pa-2 mb-4"
+                      style="width: 380px"
+                      elevation="1"
+                    >
+                      <country-select
+                        v-model="proxy.value.location"
+                        :country="proxy.value.location"
+                        placeholder="Location"
+                        topCountry="DE"
+                        countryName
+                        class="country-select"
+                      />
+                    </v-sheet>
+                    <v-text-field
+                      :rules="[requiredRule, portfolioLinkRule]"
+                      label="Portfolio Link"
+                      v-model="proxy.value.portfolio_link"
+                      @blur="proxy.value.portfolio_link = ensureHttp(proxy.value.portfolio_link)"
+                    />
+                    <v-switch
+                      label="Account Visible"
+                      color="black"
+                      v-model="proxy.value.is_visible"
+                    />
+                    <div class="d-flex justify-end gap-1">
+                      <component :is="actions" variant="outlined"></component>
+                    </div>
+                  </template>
+                </v-confirm-edit>
+              </v-col>
 
-          <SearchEngine :style="{padding: isMobile ? 0 : 4}" use-own-artworks show-upload />
-
-          </v-container>
-        </v-tabs-window-item>
-        <v-tabs-window-item :value="2" class="tabs-window-item">
-          <div class="tab-scroll-content">
-            <v-container class="pa-6" fluid>
-              <v-row>
-                <v-col cols="12" md="6">
+              <v-col cols="12" md="6" class="d-flex flex-column">
+                <div>
                   <h3>
-                    <v-icon :icon="mdiAccount" size="20"></v-icon>
-                    PROFILE
+                    <v-icon :icon="mdiSecurity" size="20"></v-icon>
+                    PASSWORD & SECURITY
                   </h3>
                   <v-divider class="mt-1"></v-divider>
-                  <v-confirm-edit v-if="authStore.user" ok-text="UPDATE" cancel-text="RESET"
-                                  v-model="authStore.user" @save="() => updateUserAccount()">
-                    <template v-slot:default="{ model: proxy, actions }">
-
-                      <div class="d-flex flex-column mt-4" style="align-items:center">
-                        <input
-                          ref="fileInput"
-                          type="file"
-                          accept="image/png, image/jpeg, image/bmp, image/jpg"
-                          style="display: none"
-                          @change="onFileChange"
-                        />
-                        <!-- Clickable avatar card -->
-                        <v-card @click="triggerFilePicker" class="pa-4 mb-6 avatar-card"
-                                elevation="10">
-                          <v-hover v-slot="{ isHovering, props }">
-                            <v-avatar
-                              size="200"
-                              class="avatar-hover"
-                              v-bind="props"
-                            >
-                              <img
-                                v-if="avatarSrc"
-                                :src="avatarSrc"
-                                alt="avatar"
-                                class="profile-img"
-                                width="200"
-                              />
-                              <v-icon v-else size="133">{{ mdiEyeOutline }}</v-icon>
-                              <v-fade-transition>
-                                <div
-                                  v-if="isHovering"
-                                  class="avatar-overlay d-flex align-center justify-center"
-                                >
-                                  <v-icon size="48" color="white">{{ mdiCamera }}</v-icon>
-                                </div>
-                              </v-fade-transition>
-                            </v-avatar>
-                          </v-hover>
-                        </v-card>
-                      </div>
-                      <v-text-field density="compact" label="Username"
-                                    :model-value="authStore.user.username" disabled />
-                      <v-text-field density="compact" label="Email"
-                                    :model-value="authStore.user.email" disabled />
-                      <v-text-field density="compact" label="First Name"
-                                    v-model="proxy.value.first_name" :rules="[minLengthRule]" />
-                      <v-text-field density="compact" label="Last Name"
-                                    v-model="proxy.value.last_name" :rules="[minLengthRule]" />
-                      <v-textarea label="Biography"
-                                  v-model="proxy.value.biography" />
-                      <v-sheet class="country-select-wrapper pa-2 mb-4" style="width: 380px"
-                               elevation="1">
-                        <country-select
-                          v-model="proxy.value.location"
-                          :country="proxy.value.location"
-                          placeholder="Location"
-                          topCountry="DE"
-                          countryName
-                          class="country-select"
-                        />
-                      </v-sheet>
-                      <v-text-field :rules="[requiredRule, portfolioLinkRule]"
-                                    label="Portfolio Link"
-                                    v-model="proxy.value.portfolio_link"
-                                    @blur="proxy.value.portfolio_link = ensureHttp(proxy.value.portfolio_link)"
-                      />
-                      <v-switch
-                        label="Account Visible"
-                        color="black"
-                        v-model="proxy.value.is_visible"
-                      />
-                      <div class="d-flex justify-end gap-1 ">
-                        <component :is="actions" variant="outlined"></component>
-                      </div>
-                    </template>
-                  </v-confirm-edit>
-
-                </v-col>
-
-                <v-col cols="12" md="6" class="d-flex flex-column">
                   <div>
-                    <h3>
-                      <v-icon :icon="mdiSecurity" size="20"></v-icon>
-                      PASSWORD & SECURITY
-                    </h3>
-                    <v-divider class="mt-1"></v-divider>
-                    <div>
-                      <v-btn color="cyan" variant="outlined" class="mt-3" style="width: 260px"
-                             @click="openDialog(AccountActionDialog.MFA, AccountAction.MFA_INIT)">
-                        Two-Factor Authentication
-                      </v-btn>
-                    </div>
-                    <div>
-                      <v-btn color="#DAA520	" variant="outlined" class="mt-3 self-start"
-                             style="width: 260px"
-                             @click="openDialog(AccountActionDialog.CHANGE_PASSWORD, AccountAction.CHANGE_PASSWORD)">
-                        Change password
-                      </v-btn>
-                    </div>
-                    <div>
-                      <v-btn color="black" variant="outlined" class="mt-3 mb-10 self-start"
-                             style="width: 260px"
-                             @click="() => {
-                               authStore.listActiveSessions();
-                               openDialog(AccountActionDialog.LOGOUT_ALL, AccountAction.LOGOUT_ALL, false)
-                             }">
-                        Logout sessions
-                      </v-btn>
-                    </div>
-                  </div>
-                  <div>
-                    <h3>
-                      <v-icon :icon="mdiEyeSettings" size="20"></v-icon>
-                      MANAGEMENT
-                    </h3>
-                    <v-divider class="mt-1"></v-divider>
-                    <v-btn color="red" variant="outlined" class="mt-3"
-                           style="width: 260px"
-                           @click="openDialog(AccountActionDialog.DELETE_ACCOUNT,
-                           AccountAction.DELETE_ACCOUNT)">
-                      Delete Account
+                    <v-btn
+                      color="cyan"
+                      variant="outlined"
+                      class="mt-3"
+                      style="width: 260px"
+                      @click="openDialog(AccountActionDialog.MFA, AccountAction.MFA_INIT)"
+                    >
+                      Two-Factor Authentication
                     </v-btn>
                   </div>
-                </v-col>
-              </v-row>
-            </v-container>
-          </div>
-        </v-tabs-window-item>
-      </v-tabs-window>
+                  <div>
+                    <v-btn
+                      color="#DAA520	"
+                      variant="outlined"
+                      class="mt-3 self-start"
+                      style="width: 260px"
+                      @click="
+                        openDialog(
+                          AccountActionDialog.CHANGE_PASSWORD,
+                          AccountAction.CHANGE_PASSWORD,
+                        )
+                      "
+                    >
+                      Change password
+                    </v-btn>
+                  </div>
+                  <div>
+                    <v-btn
+                      color="black"
+                      variant="outlined"
+                      class="mt-3 mb-10 self-start"
+                      style="width: 260px"
+                      @click="
+                        () => {
+                          authStore.listActiveSessions()
+                          openDialog(
+                            AccountActionDialog.LOGOUT_ALL,
+                            AccountAction.LOGOUT_ALL,
+                            false,
+                          )
+                        }
+                      "
+                    >
+                      Logout sessions
+                    </v-btn>
+                  </div>
+                </div>
+                <div>
+                  <h3>
+                    <v-icon :icon="mdiEyeSettings" size="20"></v-icon>
+                    MANAGEMENT
+                  </h3>
+                  <v-divider class="mt-1"></v-divider>
+                  <v-btn
+                    color="red"
+                    variant="outlined"
+                    class="mt-3"
+                    style="width: 260px"
+                    @click="
+                      openDialog(AccountActionDialog.DELETE_ACCOUNT, AccountAction.DELETE_ACCOUNT)
+                    "
+                  >
+                    Delete Account
+                  </v-btn>
+                </div>
+              </v-col>
+            </v-row>
+          </v-container>
+        </div>
+      </v-tabs-window-item>
+    </v-tabs-window>
   </StandardPage>
-
 </template>
 
 <style scoped>
-
 .main-tabs {
   border-bottom: 1px solid #ccc;
   justify-content: center;
@@ -772,7 +817,6 @@ const isMobile = useMediaQuery('(max-width: 768px)')
   display: none;
 }
 
-
 .tab-scroll-content {
   flex: 1;
   overflow-y: auto;
@@ -790,7 +834,7 @@ const isMobile = useMediaQuery('(max-width: 768px)')
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  position: absolute
+  position: absolute;
 }
 
 .text-grey {
@@ -823,5 +867,4 @@ const isMobile = useMediaQuery('(max-width: 768px)')
 .v-list-item:hover {
   background-color: #dcdcdc !important;
 }
-
 </style>

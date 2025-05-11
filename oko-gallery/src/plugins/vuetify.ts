@@ -13,49 +13,48 @@ const myCustomTheme: ThemeDefinition = {
     success: '#4CAF50',
     warning: '#FB8C00',
     error: '#D32F2F',
-    info: '#2196F3'
+    info: '#2196F3',
   },
   variables: {
-    'font-family': '\'Lato\', sans-serif'
-  }
+    'font-family': "'Lato', sans-serif",
+  },
 }
 
 const vuetify = createVuetify({
   theme: {
     defaultTheme: 'myCustomTheme',
     themes: {
-      myCustomTheme
-    }
+      myCustomTheme,
+    },
   },
   defaults: {
     VTextField: {
       variant: 'solo-filled',
-      density: 'compact'
+      density: 'compact',
     },
     VTextarea: {
-      variant: 'solo-filled'
+      variant: 'solo-filled',
     },
     VAutocomplete: {
       variant: 'solo-filled',
       density: 'compact',
       menuProps: {
         maxWidth: '100%',
-        contentClass: 'autocomplete-dropdown'
+        contentClass: 'autocomplete-dropdown',
       },
-      style: 'width: 100%'
-
-    }
+      style: 'width: 100%',
+    },
   },
   icons: {
     defaultSet: 'mdi',
     aliases,
     sets: {
-      mdi
-    }
+      mdi,
+    },
   },
   components: {
-    VDateInput
-  }
+    VDateInput,
+  },
 })
 
 export default vuetify

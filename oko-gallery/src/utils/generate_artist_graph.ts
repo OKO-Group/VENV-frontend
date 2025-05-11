@@ -12,11 +12,16 @@ export function useLayout() {
   const { findNode } = useVueFlow()
   const previousDirection = ref<Direction>('LR')
 
-  function layout(nodes: GraphNode[], edges: GraphEdge[], direction: Direction = 'LR',
-                  windowHeight = window.innerHeight, windowWidth = window.innerWidth) {
+  function layout(
+    nodes: GraphNode[],
+    edges: GraphEdge[],
+    direction: Direction = 'LR',
+    windowHeight = window.innerHeight,
+    windowWidth = window.innerWidth,
+  ) {
     const dagreGraph = new dagre.graphlib.Graph()
     dagreGraph.setDefaultEdgeLabel(() => ({}))
-    dagreGraph.setGraph({ rankdir: direction , nodesep: 50, ranksep: 100})
+    dagreGraph.setGraph({ rankdir: direction, nodesep: 50, ranksep: 100 })
 
     const isHorizontal = direction === 'LR'
     previousDirection.value = direction
@@ -25,7 +30,7 @@ export function useLayout() {
       const domNode = findNode(node.id)
       dagreGraph.setNode(node.id, {
         width: domNode?.dimensions.width || 100,
-        height: domNode?.dimensions.height || 100
+        height: domNode?.dimensions.height || 100,
       })
     }
 
@@ -36,15 +41,15 @@ export function useLayout() {
     dagre.layout(dagreGraph)
 
     // Get bounds of the graph
-    const graphNodes = nodes.map(n => dagreGraph.node(n.id))
-    const minX = Math.min(...graphNodes.map(n => n.x))
-    const maxX = Math.max(...graphNodes.map(n => n.x))
-    const minY = Math.min(...graphNodes.map(n => n.y))
-    const maxY = Math.max(...graphNodes.map(n => n.y))
+    const graphNodes = nodes.map((n) => dagreGraph.node(n.id))
+    const minX = Math.min(...graphNodes.map((n) => n.x))
+    const maxX = Math.max(...graphNodes.map((n) => n.x))
+    const minY = Math.min(...graphNodes.map((n) => n.y))
+    const maxY = Math.max(...graphNodes.map((n) => n.y))
 
     const graphCenter = {
       x: (minX + maxX) / 2,
-      y: (minY + maxY) / 2
+      y: (minY + maxY) / 2,
     }
 
     const viewportCenter = {
@@ -54,28 +59,26 @@ export function useLayout() {
     const dx = viewportCenter.x - graphCenter.x
     const dy = viewportCenter.y - graphCenter.y
 
-
     return nodes.map((node) => {
       const { x, y } = dagreGraph.node(node.id)
       return {
         ...node,
         position: { x: x + dx, y: y + dy },
         sourcePosition: isHorizontal ? Position.Right : Position.Bottom,
-        targetPosition: isHorizontal ? Position.Left : Position.Top
+        targetPosition: isHorizontal ? Position.Left : Position.Top,
       }
     })
   }
 
   return {
-    layout
+    layout,
   }
 }
 
-
 export interface ArtistNodeData extends User {
-  thumbnail: string,
-  label: string,
-  type: string,
+  thumbnail: string
+  label: string
+  type: string
 }
 
 export function generateArtistGraph(artists: User[]) {
@@ -90,12 +93,12 @@ export function generateArtistGraph(artists: User[]) {
     [...genreCounts.entries()]
       .sort((a, b) => b[1] - a[1])
       .slice(0, 5)
-      .map(([g]) => g)
+      .map(([g]) => g),
   )
 
   const scoredArtists = artists.map((a) => ({
     ...a,
-    score: a.genres.filter((g) => topGenres.has(g)).length
+    score: a.genres.filter((g) => topGenres.has(g)).length,
   }))
 
   const sorted = scoredArtists.sort((a, b) => b.score - a.score)
@@ -106,11 +109,12 @@ export function generateArtistGraph(artists: User[]) {
     data: {
       ...a,
       label: `${a.first_name} ${a.last_name}`,
-      thumbnail: (a.profile_picture && 'file_thumbnail' in a.profile_picture)
-        ? a.profile_picture.file_thumbnail
-        : undefined
+      thumbnail:
+        a.profile_picture && 'file_thumbnail' in a.profile_picture
+          ? a.profile_picture.file_thumbnail
+          : undefined,
     },
-    type: 'artistNode'
+    type: 'artistNode',
   }))
   const edges = []
   for (let i = 0; i < artists.length; i++) {
@@ -120,7 +124,7 @@ export function generateArtistGraph(artists: User[]) {
         edges.push({
           id: `e${artists[i].id}-${artists[j].id}`,
           source: artists[i].id.toString(),
-          target: artists[j].id.toString()
+          target: artists[j].id.toString(),
         })
       }
     }

@@ -13,9 +13,8 @@ const valid = ref(false)
 const mfa_authenticating = ref(false)
 const credentials = ref<LoginPayload>({
   email: '',
-  password: ''
+  password: '',
 })
-
 
 const login = async () => {
   if (!valid.value) return // Prevent submission if form is invalid
@@ -54,23 +53,40 @@ const clearError = (field: string) => {
       <v-card-title class="d-flex justify-center">LOGIN</v-card-title>
       <v-card-text>
         <v-form v-if="!mfa_authenticating" v-model="valid">
-          <v-text-field v-model="credentials.email" label="EMAIL" outlined required
-                        autocomplete="email"
-                        :rules="[requiredRule, emailRule]" @update:modelValue="clearError('email')"
-                        :error-messages="authStore.errors.email" />
-          <v-text-field v-model="credentials.password" label="PASSWORD" type="password" outlined
-                        required autocomplete="password"
-                        :rules="[requiredRule]" @update:modelValue="clearError('password')"
-                        :error-messages="authStore.errors.password" />
-          <v-btn :disabled="!valid" @click="login"
-                 :loading="authStore.loading" :icon="mdiLogin">
+          <v-text-field
+            v-model="credentials.email"
+            label="EMAIL"
+            outlined
+            required
+            autocomplete="email"
+            :rules="[requiredRule, emailRule]"
+            @update:modelValue="clearError('email')"
+            :error-messages="authStore.errors.email"
+          />
+          <v-text-field
+            v-model="credentials.password"
+            label="PASSWORD"
+            type="password"
+            outlined
+            required
+            autocomplete="password"
+            :rules="[requiredRule]"
+            @update:modelValue="clearError('password')"
+            :error-messages="authStore.errors.password"
+          />
+          <v-btn :disabled="!valid" @click="login" :loading="authStore.loading" :icon="mdiLogin">
           </v-btn>
         </v-form>
-        <v-form v-else v-model="valid" >
-          <p> 2FA CODE </p>
-          <v-otp-input v-model="credentials.password" :rules="[requiredRule]"
-                       :error-messages="[authStore.errors.error]"
-                       :length="6" outlined required autofocus
+        <v-form v-else v-model="valid">
+          <p>2FA CODE</p>
+          <v-otp-input
+            v-model="credentials.password"
+            :rules="[requiredRule]"
+            :error-messages="[authStore.errors.error]"
+            :length="6"
+            outlined
+            required
+            autofocus
           />
           <v-btn :icon="mdiLogin" @click="mfaLogin"></v-btn>
         </v-form>
@@ -85,9 +101,7 @@ const clearError = (field: string) => {
 </template>
 
 <style scoped>
-
-.login{
+.login {
   z-index: 100;
 }
-
 </style>

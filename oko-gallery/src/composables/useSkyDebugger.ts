@@ -1,13 +1,13 @@
 import { sunCfg } from '@/composables/useSunLighting.ts'
-import {GUI} from 'lil-gui'
+import { GUI } from 'lil-gui'
 
 import type { DirectionalLight } from 'three'
 function addOverride(
   gui: GUI,
   label: string,
-  config: { enabled: boolean, value: any },
+  config: { enabled: boolean; value: any },
   onChange?: (v: any) => void,
-  slider?: { min: number; max: number; step?: number }
+  slider?: { min: number; max: number; step?: number },
 ) {
   const folder = gui.addFolder(label)
   folder.add(config, 'enabled').name('Enable')
@@ -19,13 +19,11 @@ function addOverride(
   }
 
   if (onChange) {
-    valueController.onChange(v => {
+    valueController.onChange((v) => {
       if (config.enabled) onChange(v)
     })
   }
 }
-
-
 
 export function useSkyDebugger(sky: any, light: DirectionalLight, renderer: any) {
   const uniforms = sky.material.uniforms
@@ -36,12 +34,12 @@ export function useSkyDebugger(sky: any, light: DirectionalLight, renderer: any)
   addOverride(gui, 'Hour of Day', sunCfg.hourOverride, undefined, {
     min: 0,
     max: 23,
-    step: 1
+    step: 1,
   })
   addOverride(gui, 'Minute', sunCfg.minuteOverride, undefined, {
     min: 0,
     max: 59,
-    step: 1
+    step: 1,
   })
 
   // // Sky uniforms
@@ -72,4 +70,3 @@ export function useSkyDebugger(sky: any, light: DirectionalLight, renderer: any)
   // addOverride(gui, 'Elevation Override', sunLightingConfig.elevationOverride, undefined, { min: 0, max: 1, step: 0.01 })
   // addOverride(gui, 'Day Factor Override', sunLightingConfig.dayFactorOverride, undefined, { min: 0, max: 1, step: 0.01 })
 }
-

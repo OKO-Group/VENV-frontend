@@ -10,9 +10,11 @@ import {
   type MFAInfo,
   type MFAListInfo,
   MFAMethod,
-  type ResetPasswordRequestPayload, type SessionInfo, type SessionListInfo,
+  type ResetPasswordRequestPayload,
+  type SessionInfo,
+  type SessionListInfo,
   type SignupPayload,
-  type TOTPSecret
+  type TOTPSecret,
 } from '@/types/auth.ts'
 import { AxiosError, type AxiosResponse, HttpStatusCode } from 'axios'
 import { handleBadRequest, handleGenericError } from '@/utils/requests.ts'
@@ -22,8 +24,7 @@ import type { User } from '@/types/oko.ts'
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     id: null as number | null,
-    user: null as User
-      | null,
+    user: null as User | null,
     loading: false,
     errors: {} as Record<string, string>, // field-specific errors
     message: null as string | null, // message (info)
@@ -31,17 +32,17 @@ export const useAuthStore = defineStore('auth', {
     twoFAs: null as MFAListInfo | null,
     sessions: null as SessionListInfo | null,
     totp: null as MFAInfo | null,
-    authTimestamp: null as number | null
+    authTimestamp: null as number | null,
   }),
   persist: {
-    pick: ['id']
+    pick: ['id'],
   },
   getters: {
     hasTOTP: (state) => {
       if (!state.twoFAs) return false
       const mfa = state.twoFAs as MFAListInfo
       return mfa?.data?.some((m) => m.type === 'totp' && m.created_at)
-    }
+    },
   },
   actions: {
     resetErrors() {
@@ -54,13 +55,13 @@ export const useAuthStore = defineStore('auth', {
       return this.hasTOTP
     },
     requiresReAuth(): boolean {
-      return this.authTimestamp == null || ((new Date().getTime() / 1000) - this.authTimestamp > 200)
+      return this.authTimestamp == null || new Date().getTime() / 1000 - this.authTimestamp > 200
     },
     async isAuthenticated() {
       try {
         const response = await api.get('users/_allauth/browser/v1/auth/session')
         this.authTimestamp = response.data.data.methods.pop().at
-        this.id= response.data.data.user.id
+        this.id = response.data.data.user.id
       } catch (error) {
         console.log('Authentication check failed.')
         return false
@@ -96,34 +97,34 @@ export const useAuthStore = defineStore('auth', {
           switch (axiosError.response.status) {
             case HttpStatusCode.Unauthorized: {
               const err = axiosError.response as AxiosResponse<ErrorResponse>
-              for (let flow of err.data.data.flows) {
+              for (const flow of err.data.data.flows) {
                 if (flow.id === 'verify_email') {
                   this.statusCode = HttpStatusCode.Forbidden
-                  this.errors = { 'error': 'Pending email verification' }
+                  this.errors = { error: 'Pending email verification' }
                   return
                 } else if (flow.id === 'mfa_authenticate') {
                   this.statusCode = HttpStatusCode.Accepted
                   return
                 }
               }
-              this.errors = { 'error': 'Invalid credentials.' }
+              this.errors = { error: 'Invalid credentials.' }
               break
             }
             case HttpStatusCode.Forbidden: {
-              this.errors = { 'error': 'Account pending approval' }
+              this.errors = { error: 'Account pending approval' }
               break
             }
             case HttpStatusCode.BadRequest: {
               const err = axiosError.response as AxiosResponse<BadRequestResponse>
-              this.errors = { 'error': err.data.errors[0].message }
+              this.errors = { error: err.data.errors[0].message }
               break
             }
             default: {
-              this.errors = { 'error': 'Invalid credentials.' }
+              this.errors = { error: 'Invalid credentials.' }
             }
           }
         } else {
-          this.errors = { 'error': 'An unknown server error occurred,' }
+          this.errors = { error: 'An unknown server error occurred,' }
           this.statusCode = HttpStatusCode.InternalServerError
         }
       } finally {
@@ -153,7 +154,9 @@ export const useAuthStore = defineStore('auth', {
         if (method === MFAMethod.PASSWORD) {
           response = await api.post('users/_allauth/browser/v1/auth/reauthenticate', { password })
         } else {
-          response = await api.post('users/_allauth/browser/v1/auth/2fa/reauthenticate', { code: password })
+          response = await api.post('users/_allauth/browser/v1/auth/2fa/reauthenticate', {
+            code: password,
+          })
         }
         this.statusCode = response.status
         this.authTimestamp = response.data.data.methods.pop().at
@@ -168,20 +171,21 @@ export const useAuthStore = defineStore('auth', {
 
     async logout() {
       this.resetErrors()
-      try { //TODO complete this logic
+      try {
+        //TODO complete this logic
         const response = await api.delete('users/_allauth/browser/v1/auth/session')
         this.statusCode = response.status
-      } catch (error) {
-      }
+      } catch (error) {}
       this.user = null
     },
 
     async logoutSessions(sessions: SessionInfo['data'][]) {
       this.resetErrors()
       try {
-        const response = await api.delete('users/_allauth/browser/v1/auth/sessions',
-          { data: {sessions: sessions.map(s => s.id)} })
-        if (sessions.some(s => s.is_current)) {
+        const response = await api.delete('users/_allauth/browser/v1/auth/sessions', {
+          data: { sessions: sessions.map((s) => s.id) },
+        })
+        if (sessions.some((s) => s.is_current)) {
           this.$reset()
         }
         this.statusCode = response.status
@@ -209,13 +213,14 @@ export const useAuthStore = defineStore('auth', {
               this.errors = handleBadRequest(err.data.errors)
               break
             case HttpStatusCode.Unauthorized: //expected
-              this.message = 'Signup successful. Please confirm your email. Your account is pending approval.'
+              this.message =
+                'Signup successful. Please confirm your email. Your account is pending approval.'
               break
             default:
-              this.errors = { 'error': 'An unexpected error occurred.' }
+              this.errors = { error: 'An unexpected error occurred.' }
           }
         } else {
-          this.errors = { 'error': 'Network error. Please try again.' }
+          this.errors = { error: 'Network error. Please try again.' }
         }
       } finally {
         this.loading = false
@@ -226,7 +231,10 @@ export const useAuthStore = defineStore('auth', {
       this.resetErrors()
 
       try {
-        const response = await api.post('users/_allauth/browser/v1/auth/password/request', credentials)
+        const response = await api.post(
+          'users/_allauth/browser/v1/auth/password/request',
+          credentials,
+        )
         this.statusCode = response.status
       } catch (error) {
         const axiosError = error as AxiosError
@@ -234,16 +242,16 @@ export const useAuthStore = defineStore('auth', {
           switch (axiosError.response.status) {
             case HttpStatusCode.BadRequest: {
               const err = axiosError.response as AxiosResponse<BadRequestResponse>
-              this.errors = { 'error': err.data.errors[0].message }
+              this.errors = { error: err.data.errors[0].message }
               break
             }
             case HttpStatusCode.Unauthorized: {
-              this.errors = { 'error': 'Unauthorized' } //TODO check this
+              this.errors = { error: 'Unauthorized' } //TODO check this
               break
             }
           }
         } else {
-          this.errors = { 'error': 'An unknown server error occurred.' }
+          this.errors = { error: 'An unknown server error occurred.' }
         }
       }
     },
@@ -251,7 +259,7 @@ export const useAuthStore = defineStore('auth', {
       this.resetErrors()
       try {
         const response = await api.get(`users/_allauth/browser/v1/auth/password/reset`, {
-          headers: { 'X-Password-Reset-Key': key }
+          headers: { 'X-Password-Reset-Key': key },
         })
         this.statusCode = response.status
       } catch (error) {
@@ -260,23 +268,26 @@ export const useAuthStore = defineStore('auth', {
           switch (axiosError.response.status) {
             case HttpStatusCode.BadRequest: {
               const err = axiosError.response as AxiosResponse<BadRequestResponse>
-              this.errors = { 'error': err.data.errors[0].message }
+              this.errors = { error: err.data.errors[0].message }
               break
             }
             case HttpStatusCode.Conflict: {
-              this.errors = { 'error': 'No password reset flow pending.' }
+              this.errors = { error: 'No password reset flow pending.' }
               break
             }
           }
         } else {
-          this.errors = { 'error': 'An unknown server error occurred.' }
+          this.errors = { error: 'An unknown server error occurred.' }
         }
       }
     },
     async completePasswordRequest(credentials: CompletePasswordResetPayload) {
       this.resetErrors()
       try {
-        const response = await api.post('users/_allauth/browser/v1/auth/password/reset', credentials)
+        const response = await api.post(
+          'users/_allauth/browser/v1/auth/password/reset',
+          credentials,
+        )
         this.statusCode = response.status
         this.id = response.data.data.user.id
         await this.fetchUser()
@@ -286,24 +297,23 @@ export const useAuthStore = defineStore('auth', {
           switch (axiosError.response.status) {
             case HttpStatusCode.BadRequest: {
               const err = axiosError.response as AxiosResponse<BadRequestResponse>
-              this.errors = { 'error': err.data.errors[0].message }
+              this.errors = { error: err.data.errors[0].message }
               break
             }
             case HttpStatusCode.Unauthorized: {
               break
             }
             case HttpStatusCode.Conflict: {
-              this.errors = { 'error': 'Invalid password reset code or reset not pending.' }
+              this.errors = { error: 'Invalid password reset code or reset not pending.' }
               break
             }
           }
         } else {
-          this.errors = { 'error': 'An unknown server error occurred.' }
+          this.errors = { error: 'An unknown server error occurred.' }
         }
       }
     },
     async verifyEmail(credentials: ConfirmEmailPayload) {
-
       try {
         const response = await api.post(`users/_allauth/browser/v1/auth/email/verify`, credentials)
         this.statusCode = response.status
@@ -312,23 +322,24 @@ export const useAuthStore = defineStore('auth', {
         this.statusCode = axiosError.response?.status ?? 500
         if (axiosError.response) {
           switch (axiosError.response.status) {
-            case HttpStatusCode.Unauthorized: { //expected
+            case HttpStatusCode.Unauthorized: {
+              //expected
               this.message = 'Email verified successfully.'
               break
             }
             case HttpStatusCode.BadRequest: {
               const err = axiosError.response as AxiosResponse<BadRequestResponse>
-              this.errors = { 'error': err.data.errors[0].message }
+              this.errors = { error: err.data.errors[0].message }
               break
             }
             case HttpStatusCode.Conflict: {
-              this.errors = { 'error': 'No email verification  pending.' }
+              this.errors = { error: 'No email verification  pending.' }
               break
             }
           }
         } else {
           this.statusCode = 500
-          this.errors = { 'error': 'An unknown server error occurred.' }
+          this.errors = { error: 'An unknown server error occurred.' }
         }
       }
     },
@@ -338,7 +349,7 @@ export const useAuthStore = defineStore('auth', {
         const response = await api.patch(`users/artist/${this.id}/`, data, {
           headers: {
             'Content-Type': 'multipart/form-data',
-          }
+          },
         }) //TODO backend Location check for naughty users
         this.statusCode = response.status
         this.user = response.data
@@ -374,15 +385,15 @@ export const useAuthStore = defineStore('auth', {
     async listTwoFactorAuthenticators() {
       this.resetErrors()
       try {
-        const response: AxiosResponse<MFAListInfo> = await api.get(`users/_allauth/browser/v1/account/authenticators`)
+        const response: AxiosResponse<MFAListInfo> = await api.get(
+          `users/_allauth/browser/v1/account/authenticators`,
+        )
         this.statusCode = response.status
         this.twoFAs = response.data
         // populate twoFAs with available options if not active (absent)
-        const available_methods = [
-          { type: 'totp', last_used_at: null, created_at: null }
-        ]
+        const available_methods = [{ type: 'totp', last_used_at: null, created_at: null }]
         for (const method of available_methods) {
-          if (!this.twoFAs.data.find(totp => totp.type === method.type)) {
+          if (!this.twoFAs.data.find((totp) => totp.type === method.type)) {
             this.twoFAs.data.push(method)
           }
         }
@@ -395,7 +406,9 @@ export const useAuthStore = defineStore('auth', {
     async listActiveSessions() {
       this.resetErrors()
       try {
-        const response: AxiosResponse<SessionListInfo> = await api.get(`users/_allauth/browser/v1/auth/sessions`)
+        const response: AxiosResponse<SessionListInfo> = await api.get(
+          `users/_allauth/browser/v1/auth/sessions`,
+        )
         this.statusCode = response.status
         this.sessions = response.data
       } catch (error) {
@@ -424,7 +437,10 @@ export const useAuthStore = defineStore('auth', {
     async activateTOTPAuthenticator(code: string) {
       this.resetErrors()
       try {
-        const response: AxiosResponse<MFAInfo> = await api.post(`users/_allauth/browser/v1/account/authenticators/totp`, { code })
+        const response: AxiosResponse<MFAInfo> = await api.post(
+          `users/_allauth/browser/v1/account/authenticators/totp`,
+          { code },
+        )
         this.statusCode = response.status
         this.totp = response.data
       } catch (error) {
@@ -445,7 +461,6 @@ export const useAuthStore = defineStore('auth', {
         this.statusCode = statusCode
         this.errors = errors
       }
-    }
-  }
-
+    },
+  },
 })

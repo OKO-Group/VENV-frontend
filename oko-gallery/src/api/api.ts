@@ -1,6 +1,6 @@
-import axios from 'axios';
+import axios from 'axios'
 import Cookies from 'js-cookie'
-import {useAuthStore} from "@/stores/auth.ts";
+import { useAuthStore } from '@/stores/auth.ts'
 import type { User } from '@/types/oko.ts'
 
 const api = axios.create({
@@ -9,6 +9,6 @@ const api = axios.create({
   xsrfCookieName: 'csrftoken',
   xsrfHeaderName: 'X-CSRFTOKEN',
   withXSRFToken: true,
-});
+})
 
-export default api;
+export default api

@@ -1,0 +1,4 @@
+{
+  "include": ["/*"],
+  "exclude": ["/robots.txt", "/sitemap.xml"]
+}

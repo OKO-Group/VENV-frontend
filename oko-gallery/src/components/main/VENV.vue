@@ -2,7 +2,7 @@
 import { mdiClose } from '@mdi/js'
 
 defineProps<{
-  location: 'home' | 'about',
+  location: 'home' | 'about'
   closeHint: false
 }>()
 </script>
@@ -11,18 +11,21 @@ defineProps<{
   <div :class="['definition-wrapper', location]">
     <div class="definition-box">
       <div class="text-center">
-        <h1 class="definition-word">venv <span class="phonetic">/vɛnv/</span> <i>n.</i>
+        <h1 class="definition-word">
+          venv <span class="phonetic">/vɛnv/</span> <i>n.</i>
           <p class="definition-line">
-            <strong>1.</strong> Abbr. for <i>virtual environment</i>: an isolated digital space created for experimentation, system management, or creative projects.
+            <strong>1.</strong> Abbr. for <i>virtual environment</i>: an isolated digital space
+            created for experimentation, system management, or creative projects.
           </p>
         </h1>
 
         <p class="definition-line">
-          <strong>2.</strong> An evolving digital platform curating fine art, functioning as interactive repository and/or idling screensaver.
+          <strong>2.</strong> An evolving digital platform curating fine art, functioning as
+          interactive repository and/or idling screensaver.
         </p>
         <p class="definition-source">— VENV Manifesto, Founding Edition</p>
         <div v-if="closeHint">
-          <v-icon :icon="mdiClose"  />
+          <v-icon :icon="mdiClose" />
         </div>
       </div>
       <div class="text-right">

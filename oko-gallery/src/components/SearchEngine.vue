@@ -5,16 +5,18 @@ import {
   onBeforeMount,
   onMounted,
   ref,
-  shallowRef, useTemplateRef,
+  shallowRef,
+  useTemplateRef,
   watch,
-  watchEffect
+  watchEffect,
 } from 'vue'
 import {
   useDebounce,
   useDebounceFn,
-  useDraggable, useEventListener,
+  useDraggable,
+  useEventListener,
   useMediaQuery,
-  watchDebounced
+  watchDebounced,
 } from '@vueuse/core'
 import { useArtworkStore } from '@/stores/artworks'
 import { type Artwork, type ArtworkSearchQuery } from '@/types/oko'
@@ -29,11 +31,10 @@ import { fallbackArtworks } from '@/assets/fallbackArtworks.ts'
 //TODO remove automatic fetching on search field change
 
 const props = defineProps<{
-  showUpload?: boolean;
-  enableUserFilter?: boolean;
-  useOwnArtworks?: boolean;
+  showUpload?: boolean
+  enableUserFilter?: boolean
+  useOwnArtworks?: boolean
 }>()
-
 
 const route = useRoute()
 const router = useRouter()
@@ -41,22 +42,23 @@ const router = useRouter()
 const artworkStore = useArtworkStore()
 const authStore = useAuthStore()
 
-let selectedArtwork = ref<Artwork | null>(null)
-
+const selectedArtwork = ref<Artwork | null>(null)
 
 const filters = ref({
   style: [] as string[],
   genre: [] as string[],
   media: [] as string[],
-  user: null as number | null
+  user: null as number | null,
 })
 
 const allArtworks = shallowRef<Artwork[]>([])
 
-
-
 const queryUserId = computed(() => {
-  return props.useOwnArtworks ? authStore.user?.id : (props.enableUserFilter ? filters.value.user : null)
+  return props.useOwnArtworks
+    ? authStore.user?.id
+    : props.enableUserFilter
+      ? filters.value.user
+      : null
 })
 
 const querySource = computed(() => {
@@ -69,40 +71,35 @@ onMounted(() => {
   }
 })
 
-const computedQuery = useDebounce(computed<ArtworkSearchQuery>(() => ({
-  q: querySource.value,
-  style: filters.value.style.length ? filters.value.style.join(',') : null,
-  genre: filters.value.genre.length ? filters.value.genre.join(',') : null,
-  media: filters.value.media.length ? filters.value.media.join(',') : null,
-  user: queryUserId.value || null,
-  field_set: 'full'
-})), 700) // debounce query object by 700ms
-
+const computedQuery = useDebounce(
+  computed<ArtworkSearchQuery>(() => ({
+    q: querySource.value,
+    style: filters.value.style.length ? filters.value.style.join(',') : null,
+    genre: filters.value.genre.length ? filters.value.genre.join(',') : null,
+    media: filters.value.media.length ? filters.value.media.join(',') : null,
+    user: queryUserId.value || null,
+    field_set: 'full',
+  })),
+  700,
+) // debounce query object by 700ms
 
 const artworkManager = useArtworkQueryManager()
-const {
-  data,
-  fetchNextPage,
-  hasNextPage,
-  isFetchingNextPage,
-  isFetching,
-  refetch,
-} = artworkManager.query(computedQuery)
+const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching, refetch } =
+  artworkManager.query(computedQuery)
 
 const updateArtworks = useDebounceFn((newData) => {
   if (newData?.pages) {
-    allArtworks.value = newData.pages.flatMap(page => page.results)
+    allArtworks.value = newData.pages.flatMap((page) => page.results)
   }
 }, 150) // debounce delay in ms
 
-watchEffect( () => {
-    if (data.value) {
-      updateArtworks(data.value)
-    } else if (!isFetching.value) {
-      allArtworks.value = fallbackArtworks
-    }
+watchEffect(() => {
+  if (data.value) {
+    updateArtworks(data.value)
+  } else if (!isFetching.value) {
+    allArtworks.value = fallbackArtworks
   }
-)
+})
 
 onBeforeMount(() => {
   const q = route.query
@@ -110,7 +107,7 @@ onBeforeMount(() => {
     style: typeof q.style === 'string' ? q.style.split(',') : [],
     genre: typeof q.genre === 'string' ? q.genre.split(',') : [],
     media: typeof q.media === 'string' ? q.media.split(',') : [],
-    user: q.user ? Number(q.user) : null
+    user: q.user ? Number(q.user) : null,
   }
   // also update the search string
   const search = q.q
@@ -118,9 +115,6 @@ onBeforeMount(() => {
     artworkStore.search = search
   }
 })
-
-
-
 
 function updateQueryParams() {
   const query: Record<string, any> = {}
@@ -139,7 +133,7 @@ if (!props.useOwnArtworks) {
       updateQueryParams()
       selectedArtwork.value = null
     },
-    { debounce: 500, deep: true }
+    { debounce: 500, deep: true },
   )
 }
 
@@ -192,7 +186,6 @@ function handleArtworkDelete() {
 
 const isMobile = useMediaQuery('(max-width: 768px)')
 
-
 const artworkPanelRef = useTemplateRef<HTMLElement>('el')
 const panelEl = ref<HTMLElement | null>(null)
 
@@ -206,13 +199,12 @@ const handleTap = (e: TouchEvent | MouseEvent) => {
 onMounted(() => {
   useEventListener(panelEl, 'click', handleTap, { passive: true })
 })
-
 </script>
 
 <template>
   <v-container fluid>
     <!-- Mobile Layout: stacked vertically -->
-    <div v-if="isMobile" >
+    <div v-if="isMobile">
       <v-col>
         <FilterPanel
           v-if="!selectedArtwork"
@@ -237,20 +229,18 @@ onMounted(() => {
           @blur="handleBlur"
           @activate-search="activateSearch"
         />
-          <ArtworkPanel
-            v-if="selectedArtwork"
-            ref="panelEl"
-            :artwork="selectedArtwork"
-            :is-creating-new="isCreatingNew"
-            :filterdb="filterdb"
-            @update-artwork="handleArtworkUpdate"
-            @upload-artwork="handleArtworkUpload"
-            @delete-artwork="handleArtworkDelete"
-          />
+        <ArtworkPanel
+          v-if="selectedArtwork"
+          ref="panelEl"
+          :artwork="selectedArtwork"
+          :is-creating-new="isCreatingNew"
+          :filterdb="filterdb"
+          @update-artwork="handleArtworkUpdate"
+          @upload-artwork="handleArtworkUpload"
+          @delete-artwork="handleArtworkDelete"
+        />
       </v-col>
-
     </div>
-
 
     <!-- Desktop Layout: side-by-side -->
     <v-row v-else>
@@ -280,24 +270,20 @@ onMounted(() => {
           @activate-search="activateSearch"
         />
       </v-col>
-        <ArtworkPanel
-          v-if="selectedArtwork"
-          :artwork="selectedArtwork"
-          :is-creating-new="isCreatingNew"
-          :filterdb="filterdb"
-          @update-artwork="handleArtworkUpdate"
-          @upload-artwork="handleArtworkUpload"
-          @delete-artwork="handleArtworkDelete"
-        />
+      <ArtworkPanel
+        v-if="selectedArtwork"
+        :artwork="selectedArtwork"
+        :is-creating-new="isCreatingNew"
+        :filterdb="filterdb"
+        @update-artwork="handleArtworkUpdate"
+        @upload-artwork="handleArtworkUpload"
+        @delete-artwork="handleArtworkDelete"
+      />
     </v-row>
   </v-container>
 </template>
 
-
-
-
 <style scoped>
-
 .filter-row > * {
   min-width: 120px;
 }
@@ -320,5 +306,4 @@ onMounted(() => {
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
-
 </style>

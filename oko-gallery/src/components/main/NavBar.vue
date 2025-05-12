@@ -7,13 +7,12 @@ import {
   mdiAccount,
   mdiAccountGroup,
   mdiDomain,
-  mdiEyeOutline,
   mdiFormTextbox,
   mdiInformation,
   mdiLogin,
   mdiLogout,
   mdiSearchWeb,
-  mdiCompass,
+  mdiCompass, mdiSetNone
 } from '@mdi/js'
 import { useMediaQuery } from '@vueuse/core'
 
@@ -70,7 +69,7 @@ function focusInput() {
     <v-col cols="2" md="3">
       <RouterLink to="/" exact-active-class="active">
         <v-icon
-          :icon="mdiEyeOutline"
+          :icon="mdiSetNone"
           class="top-left-icon cursor-pointer"
           :style="{ position: isMobile ? 'absolute' : 'fixed', top: isMobile ? 0 : '1rem' }"
         />

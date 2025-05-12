@@ -12,7 +12,8 @@
     "type-check": "vue-tsc --build",
     "lint": "eslint . --fix",
     "format": "prettier --write src/",
-    "generate:sitemap": "tsx scripts/sitemap.ts"
+    "generate:sitemap": "tsx scripts/sitemap.ts",
+    "deploy": "pnpm run generate:sitemap && pnpm run build && wrangler pages deploy ./dist --project-name=venv"
   },
   "dependencies": {
     "@dagrejs/dagre": "^1.1.4",

@@ -23,7 +23,7 @@ import { useSunLighting } from '@/composables/useSunLighting.ts'
 import { useSkyDebugger } from '@/composables/useSkyDebugger.ts'
 import { routeBus } from '@/utils/routeBus.ts'
 import { useMediaQuery } from '@vueuse/core'
-import {isMobile} from '@/utils/isMobile.ts'
+import { isMobile } from '@/utils/isMobile.ts'
 
 const props = defineProps<{
   artworks: Artwork[]
@@ -37,7 +37,7 @@ const emit = defineEmits<{
 
 const images = [
   { position: [0, 1, 3], rotation: [0, 0, 0] },
-  { position: [-1.75, 1, 2], rotation: [0, 1, 0] },
+  { position: [-1.75, 1, 3], rotation: [0, 1, 0] },
   { position: [1.75, 1, 3], rotation: [0, -1, 0] }
 ]
 
@@ -46,23 +46,24 @@ const { scene, camera, renderer, raycaster } = useTresContext()
 
 
 function onScenePointer(event: any) {
-  const pointerX = (event.clientX  / window.innerWidth ) * 2 - 1;
-  const pointerY = - ( event.clientY / window.innerHeight ) * 2 + 1;
+  const pointerX = (event.clientX / window.innerWidth) * 2 - 1
+  const pointerY = -(event.clientY / window.innerHeight) * 2 + 1
   raycaster.value.setFromCamera({ x: pointerX, y: pointerY }, camera.value)
 
   const hits = raycaster.value.intersectObjects(scene.value.children, true)
   if (hits.length > 0) {
     hits.forEach((hit) => {
-      const object = hit.object;
+      const object = hit.object
       // You must identify the object and map it to the index or data
       if (object.name) {
-        onClick({ object }); // Call your existing click logic
+        onClick({ object }) // Call your existing click logic
         return
       }
     })
   }
 }
-if (isMobile){
+
+if (isMobile) {
   window.addEventListener('pointerdown', onScenePointer)
 }
 const materialRefs: ShallowReactive<
@@ -191,7 +192,7 @@ function updateCameraTarget() {
   const mesh = activeId.value != null ? frameRefs.value[activeId.value] : null
   if (mesh) {
     mesh.parent?.updateWorldMatrix(true, true)
-    mesh.parent?.localToWorld(targetPosition.set(0, 0.85, isMobile ? 2 : 1.3))
+    mesh.parent?.localToWorld(targetPosition.set(0, 0.85, isMobile ? 2.1 : 1.3))
     mesh.parent?.getWorldQuaternion(targetQuaternion)
   } else {
     targetPosition.set(0, 1.8, isMobile ? 13.3 : 6)
@@ -446,6 +447,7 @@ async function updateTerrainFromTexture(sourceTexture: THREE.Texture) {
     })
   }
 }
+
 let rippleTime = 0
 useRenderLoop().onLoop(({ delta }) => {
   if (!groundMaterial.value) return
@@ -472,7 +474,7 @@ useRenderLoop().onLoop(({ delta }) => {
       :name="i.toString()"
       :position="[0, GOLDENRATIO / 2, 0]"
       :scale="[1 * aspectRatios[i], 1, 0.05]"
-      @click="onClick"
+      @click="(e) => {if (isMobile) onClick}"
       @pointer-enter="
         (e) => {
           onPointerEnter(e);

@@ -11,31 +11,28 @@ import VENV from '@/components/main/VENV.vue'
       <v-card class="pa-4 elevation-2 mx-auto about-card" variant="tonal">
         <v-card-text class="text-body-1">
           <p>
-            <strong>VENV</strong> is yet another initiative born from the intersection of technology
-            and art. It aims to gather a curious community of artists, creators, and engineers
-            exploring the world of expression.
+            <i>VENV</i> is yet another initiative to gather a curious community of artists, creators, and engineers
+            exploring the world of self expression.
           </p>
 
           <p class="mt-4">
-            At its core, VENV offers a fine art database and sharing platform with a twist: artworks
-            are embedded within a 3D environment — a serene dune landscape that gently shifts from
-            day to night. It's both a screensaver and a gateway into curated creativity. Users may
-            also navigate via a fast, built-in search engine.
+            At its core, <i>VENV</i> begins by offering a fine art database and sharing platform or
+            idling screensaver, both of which will evolve together with its community.
           </p>
 
           <p class="mt-2">
-            Account holders enjoy full control over their artworks and visibility. Membership is
+            Account holders enjoy full control over their artworks and exposure. Membership is
             application-based, intentionally designed to grow gradually and mindfully, preserving
             the integrity and alignment of the community.
           </p>
 
           <p class="mt-2">
             This platform is an open canvas. While its current purpose is rooted in digital fine
-            arts, future visions include machine learning-driven recommendations, theme
-            associations, user-influenced content training, and more.
+            arts, future visions include various creative endeavors that would be pursued according to the community's
+            interests and needs.
           </p>
           <p class="mt-2">
-            Whether you're an artist, a developer-turned-creator, or simply curious, VENV welcomes
+            Whether you're an artist, a developer-turned-creator, or simply curious, <i>VENV</i> welcomes
             you to explore and grow alongside it.
           </p>
         </v-card-text>

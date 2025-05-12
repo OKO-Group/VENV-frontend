@@ -20,10 +20,10 @@ defineProps<{
         </h1>
 
         <p class="definition-line">
-          <strong>2.</strong> An evolving digital platform curating fine art, functioning as
+          <strong>2.</strong> An ever evolving digital platform for those that keep exploring, functioning as
           interactive repository and/or idling screensaver.
         </p>
-        <p class="definition-source">— VENV Manifesto, Founding Edition</p>
+        <p class="definition-source">— VENV Manifesto V1</p>
         <div v-if="closeHint">
           <v-icon :icon="mdiClose" />
         </div>

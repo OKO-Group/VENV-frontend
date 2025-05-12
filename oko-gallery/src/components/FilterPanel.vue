@@ -90,6 +90,11 @@ const isExpanded = ref(false)
   cursor: pointer;
 }
 
+.filter-card:hover {
+  background-color: rgba(180, 180, 180, 0.11) !important;
+  transition: background-color 0.5s ease-in-out;
+}
+
 .toggle-wrapper {
   width: 100%;
   max-width: 100%;

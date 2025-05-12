@@ -71,7 +71,7 @@ const filteredArtworks = computed(() => {
 </script>
 
 <template>
-  <v-card class="pa-4 d-flex flex-column" height="75vh">
+  <v-card class="pa-4 d-flex flex-column panel-card" height="75vh">
     <div v-if="useOwnArtworks" class="pa-2 pt-10 pb-10 search-bar-wrapper">
       <v-tooltip v-if="!searchActive" text="Search" location="top">
         <template #activator="{ props }">
@@ -170,6 +170,10 @@ const filteredArtworks = computed(() => {
 </template>
 
 <style scoped>
+.panel-card:hover {
+  background-color: rgba(180, 180, 180, 0.11) !important;
+  transition: background-color 0.5s ease-in-out;
+}
 .search-bar-wrapper {
   height: 50px;
   overflow: hidden;

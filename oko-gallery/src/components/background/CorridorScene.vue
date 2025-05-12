@@ -78,10 +78,7 @@ scene.value.add(light)
 const ambientLight = reactive({ intensity: 0.5, color: new THREE.Color() })
 // Enable adaptive sun lighting
 useSunLighting(sky, light, ambientLight)
-
-renderer.value.outputColorSpace = SRGBColorSpace
 renderer.value.shadowMap.enabled = true
-renderer.value.shadowMap.type = PCFSoftShadowMap
 
 useSkyDebugger(sky, light, renderer.value)
 
@@ -501,14 +498,13 @@ useRenderLoop().onLoop(({ delta }) => {
           "
           :map="textures[i]"
           :metalness="0.05"
-          :roughness="0.9"
-          :sheen="0.1"
-          :sheenColor="0xe8e0d1"
-          :clearcoat="0.5"
-          :iridescence="1"
-          :reflectivity="0.8"
-          :clearcoatRoughness="0.8"
-          wrapAround
+          :roughness="0.8"
+          :sheen="0.05"
+          :sheenColor="0xffffff"
+          :clearcoat="0."
+          :iridescence="0.1"
+          :reflectivity="0.9"
+          :clearcoatRoughness="0.81"
           transparent
         />
       </TresMesh>
@@ -525,9 +521,9 @@ useRenderLoop().onLoop(({ delta }) => {
       :roughness="0.33"
       :opacity="0"
       transparent
-      :iridescence="1"
-      :iridescenceior="0.5"
-      :reflectivity="0.8"
+      :iridescence="0.7"
+      :reflectivity="0.95"
+      :emissive="[0.01, 0.01, 0.01]"
     />
   </TresMesh>
 </template>

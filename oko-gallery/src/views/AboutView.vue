@@ -20,19 +20,19 @@ import VENV from '@/components/main/VENV.vue'
             idling screensaver, both of which will evolve together with its community.
           </p>
 
-          <p class="mt-2">
+          <p class="mt-4">
             Account holders enjoy full control over their artworks and exposure. Membership is
             application-based, intentionally designed to grow gradually and mindfully, preserving
             the integrity and alignment of the community.
           </p>
 
-          <p class="mt-2">
+          <p class="mt-4">
             This platform is an open canvas. While its current purpose is rooted in digital fine
             arts, future visions include various creative endeavors that would be pursued according to the community's
             interests and needs.
           </p>
-          <p class="mt-2">
-            Whether you're an artist, a developer-turned-creator, or simply curious, <i>VENV</i> welcomes
+          <p class="mt-8">
+            Whatever your background is, <i>VENV</i> welcomes
             you to explore and grow alongside it.
           </p>
         </v-card-text>

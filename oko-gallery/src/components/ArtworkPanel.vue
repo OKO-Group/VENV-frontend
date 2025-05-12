@@ -1,29 +1,29 @@
 <script setup lang="ts">
-import { ref, computed, shallowRef, type Ref, watch, nextTick, toRaw, onBeforeMount } from 'vue'
+import { computed, nextTick, type Ref, ref, shallowRef, toRaw, watch } from 'vue'
 import {
+  mdiAlbum,
+  mdiBrush,
+  mdiCheckBold,
+  mdiDeleteCircle,
+  mdiDeleteForever,
   mdiEyeOutline,
-  mdiUndo,
   mdiLink,
   mdiLinkOff,
   mdiLocationExit,
-  mdiSoundcloud,
-  mdiAlbum,
-  mdiEye,
-  mdiCheckBold,
-  mdiUpload,
-  mdiBrush,
   mdiPencilCircle,
-  mdiDeleteForever,
-  mdiDeleteCircle,
+  mdiSoundcloud,
+  mdiUndo,
+  mdiUpload
 } from '@mdi/js'
 import { type Artwork, ArtworkFileCategory } from '@/types/oko'
 import { fileCategories } from '@/types/oko.ts'
-import { useFileDialog, useMediaQuery, useObjectUrl, watchPausable } from '@vueuse/core'
+import { useFileDialog, useObjectUrl, watchPausable } from '@vueuse/core'
 import { useArtworkStore } from '@/stores/artworks.ts'
 import { useAuthStore } from '@/stores/auth.ts'
 import clonedeep from 'lodash.clonedeep'
 import { getChangedFields } from '@/utils/utils.ts'
 import { HttpStatusCode } from 'axios'
+import {isMobile} from '@/utils/isMobile.ts'
 
 // Props
 const props = defineProps<{
@@ -269,7 +269,6 @@ function closeImageViewer() {
   fullscreenImage.value = undefined
 }
 
-const isMobile = useMediaQuery('(max-width: 768px)')
 </script>
 
 <template>

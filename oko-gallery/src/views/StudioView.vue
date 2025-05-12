@@ -28,7 +28,7 @@ import ReauthForm from '@/components/dialogs/ReauthForm.vue'
 import { useRouter } from 'vue-router'
 import SearchEngine from '@/components/SearchEngine.vue'
 import StandardPage from '@/components/main/StandardPage.vue'
-import { useMediaQuery } from '@vueuse/core'
+import {isMobile} from '@/utils/isMobile.ts'
 
 const valid = ref(false)
 
@@ -263,7 +263,6 @@ function onFileChange(e: Event) {
   updateUserAccount(true)
 }
 
-const isMobile = useMediaQuery('(max-width: 768px)')
 
 //TODO UPLOAD button inside the v-img
 </script>

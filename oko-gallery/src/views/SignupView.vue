@@ -56,7 +56,6 @@ const redirectToHome = () => {
   router.push('/') // Redirect to home
 }
 
-const isMobile = useMediaQuery('(max-width: 768px)')
 </script>
 
 <template>

@@ -12,7 +12,7 @@ import {
 import ArtworkListRenderer from './ArtworkListRenderer.vue'
 import { computed, ref } from 'vue'
 import orderBy from 'lodash-es/orderBy'
-import { useMediaQuery } from '@vueuse/core'
+import {isMobile} from '@/utils/isMobile.ts'
 
 const props = defineProps<{
   showUpload?: boolean
@@ -26,7 +26,6 @@ const props = defineProps<{
   artworkStore: any
 }>()
 
-const isMobile = useMediaQuery('(max-width: 768px)')
 
 const viewModes = [
   { value: 'relaxed', icon: mdiViewAgenda, title: 'Relaxed' },

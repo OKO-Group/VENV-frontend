@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import {
   defineEmits,
-  onBeforeMount,
   onMounted,
   reactive,
   ref,
@@ -9,18 +8,22 @@ import {
   shallowReactive,
   shallowRef,
   watch,
+  nextTick, onBeforeUnmount
 } from 'vue'
 import { useRenderLoop, useTresContext } from '@tresjs/core'
 import * as THREE from 'three'
-import { MathUtils, PCFSoftShadowMap, Quaternion, SRGBColorSpace, Vector3 } from 'three'
+import { Quaternion, Vector3 } from 'three'
 import { type Artwork } from '@/types/oko.ts'
 import gsap from 'gsap'
 import { canvasRGBA } from 'stackblur-canvas'
-import HeightToNormal, { NORMA_MAP_TYPES } from 'height-to-normal-map'
+import HeightToNormal from 'height-to-normal-map'
 import { Sky } from 'three/examples/jsm/Addons.js'
 import { useArtworkStore } from '@/stores/artworks.ts'
 import { useSunLighting } from '@/composables/useSunLighting.ts'
 import { useSkyDebugger } from '@/composables/useSkyDebugger.ts'
+import { routeBus } from '@/utils/routeBus.ts'
+import { useMediaQuery } from '@vueuse/core'
+import {isMobile} from '@/utils/isMobile.ts'
 
 const props = defineProps<{
   artworks: Artwork[]
@@ -35,11 +38,33 @@ const emit = defineEmits<{
 const images = [
   { position: [0, 1, 3], rotation: [0, 0, 0] },
   { position: [-1.75, 1, 2], rotation: [0, 1, 0] },
-  { position: [1.75, 1, 3], rotation: [0, -1.3, 0] },
+  { position: [1.75, 1, 3], rotation: [0, -1, 0] }
 ]
 
-const { scene, camera, renderer } = useTresContext()
+const pointer = new THREE.Vector2()
+const { scene, camera, renderer, raycaster } = useTresContext()
 
+
+function onScenePointer(event: any) {
+  const pointerX = (event.clientX  / window.innerWidth ) * 2 - 1;
+  const pointerY = - ( event.clientY / window.innerHeight ) * 2 + 1;
+  raycaster.value.setFromCamera({ x: pointerX, y: pointerY }, camera.value)
+
+  const hits = raycaster.value.intersectObjects(scene.value.children, true)
+  if (hits.length > 0) {
+    hits.forEach((hit) => {
+      const object = hit.object;
+      // You must identify the object and map it to the index or data
+      if (object.name) {
+        onClick({ object }); // Call your existing click logic
+        return
+      }
+    })
+  }
+}
+if (isMobile){
+  window.addEventListener('pointerdown', onScenePointer)
+}
 const materialRefs: ShallowReactive<
   Record<
     number,
@@ -56,7 +81,6 @@ const activeId = ref<number | null>(null)
 const hoveredId = ref<number | null>(null)
 const targetPosition = new Vector3(0, 1.8, 20)
 const targetQuaternion = new Quaternion()
-const opacities = ref<Record<number, number>>({})
 const seenIDs = new Set()
 const displayedArtworks = ref<Artwork[]>([])
 const groundMaterial = shallowRef<THREE.MeshStandardMaterial | null>(null)
@@ -88,7 +112,7 @@ watch(
   (newVal) => {
     targetPosition.set(newVal[0], newVal[1], newVal[2])
     targetQuaternion.identity()
-  },
+  }
 )
 
 function shuffleArtwork(index: number | null) {
@@ -115,7 +139,7 @@ function shuffleArtwork(index: number | null) {
             resolve(true)
           }
         },
-        { immediate: false },
+        { immediate: false }
       )
     })
     let updatedPool = props.artworks.filter((a) => !seenIDs.has(a.id))
@@ -167,10 +191,10 @@ function updateCameraTarget() {
   const mesh = activeId.value != null ? frameRefs.value[activeId.value] : null
   if (mesh) {
     mesh.parent?.updateWorldMatrix(true, true)
-    mesh.parent?.localToWorld(targetPosition.set(0, 0.85, 1.3))
+    mesh.parent?.localToWorld(targetPosition.set(0, 0.85, isMobile ? 2 : 1.3))
     mesh.parent?.getWorldQuaternion(targetQuaternion)
   } else {
-    targetPosition.set(0, 1.8, 6)
+    targetPosition.set(0, 1.8, isMobile ? 13.3 : 6)
     targetQuaternion.identity()
   }
   cameraMovementComplete.value = false
@@ -182,7 +206,7 @@ watch(
     if (newVal && activeId.value !== null) {
       await updateTerrainFromTexture(textures.value[activeId.value])
     }
-  },
+  }
 )
 
 async function onClick(e: any) {
@@ -207,7 +231,7 @@ function animateEmissiveColor(id: number, toColor: { r: number; g: number; b: nu
     g: toColor.g,
     b: toColor.b,
     duration: 1,
-    ease: 'power2.out',
+    ease: 'power2.out'
   })
 }
 
@@ -231,19 +255,15 @@ const textures = ref<Record<number, THREE.Texture>>({})
 const aspectRatios = ref<Record<number, number>>({})
 const loader = new THREE.TextureLoader()
 
-function initArtworks(newArtworks: Artwork[]) {
-  displayedArtworks.value = newArtworks.slice(0, images.length)
-  displayedArtworks.value.forEach((artwork, i) => {
-    materialRefs[i] = {
-      frame: undefined,
-      border: undefined,
-      image: undefined,
+function initArtworks() {
+  images.forEach((_, i) => {
+      materialRefs[i] = {
+        frame: undefined,
+        border: undefined,
+        image: undefined
+      }
     }
-    const file = artwork.files.find((f) => f.category === 'painting')?.file
-    if (file) {
-      loadArtworkFile(artwork, file, i)
-    }
-  })
+  )
 }
 
 async function initTerrain(onComplete?: () => void) {
@@ -277,31 +297,51 @@ async function initTerrain(onComplete?: () => void) {
     onComplete: () => {
       onComplete?.()
       groundMaterial.value!.transparent = false
-    },
+    }
   })
 }
 
-watch(
-  () => props.artworks,
-  (newArtworks) => {
-    initArtworks(newArtworks)
-  },
-  { immediate: true },
-)
+
+initArtworks()
 
 onMounted(async () => {
   await initTerrain(() => {
-    Object.values(materialRefs).forEach((mat) => {
-      gsap.to([mat.frame, mat.image, mat.border], {
-        opacity: 1,
-        duration: 3,
-      })
-    })
+    watch(() => props.artworks,
+      (newArtworks) => {
+        if (!newArtworks) return
+        displayedArtworks.value = []
+        newArtworks.slice(0, images.length).forEach((artwork, i) => {
+          displayedArtworks.value[i] = artwork
+          const file = artwork.files.find((f) => f.category === 'painting')?.file
+          if (file) {
+            loadArtworkFile(artwork, file, i)
+            fadeArtwork(i, 1)
+          }
+        })
+      }, { immediate: true })
   })
 })
 
+
+routeBus.on('route-change', ({ from, to }) => {
+  if (from === '/explore' && to !== '/explore') {
+    Object.keys(displayedArtworks.value).forEach((key) => {
+      const index = Number(key)
+      fadeArtwork(index, 0.33)
+    })
+  }
+})
+
+routeBus.on('route-change', ({ from, to }) => {
+  if (to == '/explore') {
+    Object.keys(displayedArtworks.value).forEach((key) => {
+      const index = Number(key)
+      fadeArtwork(index, 1)
+    })
+  }
+})
+
 function loadArtworkFile(artwork: Artwork, file: string, i: number) {
-  opacities.value[i] = 0
   loader.load(file, (texture) => {
     textures.value[i] = texture
     aspectRatios.value[i] = texture.image.width / texture.image.height
@@ -316,7 +356,7 @@ function fadeArtwork(id: number, toOpacity: number, onComplete?: () => void) {
     duration: 1,
     onComplete,
     overwrite: true,
-    ease: 'power2.out',
+    ease: 'power2.out'
   })
 }
 
@@ -351,7 +391,7 @@ async function updateTerrainFromTexture(sourceTexture: THREE.Texture) {
           sharedHeightData,
           img.width,
           img.height,
-          THREE.RedFormat,
+          THREE.RedFormat
         ) //TODO look into compression and sample
         sharedHeightMap.type = THREE.UnsignedByteType
         sharedHeightMap.colorSpace = THREE.NoColorSpace
@@ -370,7 +410,7 @@ async function updateTerrainFromTexture(sourceTexture: THREE.Texture) {
         // Reuse normalMap canvas + texture
         heightToNormal.apply(processingCanvas, {
           blursharp: 0,
-          strength: 2,
+          strength: 2
         })
         sharedHeightMap.image.width = img.width
         sharedHeightMap.image.height = img.height
@@ -389,7 +429,7 @@ async function updateTerrainFromTexture(sourceTexture: THREE.Texture) {
           onUpdate: () => {
             groundMaterial.value!.needsUpdate = true
             renderer.value.shadowMap.needsUpdate = true
-          },
+          }
         })
 
         const originalY = groundMesh.value!.position.y
@@ -399,14 +439,13 @@ async function updateTerrainFromTexture(sourceTexture: THREE.Texture) {
           gsap.to(groundMesh.value!.position, {
             y: originalY + displacementOffset,
             duration: displacementDuration,
-            ease: easeType,
+            ease: easeType
           })
         }
-      },
+      }
     })
   }
 }
-
 let rippleTime = 0
 useRenderLoop().onLoop(({ delta }) => {
   if (!groundMaterial.value) return
@@ -422,9 +461,8 @@ useRenderLoop().onLoop(({ delta }) => {
     :color="ambientLight.color"
     :ground-color="0xfff7de"
   />
-
   <TresGroup
-    v-for="(artwork, i) in displayedArtworks"
+    v-for="(artwork, i) in images"
     :key="i"
     :position="[...images[i].position]"
     :rotation="[...images[i].rotation]"
@@ -437,12 +475,12 @@ useRenderLoop().onLoop(({ delta }) => {
       @click="onClick"
       @pointer-enter="
         (e) => {
-          onPointerEnter(e)
+          onPointerEnter(e);
         }
       "
       @pointer-out="
         (e) => {
-          onPointerOut(e)
+          onPointerOut(e);
         }
       "
       :ref="
@@ -465,6 +503,7 @@ useRenderLoop().onLoop(({ delta }) => {
             }
           }
         "
+        :opacity="0"
         color="#151515"
         :metalness="0.5"
         :roughness="0.5"
@@ -474,6 +513,8 @@ useRenderLoop().onLoop(({ delta }) => {
       <TresMesh :scale="[0.9, 0.93, 0.9]" :position="[0, 0, 0.2]">
         <TresBoxGeometry />
         <TresMeshStandardMaterial
+          :opacity="0"
+
           :ref="
             (el: any) => {
               if (el) {
@@ -486,7 +527,7 @@ useRenderLoop().onLoop(({ delta }) => {
       </TresMesh>
 
       <!-- Artwork Image -->
-      <TresMesh v-if="textures[i]" :position="[0, 0, 0.7]">
+      <TresMesh :position="[0, 0, 0.7]">
         <TresPlaneGeometry />
         <TresMeshPhysicalMaterial
           :ref="
@@ -496,6 +537,7 @@ useRenderLoop().onLoop(({ delta }) => {
               }
             }
           "
+          :opacity="0"
           :map="textures[i]"
           :metalness="0.05"
           :roughness="0.8"

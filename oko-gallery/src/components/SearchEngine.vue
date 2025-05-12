@@ -7,17 +7,9 @@ import {
   ref,
   shallowRef,
   useTemplateRef,
-  watch,
-  watchEffect,
+  watchEffect
 } from 'vue'
-import {
-  useDebounce,
-  useDebounceFn,
-  useDraggable,
-  useEventListener,
-  useMediaQuery,
-  watchDebounced,
-} from '@vueuse/core'
+import { useDebounce, useDebounceFn, useEventListener, watchDebounced } from '@vueuse/core'
 import { useArtworkStore } from '@/stores/artworks'
 import { type Artwork, type ArtworkSearchQuery } from '@/types/oko'
 import { useAuthStore } from '@/stores/auth.ts'
@@ -28,6 +20,8 @@ import { useArtworkQueryManager } from '@/stores/ArtworkQueryManager.ts'
 import SearchPanel from '@/components/SearchPanel.vue'
 import FilterPanel from '@/components/FilterPanel.vue'
 import { fallbackArtworks } from '@/assets/fallbackArtworks.ts'
+import {isMobile} from '@/utils/isMobile.ts'
+
 //TODO remove automatic fetching on search field change
 
 const props = defineProps<{
@@ -184,7 +178,6 @@ function handleArtworkDelete() {
   selectedArtwork.value = null
 }
 
-const isMobile = useMediaQuery('(max-width: 768px)')
 
 const artworkPanelRef = useTemplateRef<HTMLElement>('el')
 const panelEl = ref<HTMLElement | null>(null)

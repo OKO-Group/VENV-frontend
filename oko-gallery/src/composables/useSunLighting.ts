@@ -92,7 +92,7 @@ export async function useSunLighting(
   ambientLight: Reactive<any>,
 ) {
   const { scene, renderer } = useTresContext()
-  const updateInterval = 0.042 // seconds
+  const updateInterval = 0.33 // seconds
   const timer = ref(0)
 
   const sunPosition = new Vector3()
@@ -106,7 +106,7 @@ export async function useSunLighting(
         now.setHours(sunCfg.hourOverride.value, sunCfg.minuteOverride.value)
       }
 
-      now.setSeconds(now.getSeconds() + 20)
+      now.setSeconds(now.getSeconds() + 33)
 
       const pos = SunCalc.getPosition(now, latitude, longitude)
       sunPosition.setFromSphericalCoords(1, pos.azimuth, pos.altitude)

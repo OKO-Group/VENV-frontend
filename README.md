@@ -1,4 +1,3 @@
-# OKO-gallery-frontend
+v1 VENV FRONTEND
 
-
-https://codepen.io/shubniggurath/pen/OEeMOd
+<img src="venv/img/example_II.svg" alt="example" width="600"/>

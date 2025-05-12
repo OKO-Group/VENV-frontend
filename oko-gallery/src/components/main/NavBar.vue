@@ -14,7 +14,7 @@ import {
   mdiSearchWeb,
   mdiCompass, mdiSetNone
 } from '@mdi/js'
-import { useMediaQuery } from '@vueuse/core'
+import {isMobile} from '@/utils/isMobile.ts'
 
 const route = useRoute()
 const router = useRouter()
@@ -29,7 +29,6 @@ const artworkStore = useArtworkStore()
 const isLoggedIn = computed(() => !!authStore.user)
 const isApproved = computed(() => authStore.user?.is_approved === true)
 
-const isMobile = useMediaQuery('(max-width: 768px)')
 
 // Watch for route changes and update state
 watchEffect(() => {

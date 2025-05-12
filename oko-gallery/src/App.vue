@@ -1,8 +1,18 @@
 <script setup lang="ts">
-import { RouterView } from 'vue-router'
+import { RouterView, useRoute } from 'vue-router'
 import NavBar from '@/components/main/NavBar.vue'
 // import ControlPanel from '@/components/main/ControlPanel.vue'
 import GalleryView from '@/views/GalleryView.vue'
+import { routeBus } from '@/utils/routeBus.ts'
+import {watch} from 'vue'
+
+
+const route = useRoute()
+
+watch(() => route.path, (to, from) => {
+  routeBus.emit('route-change', { from, to })
+})
+
 </script>
 <template>
   <header></header>

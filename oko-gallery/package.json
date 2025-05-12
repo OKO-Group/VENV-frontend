@@ -37,6 +37,7 @@
     "lodash-es": "^4.17.21",
     "lodash.clonedeep": "^4.5.0",
     "maath": "^0.10.8",
+    "mitt": "^3.0.1",
     "pinia": "^3.0.1",
     "pinia-plugin-persistedstate": "^4.2.0",
     "qrcode.vue": "^3.6.0",

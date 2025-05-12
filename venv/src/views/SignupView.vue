@@ -65,7 +65,7 @@ const redirectToHome = () => {
         <v-card-text>
           <div v-if="formClosed">
             <p class="text-center text-subtitle-1 venv-title">
-              Applications will be opened on May 25th, 2025. See you soon 👋
+              Applications open on May 25th, 2025. See you soon! 👋
             </p>
           </div>
           <v-form v-else v-model="valid">
@@ -141,7 +141,7 @@ const redirectToHome = () => {
 
         </v-card-text>
         <v-card-actions>
-          <router-link to="/login">Already have an VENV account? Login</router-link>
+          <router-link to="/login">Already have an account? Login</router-link>
         </v-card-actions>
       </v-card>
     </v-container>

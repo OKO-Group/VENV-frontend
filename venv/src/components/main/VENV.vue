@@ -23,13 +23,13 @@ defineProps<{
           <strong>2.</strong> An ever evolving digital platform for those that keep exploring, functioning as
           interactive repository and/or idling screensaver.
         </p>
-        <p class="definition-source">— VENV Manifesto V1</p>
+<!--        <p class="definition-source">README.md V1</p>-->
         <div v-if="closeHint">
           <v-icon :icon="mdiClose" />
         </div>
       </div>
       <div class="text-right">
-        <p>First release: May 25, 2025</p>
+<!--        <p>First release: May 25, 2025</p>-->
       </div>
     </div>
   </div>

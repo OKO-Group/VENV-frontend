@@ -25,7 +25,7 @@ const userData = ref<SignupPayload>({
   password_confirmation: '',
   answer: '',
   portfolio_link: '',
-  first_name: '',
+  first_name: 'V',
   last_name: '',
 })
 
@@ -66,6 +66,15 @@ const redirectToHome = () => {
         <v-card-text>
           <v-form v-model="valid">
             <v-text-field
+              v-model="userData.email"
+              :rules="[requiredRule, emailRule]"
+              label="Email"
+              outlined
+              required
+              :error-messages="authStore.errors.email"
+              @update:modelValue="clearError('email')"
+            />
+            <v-text-field
               v-model="userData.username"
               :rules="[requiredRule, minLengthRule]"
               label="Username"
@@ -76,13 +85,15 @@ const redirectToHome = () => {
               @update:modelValue="clearError('username')"
             />
             <v-text-field
-              v-model="userData.email"
-              :rules="[requiredRule, emailRule]"
-              label="Email"
+              v-model="userData.password"
+              :rules="[requiredRule, passwordMinLengthRule]"
+              label="Password"
+              type="password"
+              autocomplete="new-password"
               outlined
               required
-              :error-messages="authStore.errors.email"
-              @update:modelValue="clearError('email')"
+              :error-messages="authStore.errors.password"
+              @update:modelValue="clearError('password')"
             />
             <v-text-field
               v-model="userData.first_name"
@@ -111,19 +122,6 @@ const redirectToHome = () => {
               :error-messages="authStore.errors.portfolio_link"
               @update:modelValue="clearError('portfolio_link')"
             />
-
-            <v-text-field
-              v-model="userData.password"
-              :rules="[requiredRule, passwordMinLengthRule]"
-              label="Password"
-              type="password"
-              autocomplete="new-password"
-              outlined
-              required
-              :error-messages="authStore.errors.password"
-              @update:modelValue="clearError('password')"
-            />
-
             <v-text-field
               v-model="userData.password_confirmation"
               :rules="[requiredRule, matchPasswordRule]"

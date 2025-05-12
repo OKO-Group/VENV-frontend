@@ -474,7 +474,7 @@ useRenderLoop().onLoop(({ delta }) => {
       :name="i.toString()"
       :position="[0, GOLDENRATIO / 2, 0]"
       :scale="[1 * aspectRatios[i], 1, 0.05]"
-      @click="(e) => {if (isMobile) onClick}"
+      @click="(e) => {if (!isMobile) onClick}"
       @pointer-enter="
         (e) => {
           onPointerEnter(e);

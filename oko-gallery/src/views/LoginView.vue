@@ -50,7 +50,7 @@ const clearError = (field: string) => {
 <template>
   <v-container class="login d-flex justify-center align-center" style="min-height: 100vh">
     <v-card>
-      <v-card-title class="d-flex justify-center">LOGIN</v-card-title>
+      <v-card-title class="d-flex justify-center login-title">LOGIN</v-card-title>
       <v-card-text>
         <v-form v-if="!mfa_authenticating" v-model="valid">
           <v-text-field
@@ -103,5 +103,8 @@ const clearError = (field: string) => {
 <style scoped>
 .login {
   z-index: 100;
+}
+.login-title {
+  color: hsl(0, 0%, 43%);
 }
 </style>

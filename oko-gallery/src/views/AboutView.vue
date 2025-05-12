@@ -44,7 +44,7 @@ import VENV from '@/components/main/VENV.vue'
 <style scoped>
 .about-card {
   width: 100%;
-  backdrop-filter: blur(10px);
-  background-color: rgba(255, 255, 255, 0.42) !important;
+  backdrop-filter: blur(15px);
+  background-color: rgba(255, 255, 255, 0.8) !important;
 }
 </style>

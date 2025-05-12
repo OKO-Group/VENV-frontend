@@ -10,23 +10,22 @@ import {
   requiredRule,
 } from '@/utils/validation.ts'
 import type { SignupPayload } from '@/types/auth.ts'
-import { useMediaQuery } from '@vueuse/core'
 
 const authStore = useAuthStore()
 const router = useRouter()
 
 const valid = ref(false)
 const dialog = ref(false) // Controls the success message dialog
-
+const formClosed = true // TODO set to true on release
 const userData = ref<SignupPayload>({
   username: '',
   email: '',
   password: '',
   password_confirmation: '',
-  answer: '',
+  answer: 'VE',
   portfolio_link: '',
-  first_name: 'V',
-  last_name: '',
+  first_name: '',
+  last_name: 'VE',
 })
 
 const matchPasswordRule = () =>
@@ -61,10 +60,15 @@ const redirectToHome = () => {
 <template>
   <div class="signup-container">
     <v-container class="d-flex justify-center align-center fill-height">
-      <v-card class="signup-card">
-        <v-card-title>VENV Artist Application</v-card-title>
+      <v-card>
+        <v-card-title class="venv-title">VENV Artist Application</v-card-title>
         <v-card-text>
-          <v-form v-model="valid">
+          <div v-if="formClosed">
+            <p class="text-center text-subtitle-1 venv-title">
+              Applications will be opened on May 25th, 2025. See you soon 👋
+            </p>
+          </div>
+          <v-form v-else v-model="valid">
             <v-text-field
               v-model="userData.email"
               :rules="[requiredRule, emailRule]"
@@ -96,33 +100,6 @@ const redirectToHome = () => {
               @update:modelValue="clearError('password')"
             />
             <v-text-field
-              v-model="userData.first_name"
-              :rules="[requiredRule, minLengthRule]"
-              label="First Name"
-              outlined
-              required
-              :error-messages="authStore.errors.first_name"
-              @update:modelValue="clearError('first_name')"
-            />
-            <v-text-field
-              v-model="userData.last_name"
-              :rules="[requiredRule, minLengthRule]"
-              label="Last Name"
-              outlined
-              required
-              :error-messages="authStore.errors.last_name"
-              @update:modelValue="clearError('last_name')"
-            />
-            <v-text-field
-              v-model="userData.portfolio_link"
-              :rules="[requiredRule, portfolioLinkRule]"
-              label="Portfolio Link"
-              outlined
-              required
-              :error-messages="authStore.errors.portfolio_link"
-              @update:modelValue="clearError('portfolio_link')"
-            />
-            <v-text-field
               v-model="userData.password_confirmation"
               :rules="[requiredRule, matchPasswordRule]"
               label="Confirm Password"
@@ -134,13 +111,22 @@ const redirectToHome = () => {
               @update:modelValue="clearError('password_confirmation')"
             />
             <v-text-field
-              v-model="userData.answer"
-              :rules="[requiredRule]"
-              label="Why do you create?"
+              v-model="userData.first_name"
+              :rules="[requiredRule, minLengthRule]"
+              label="First Name"
               outlined
               required
-              :error-messages="authStore.errors.answer"
-              @update:modelValue="clearError('answer')"
+              :error-messages="authStore.errors.first_name"
+              @update:modelValue="clearError('first_name')"
+            />
+            <v-text-field
+              v-model="userData.portfolio_link"
+              :rules="[requiredRule, portfolioLinkRule]"
+              label="Portfolio Link"
+              outlined
+              required
+              :error-messages="authStore.errors.portfolio_link"
+              @update:modelValue="clearError('portfolio_link')"
             />
             <v-btn
               color="primary"
@@ -151,6 +137,8 @@ const redirectToHome = () => {
               >Sign Up
             </v-btn>
           </v-form>
+          <p v-if="authStore.errors" class="text-error">{{ authStore.errors.error || '' }}</p>
+
         </v-card-text>
         <v-card-actions>
           <router-link to="/login">Already have an VENV account? Login</router-link>
@@ -174,6 +162,8 @@ const redirectToHome = () => {
 
 <style scoped>
 /* Ensures full-page centering */
+
+
 .signup-container {
   display: flex;
   justify-content: center;
@@ -182,8 +172,10 @@ const redirectToHome = () => {
   z-index: 100;
 }
 
-.signup-card {
+.venv-title {
+  color: hsl(0, 0%, 43%);
 }
+
 /* Center the dialog */
 
 /* Fix text alignment issue */

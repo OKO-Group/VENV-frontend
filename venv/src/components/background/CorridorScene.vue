@@ -105,7 +105,7 @@ const ambientLight = reactive({ intensity: 0.5, color: new THREE.Color() })
 useSunLighting(sky, light, ambientLight)
 renderer.value.shadowMap.enabled = true
 
-useSkyDebugger(sky, light, renderer.value)
+//useSkyDebugger(sky, light, renderer.value)
 
 const artworkStore = useArtworkStore()
 watch(

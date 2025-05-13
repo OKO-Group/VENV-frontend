@@ -17,19 +17,19 @@ defineProps<{
             <strong>1.</strong> Abbr. for <i>virtual environment</i>: an isolated digital space
             created for experimentation, system management, or creative projects.
           </p>
-        </h1>
+        </h1>u
 
         <p class="definition-line">
           <strong>2.</strong> An ever evolving digital platform for those that keep exploring, functioning as
           interactive repository and/or idling screensaver.
         </p>
-<!--        <p class="definition-source">README.md V1</p>-->
+        <p class="definition-source">README.md</p>
         <div v-if="closeHint">
           <v-icon :icon="mdiClose" />
         </div>
       </div>
       <div class="text-right">
-<!--        <p>First release: May 25, 2025</p>-->
+        <p>First release: May 25, 2025</p>
       </div>
     </div>
   </div>

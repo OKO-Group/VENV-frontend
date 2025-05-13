@@ -21,7 +21,7 @@ import { useArtworkStore } from '@/stores/artworks.ts'
 import { useSunLighting } from '@/composables/useSunLighting.ts'
 import { routeBus } from '@/utils/routeBus.ts'
 import { isMobile } from '@/utils/isMobile.ts'
-import { useSkyDebugger } from '@/composables/useSkyDebugger.ts'
+// import { useSkyDebugger } from '@/composables/useSkyDebugger.ts'
 
 let currentPath = '/'
 const props = defineProps<{
@@ -107,7 +107,7 @@ updateSun()
 renderer.value.shadowMap.enabled = true
 renderer.value.shadowMap.needsUpdate = true
 
-useSkyDebugger(sky, light, renderer.value)
+//useSkyDebugger(sky, light, renderer.value)
 
 const artworkStore = useArtworkStore()
 watch(
@@ -370,7 +370,7 @@ function fadeArtwork(id: number, toOpacity: number, onComplete?: () => void) {
   const mat = materialRefs[id]
   gsap.to([mat.frame, mat.border, mat.image, frameRefs.value[id].material], {
     opacity: toOpacity,
-    duration: 2,
+    duration: 1.8,
     onComplete,
     overwrite: true,
     ease: 'power2.out'

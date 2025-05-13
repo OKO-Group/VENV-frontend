@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {
-  defineEmits,
+  defineEmits, nextTick,
   onMounted,
   reactive,
   ref,
@@ -9,7 +9,7 @@ import {
   shallowRef,
   watch
 } from 'vue'
-import { useRenderLoop, useTresContext } from '@tresjs/core'
+import { dispose, useRenderLoop, useTresContext } from '@tresjs/core'
 import * as THREE from 'three'
 import { Quaternion, Vector3 } from 'three'
 import { type Artwork } from '@/types/oko.ts'
@@ -21,6 +21,7 @@ import { useArtworkStore } from '@/stores/artworks.ts'
 import { useSunLighting } from '@/composables/useSunLighting.ts'
 import { routeBus } from '@/utils/routeBus.ts'
 import { isMobile } from '@/utils/isMobile.ts'
+import { useSkyDebugger } from '@/composables/useSkyDebugger.ts'
 
 let currentPath = '/'
 const props = defineProps<{
@@ -101,10 +102,12 @@ scene.value.add(light)
 
 const ambientLight = reactive({ intensity: 0.5, color: new THREE.Color() })
 // Enable adaptive sun lighting
-useSunLighting(sky, light, ambientLight)
+const { updateSun } = await useSunLighting(sky, light, ambientLight)
+updateSun()
 renderer.value.shadowMap.enabled = true
+renderer.value.shadowMap.needsUpdate = true
 
-//useSkyDebugger(sky, light, renderer.value)
+useSkyDebugger(sky, light, renderer.value)
 
 const artworkStore = useArtworkStore()
 watch(
@@ -123,6 +126,7 @@ function shuffleArtwork(index: number | null) {
   const currentArtworks = props.artworks.map((a) => a.id).join(',')
 
   fadeArtwork(index, 0, async () => {
+    textures.value[index].dispose()
     let replacement: Artwork | null = null
     const timeoutPromise = new Promise<void>((resolve) => {
       setTimeout(() => {
@@ -165,7 +169,6 @@ function shuffleArtwork(index: number | null) {
     displayedArtworks.value[index] = replacement
     const file = replacement.files.find((f) => f.category === 'painting')?.file
     loadArtworkFile(replacement, file!, index) //TODO concurrency with texture loader
-    fadeArtwork(index, 1)
   })
 }
 
@@ -305,7 +308,7 @@ async function initTerrain(onComplete?: () => void) {
 initArtworks()
 
 onMounted(async () => {
-  await initTerrain(() => {
+  await initTerrain(async () => {
     watch(() => props.artworks,
       (newArtworks) => {
         if (!newArtworks) return
@@ -315,7 +318,6 @@ onMounted(async () => {
           const file = artwork.files.find((f) => f.category === 'painting')?.file
           if (file) {
             loadArtworkFile(artwork, file, i)
-            fadeArtwork(i, 1)
           }
         })
       }, { immediate: true })
@@ -347,16 +349,28 @@ routeBus.on('route-change', ({ from, to }) => {
 function loadArtworkFile(artwork: Artwork, file: string, i: number) {
   loader.load(file, (texture) => {
     textures.value[i] = texture
-    aspectRatios.value[i] = texture.image.width / texture.image.height
-    seenIDs.add(artwork.id)
+    if (materialRefs[i]?.image) {
+      materialRefs[i].image.map = texture
+      materialRefs[i].image.needsUpdate = true
+    }
+
+    nextTick(() => {
+      fadeArtwork(i, 1)
+    })
+
+    aspectRatios.value = {
+      ...aspectRatios.value,
+      [i]: texture.image.width / texture.image.height
+    }
   })
+  seenIDs.add(artwork.id)
 }
 
 function fadeArtwork(id: number, toOpacity: number, onComplete?: () => void) {
   const mat = materialRefs[id]
   gsap.to([mat.frame, mat.border, mat.image, frameRefs.value[id].material], {
     opacity: toOpacity,
-    duration: 1,
+    duration: 2,
     onComplete,
     overwrite: true,
     ease: 'power2.out'

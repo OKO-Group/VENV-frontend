@@ -69,6 +69,7 @@ function computeSkyColor(sunElevation: number, direction: 'am' | 'pm'): THREE.Co
 }
 
 const now = new Date()
+const sunPosition = new Vector3()
 
 export interface GeoResponse {
   ip: string
@@ -95,8 +96,6 @@ export async function useSunLighting(
   const updateInterval = 33 // seconds
   const timer = ref(0)
 
-  const sunPosition = new Vector3()
-  const clearColor = new Color()
 
   const { latitude, longitude } = await getGeoFromIP()
 
@@ -167,11 +166,6 @@ export async function useSunLighting(
     }
   }
 
-  await updateSun()
-
-
-  onMounted(updateSun)
-
   const { onLoop } = useRenderLoop()
   onLoop(({ delta }) => {
     timer.value += delta
@@ -181,4 +175,5 @@ export async function useSunLighting(
       renderer.value.shadowMap.needsUpdate = true
     }
   })
+  return { updateSun }
 }

@@ -30,13 +30,16 @@ function replaceArtwork(id: number) {
     window-size
     preset="realistic"
     class="canvas-component"
+    render-mode="on-demand"
   >
     <TresPerspectiveCamera :position="[0, 0, 0]" />
-    <CorridorScene
-      :artworks="artworkManager.searchArtworks.value"
-      @replace-artwork="replaceArtwork"
-      @clicked-artwork="explore"
-    />
+    <Suspense>
+      <CorridorScene
+        :artworks="artworkManager.searchArtworks.value"
+        @replace-artwork="replaceArtwork"
+        @clicked-artwork="explore"
+      />
+    </Suspense>
   </TresCanvas>
 </template>
 

@@ -7,8 +7,7 @@ import {
   type ShallowReactive,
   shallowReactive,
   shallowRef,
-  watch,
-  nextTick, onBeforeUnmount
+  watch
 } from 'vue'
 import { useRenderLoop, useTresContext } from '@tresjs/core'
 import * as THREE from 'three'
@@ -20,11 +19,10 @@ import HeightToNormal from 'height-to-normal-map'
 import { Sky } from 'three/examples/jsm/Addons.js'
 import { useArtworkStore } from '@/stores/artworks.ts'
 import { useSunLighting } from '@/composables/useSunLighting.ts'
-import { useSkyDebugger } from '@/composables/useSkyDebugger.ts'
 import { routeBus } from '@/utils/routeBus.ts'
-import { useMediaQuery } from '@vueuse/core'
 import { isMobile } from '@/utils/isMobile.ts'
 
+let currentPath = '/'
 const props = defineProps<{
   artworks: Artwork[]
 }>()
@@ -46,9 +44,12 @@ const { scene, camera, renderer, raycaster } = useTresContext()
 
 
 function onScenePointer(event: any) {
-  const pointerX = (event.clientX / window.innerWidth) * 2 - 1
-  const pointerY = -(event.clientY / window.innerHeight) * 2 + 1
-  raycaster.value.setFromCamera({ x: pointerX, y: pointerY }, camera.value)
+  if (currentPath !== '/explore') return
+  if (!camera.value) return
+
+  pointer.x = (event.clientX / window.innerWidth) * 2 - 1
+  pointer.y = -(event.clientY / window.innerHeight) * 2 + 1
+  raycaster.value.setFromCamera(pointer, camera.value)
 
   const hits = raycaster.value.intersectObjects(scene.value.children, true)
   if (hits.length > 0) {
@@ -63,9 +64,7 @@ function onScenePointer(event: any) {
   }
 }
 
-if (isMobile) {
-  window.addEventListener('pointerdown', onScenePointer)
-}
+
 const materialRefs: ShallowReactive<
   Record<
     number,
@@ -323,22 +322,25 @@ onMounted(async () => {
   })
 })
 
-
 routeBus.on('route-change', ({ from, to }) => {
-  if (from === '/explore' && to !== '/explore') {
-    Object.keys(displayedArtworks.value).forEach((key) => {
-      const index = Number(key)
-      fadeArtwork(index, 0.33)
-    })
-  }
-})
-
-routeBus.on('route-change', ({ from, to }) => {
+  currentPath = to
   if (to == '/explore') {
     Object.keys(displayedArtworks.value).forEach((key) => {
       const index = Number(key)
       fadeArtwork(index, 1)
     })
+    if (isMobile) {
+      window.addEventListener('pointerdown', onScenePointer)
+    }
+  }
+  if (from === '/explore' && to !== '/explore') {
+    Object.keys(displayedArtworks.value).forEach((key) => {
+      const index = Number(key)
+      fadeArtwork(index, 0.33)
+    })
+    if (isMobile) {
+      window.removeEventListener('pointerdown', onScenePointer)
+    }
   }
 })
 

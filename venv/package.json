@@ -13,7 +13,9 @@
     "lint": "eslint . --fix",
     "format": "prettier --write src/",
     "generate:sitemap": "tsx scripts/sitemap.ts",
-    "deploy": "pnpm run generate:sitemap && pnpm run build && wrangler pages deploy ./dist --project-name=venv"
+    "deploy:dev": "pnpm run generate:sitemap && pnpm run build && wrangler deploy --env dev",
+    "deploy:prod": "pnpm run generate:sitemap && pnpm run build && wrangler deploy --env production",
+    "deploy": "wrangler deploy --env production"
   },
   "dependencies": {
     "@dagrejs/dagre": "^1.1.4",

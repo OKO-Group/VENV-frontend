@@ -60,7 +60,7 @@ const redirectToHome = () => {
 <template>
   <div class="signup-container">
     <v-container class="d-flex justify-center align-center fill-height">
-      <v-card>
+      <v-card class="venv-card">
         <v-card-title class="venv-title">VENV Artist Application</v-card-title>
         <v-card-text>
           <div v-if="formClosed">
@@ -164,6 +164,9 @@ const redirectToHome = () => {
 /* Ensures full-page centering */
 
 
+.venv-card {
+  background: rgba(220, 219, 219, 0.5) !important;
+}
 .signup-container {
   display: flex;
   justify-content: center;
@@ -173,7 +176,7 @@ const redirectToHome = () => {
 }
 
 .venv-title {
-  color: hsl(0, 0%, 43%);
+  color: hsl(0, 0%, 15%);
 }
 
 /* Center the dialog */

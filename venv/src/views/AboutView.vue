@@ -11,8 +11,8 @@ import VENV from '@/components/main/VENV.vue'
       <v-card class="pa-4 elevation-2 mx-auto about-card" variant="tonal">
         <v-card-text class="text-body-1">
           <p>
-            <i>VENV</i> is yet another initiative to gather a curious community of artists, creators, and engineers
-            exploring the world of self expression.
+            <i>VENV</i> is yet another initiative to gather a curious community of creators
+            exploring self-expression.
           </p>
 
           <p class="mt-4">

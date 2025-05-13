@@ -108,7 +108,7 @@ function focusInput() {
             </template>
           </v-tooltip>
           <RouterLink v-else to="/artists" exact-active-class="active">
-            <span>ARTISTS</span>
+            <span>MEMBERS</span>
           </RouterLink>
 
           <!-- About -->

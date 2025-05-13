@@ -13,6 +13,7 @@ watch(() => route.path, (to, from) => {
   routeBus.emit('route-change', { from, to })
 })
 
+
 </script>
 <template>
   <header></header>

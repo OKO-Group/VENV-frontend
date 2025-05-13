@@ -17,8 +17,7 @@ defineProps<{
             <strong>1.</strong> Abbr. for <i>virtual environment</i>: an isolated digital space
             created for experimentation, system management, or creative projects.
           </p>
-        </h1>u
-
+        </h1>
         <p class="definition-line">
           <strong>2.</strong> An ever evolving digital platform for those that keep exploring, functioning as
           interactive repository and/or idling screensaver.

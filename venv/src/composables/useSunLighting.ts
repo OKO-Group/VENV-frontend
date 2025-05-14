@@ -1,10 +1,9 @@
 // composables/useSunLighting.ts
-import { ref, onMounted, reactive, type Ref, type Reactive } from 'vue'
-import { useRenderLoop, useTresContext } from '@tresjs/core'
+import { reactive, type Reactive, ref, type ShallowRef } from 'vue'
+import { useRenderLoop, useTexture, useTresContext } from '@tresjs/core'
 import * as THREE from 'three'
+import { Color, DirectionalLight, FogExp2, Vector3 } from 'three'
 import SunCalc from 'suncalc'
-import { Color, FogExp2, Vector3, MathUtils, DirectionalLight, AmbientLight } from 'three'
-import { max } from 'lodash-es'
 
 export const sunCfg = reactive({
   turbidity: { enabled: false, value: 5 },
@@ -29,12 +28,12 @@ export const sunCfg = reactive({
   backgroundLightness: { enabled: false, value: 0.85 },
   hourOverride: {
     enabled: false,
-    value: 12, // local hour: 0–23
+    value: 19 // local hour: 0–23
   },
   minuteOverride: {
     enabled: false,
-    value: 0, // local minute: 0–59
-  },
+    value: 0 // local minute: 0–59
+  }
 })
 
 // Lerp function to interpolate between two values
@@ -68,8 +67,6 @@ function computeSkyColor(sunElevation: number, direction: 'am' | 'pm'): THREE.Co
   return new THREE.Color().setHSL(hue % 1, sat, light)
 }
 
-const now = new Date()
-const sunPosition = new Vector3()
 
 export interface GeoResponse {
   ip: string
@@ -87,32 +84,38 @@ export const getGeoFromIP = async (): Promise<GeoResponse> => {
   return res.json()
 }
 
+export interface Moon {
+  mesh: ShallowRef<THREE.Mesh | null>
+  material: ShallowRef<THREE.MeshPhysicalMaterial | null>
+  light: DirectionalLight
+}
+
 export async function useSunLighting(
   sky: any,
-  light: DirectionalLight,
+  sunLight: DirectionalLight,
   ambientLight: Reactive<any>,
+  moon: Moon
 ) {
   const { scene, renderer } = useTresContext()
-  const updateInterval = 33 // seconds
+  const updateInterval = 0.04
   const timer = ref(0)
-
-
   const { latitude, longitude } = await getGeoFromIP()
 
+  const now = new Date()
+  const sunPosition = new Vector3()
+  const moonDir = new THREE.Vector3()
+  now.setHours(now.getHours() + 10.5)
   const updateSun = async () => {
     try {
-      if (sunCfg.hourOverride.enabled) {
-        now.setHours(sunCfg.hourOverride.value, sunCfg.minuteOverride.value)
-      }
-      now.setSeconds(now.getSeconds())
-
+      now.setSeconds(now.getSeconds() + 20)
       const pos = SunCalc.getPosition(now, latitude, longitude)
       sunPosition.setFromSphericalCoords(1, pos.azimuth, pos.altitude)
       sky.material.uniforms.sunPosition.value.copy(sunPosition)
-      // ☀️ Elevation & moonlight logic
+      // Elevation & moonlight logic
       const elevation = Math.sin(pos.altitude)
-      const sunriseMin = 0.368
+      const sunriseMin = 0.38
       const sunriseMax = 0.55
+      const isMoonNight = elevation < 0
       const isNight = elevation < sunriseMin
       const isSunrise = elevation < sunriseMax
 
@@ -123,17 +126,17 @@ export async function useSunLighting(
       const skyColor = computeSkyColor(elevation, now.getHours() < 12 ? 'am' : 'pm')
 
       // Realistic sun/moon intensity and color
-      light.position.copy(sunPosition.clone().multiplyScalar(100))
+      sunLight.position.copy(sunPosition.clone().multiplyScalar(100))
 
       const t = Math.min(
         1,
-        Math.max(0, (elevationNormalized - sunriseMin) / (sunriseMax - sunriseMin)),
+        Math.max(0, (elevationNormalized - sunriseMin) / (sunriseMax - sunriseMin))
       )
 
       // Quadratic interpolation (ease in)
-      light.intensity = isNight ? 0 : t ** 3
+      sunLight.intensity = isMoonNight ? 1 : (isNight ? 0.001 : t ** 3)
 
-      light.color.set(skyColor)
+      sunLight.color.set(isMoonNight ? 0xe8e8e8 : skyColor)
 
       // Turbidity: clearer sky at night, gradually hazier during sunrise/sunset
       sky.material.uniforms.turbidity.value = (1 - elevationNormalized) * 7 // From 6 (hazy at horizon) to 1 (clear daytime)
@@ -147,7 +150,7 @@ export async function useSunLighting(
       // Mie directional scattering: consistent, but slightly more forward-scattering at sunrise/sunset
       sky.material.uniforms.mieDirectionalG.value = 1 - (elevationNormalized + 0.1) ** 2 // From 0.7 (daytime) to 0.8 (sunset/sunrise)
 
-      ambientLight.intensity = elevationNormalized * 1.3
+      ambientLight.intensity = elevationNormalized * 1.3 + 0.088
       ambientLight.color.set(skyColor)
       // Fog and background color
       const fogHue = isNight ? 0.62 : 0.1
@@ -156,8 +159,7 @@ export async function useSunLighting(
 
       scene.value.fog = new FogExp2(
         new Color().setHSL(fogHue, fogSat, fogLightness),
-        isNight ? 0.001 : isSunrise ? 0.01 : elevationNormalized * 0.03,
-      )
+        isNight ? 0.0001 : isSunrise ? 0.1 * elevationNormalized**2 : 0.05 * elevationNormalized**2)
 
       renderer.value.setClearColor(skyColor)
       renderer.value.toneMappingExposure = Math.max(0.7, elevationNormalized)
@@ -166,14 +168,54 @@ export async function useSunLighting(
     }
   }
 
+  function updateMoon() {
+    if (!moon.light || !moon.mesh.value || !moon.material.value) return
+
+    const moonPos = SunCalc.getMoonPosition(now, latitude, longitude)
+    const illum = SunCalc.getMoonIllumination(now)
+
+    // Direction from Earth observer to Moon
+    moonDir.setFromSphericalCoords(1, Math.PI / 2 - moonPos.altitude, moonPos.azimuth + Math.PI)
+
+    moon.light.position.copy(moonDir.clone().multiplyScalar(100))
+    moon.mesh.value.position.copy(moonDir.clone().multiplyScalar(100))
+
+    // Face the Earth (origin) — simulate tidal locking
+    moon.mesh.value.lookAt(new THREE.Vector3(0, 0, 0))
+
+    // Adjust light intensity based on altitude and illumination
+    const visible = moonPos.altitude > 0
+    const moonBrightness = visible
+      ? Math.pow(Math.sin(moonPos.altitude), 2) * illum.fraction
+      : 0
+    moon.light.intensity = moonBrightness * 0.4
+
+    // Apply phase tint (darker for crescent/new moon)
+    const fullMoonColor = new THREE.Color(0xffffff)
+    const shadowColor = new THREE.Color(0x222233)
+    moon.material.value.color = fullMoonColor.clone().lerp(shadowColor, 1 - illum.fraction)
+
+    // Simulate Earthshine on dark side of Moon
+    if (ambientLight && !visible) {
+      const earthshine = 0.05 + (1 - illum.fraction) * 0.1
+      ambientLight.intensity += earthshine
+    }
+  }
+  const updateCelestial = () => {
+    updateSun()
+    updateMoon()
+  }
+
   const { onLoop } = useRenderLoop()
   onLoop(({ delta }) => {
     timer.value += delta
     if (timer.value >= updateInterval) {
       timer.value = 0
-      updateSun()
+      updateCelestial()
       renderer.value.shadowMap.needsUpdate = true
     }
   })
-  return { updateSun }
+
+  return { updateCelestial }
 }
+

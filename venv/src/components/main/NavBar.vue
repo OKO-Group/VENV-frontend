@@ -226,7 +226,7 @@ function focusInput() {
 }
 
 nav {
-  font-size: clamp(0.7rem, 5vw, 1.8rem); /* responsive font scaling */
+  font-size: clamp(0.7rem, 4vw, 1.8rem); /* responsive font scaling */
   transition: opacity 0.5s ease-in-out;
 }
 

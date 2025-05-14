@@ -70,7 +70,7 @@ const filteredArtworks = computed(() => {
 </script>
 
 <template>
-  <v-card class="pa-4 d-flex flex-column panel-card" height="75vh">
+  <v-card class="pa-4 d-flex flex-column panel-card" :height="isMobile ? '60vh' : '75vh'">
     <div v-if="useOwnArtworks" class="pa-2 pt-10 pb-10 search-bar-wrapper">
       <v-tooltip v-if="!searchActive" text="Search" location="top">
         <template #activator="{ props }">
@@ -144,8 +144,8 @@ const filteredArtworks = computed(() => {
         </v-icon>
       </v-col>
     </v-row>
+    <div       v-if="filteredArtworks.length">
     <ArtworkListRenderer
-      v-if="filteredArtworks.length"
       :artworks="filteredArtworks"
       :viewMode="selectedViewMode"
       :selectedArtworkId="selectedArtwork?.id"
@@ -154,13 +154,14 @@ const filteredArtworks = computed(() => {
       :has-next-page="hasNextPage"
       @select="$emit('selectArtwork', $event)"
     />
-    <v-else>
+    </div>
+    <div v-else>
       <v-row class="text-center">
         <v-col>
           <v-progress-circular v-if="!filteredArtworks.length" indeterminate />
         </v-col>
       </v-row>
-    </v-else>
+    </div>
     <div class="text-center mt-4">
       <v-progress-circular v-if="isFetchingNextPage" indeterminate />
       <v-icon v-else-if="!hasNextPage && filteredArtworks.length"> {{ mdiEyeOutline }}</v-icon>

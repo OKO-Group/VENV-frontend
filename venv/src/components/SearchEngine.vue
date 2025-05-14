@@ -178,20 +178,18 @@ function handleArtworkDelete() {
   selectedArtwork.value = null
 }
 
-
-const artworkPanelRef = useTemplateRef<HTMLElement>('el')
-const panelEl = ref<HTMLElement | null>(null)
-
-const handleTap = (e: TouchEvent | MouseEvent) => {
-  // Detect double tap via event.detail === 2
-  if ((e as any).detail === 2) {
-    selectedArtwork.value = null
-  }
+// const artworkPanelRef = useTemplateRef<HTMLElement>('el')
+// const panelEl = ref<HTMLElement | null>(null)
+//
+// const handleTap = (e: TouchEvent | MouseEvent) => {
+//   // Detect double tap via event.detail === 2
+//   if ((e as any).detail === 2) {
+//     selectedArtwork.value = null
+//   }
+// }
+function handleCloseArtworkPanel(){
+  selectedArtwork.value = null
 }
-
-onMounted(() => {
-  useEventListener(panelEl, 'click', handleTap, { passive: true })
-})
 </script>
 
 <template>
@@ -199,39 +197,41 @@ onMounted(() => {
     <!-- Mobile Layout: stacked vertically -->
     <div v-if="isMobile">
       <v-col>
-        <FilterPanel
-          v-if="!selectedArtwork"
-          :filters="filters"
-          :filterdb="filterdb"
-          :artists="artworkStore.artists"
-          :enable-user-filter="enableUserFilter"
-        />
-        <SearchPanel
-          v-if="!selectedArtwork"
-          :artworks="allArtworks"
-          :show-upload="showUpload"
-          :use-own-artworks="useOwnArtworks"
-          :search-active="searchActive"
-          :is-fetching-next-page="isFetchingNextPage"
-          :has-next-page="hasNextPage"
-          :fetch-next-page="fetchNextPage"
-          :selected-artwork="selectedArtwork"
-          :artwork-store="artworkStore"
-          @upload="initArtworkCanvas"
-          @select-artwork="selectArtwork"
-          @blur="handleBlur"
-          @activate-search="activateSearch"
-        />
-        <ArtworkPanel
-          v-if="selectedArtwork"
-          ref="panelEl"
-          :artwork="selectedArtwork"
-          :is-creating-new="isCreatingNew"
-          :filterdb="filterdb"
-          @update-artwork="handleArtworkUpdate"
-          @upload-artwork="handleArtworkUpload"
-          @delete-artwork="handleArtworkDelete"
-        />
+        <div v-if="!selectedArtwork">
+          <FilterPanel
+            :filters="filters"
+            :filterdb="filterdb"
+            :artists="artworkStore.artists"
+            :enable-user-filter="enableUserFilter"
+          />
+          <SearchPanel
+            v-if="!selectedArtwork"
+            :artworks="allArtworks"
+            :show-upload="showUpload"
+            :use-own-artworks="useOwnArtworks"
+            :search-active="searchActive"
+            :is-fetching-next-page="isFetchingNextPage"
+            :has-next-page="hasNextPage"
+            :fetch-next-page="fetchNextPage"
+            :selected-artwork="selectedArtwork"
+            :artwork-store="artworkStore"
+            @upload="initArtworkCanvas"
+            @select-artwork="selectArtwork"
+            @blur="handleBlur"
+            @activate-search="activateSearch"
+          />
+        </div>
+        <div v-else>
+          <ArtworkPanel
+            :artwork="selectedArtwork"
+            :is-creating-new="isCreatingNew"
+            :filterdb="filterdb"
+            @update-artwork="handleArtworkUpdate"
+            @upload-artwork="handleArtworkUpload"
+            @delete-artwork="handleArtworkDelete"
+            @close="handleCloseArtworkPanel"
+          />
+        </div>
       </v-col>
     </div>
 
@@ -245,7 +245,6 @@ onMounted(() => {
           :enable-user-filter="enableUserFilter"
         />
       </v-col>
-
       <v-col cols="6">
         <SearchPanel
           :artworks="allArtworks"
@@ -271,6 +270,7 @@ onMounted(() => {
         @update-artwork="handleArtworkUpdate"
         @upload-artwork="handleArtworkUpload"
         @delete-artwork="handleArtworkDelete"
+        @close="handleCloseArtworkPanel"
       />
     </v-row>
   </v-container>

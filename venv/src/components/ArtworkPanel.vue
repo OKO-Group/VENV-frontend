@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, nextTick, type Ref, ref, shallowRef, toRaw, watch } from 'vue'
 import {
-  mdiAlbum,
+  mdiAlbum, mdiArrowLeft,
   mdiBrush,
   mdiCheckBold,
   mdiDeleteCircle,
@@ -269,6 +269,8 @@ function closeImageViewer() {
   fullscreenImage.value = undefined
 }
 
+
+
 </script>
 
 <template>
@@ -505,6 +507,12 @@ function closeImageViewer() {
           </div>
         </template>
       </div>
+      <v-btn
+        :icon="mdiArrowLeft"
+        class="description-edit-btn opacity-70"
+        @click="emit('close')"
+      >
+      </v-btn>
     </v-card>
   </v-col>
 </template>

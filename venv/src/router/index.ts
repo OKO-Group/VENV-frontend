@@ -7,6 +7,7 @@ const routes = [
   { path: '/artists', component: () => import('@/views/ArtistView.vue') },
   { path: '/search', component: () => import('@/views/SearchView.vue') },
   { path: '/about', component: () => import('@/views/AboutView.vue') },
+  { path: '/contact', component: () => import('@/views/ContactUsView.vue') },
   {
     path: '/login',
     component: () => import('@/views/LoginView.vue'),

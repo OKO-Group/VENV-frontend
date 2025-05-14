@@ -97,17 +97,15 @@ export async function useSunLighting(
   moon: Moon
 ) {
   const { scene, renderer } = useTresContext()
-  const updateInterval = 0.04
+  const updateInterval = 33
   const timer = ref(0)
   const { latitude, longitude } = await getGeoFromIP()
 
   const now = new Date()
   const sunPosition = new Vector3()
   const moonDir = new THREE.Vector3()
-  now.setHours(now.getHours() + 10.5)
   const updateSun = async () => {
     try {
-      now.setSeconds(now.getSeconds() + 20)
       const pos = SunCalc.getPosition(now, latitude, longitude)
       sunPosition.setFromSphericalCoords(1, pos.azimuth, pos.altitude)
       sky.material.uniforms.sunPosition.value.copy(sunPosition)

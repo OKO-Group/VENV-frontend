@@ -1,12 +1,14 @@
 <script setup lang="ts">
+import {isMobile} from '@/utils/isMobile.ts'
+
 defineProps<{
   cardClass?: string
 }>()
 </script>
 
 <template>
-  <v-container fluid class="full-screen-container">
-    <v-card class="dashboard-card" :class="cardClass">
+  <v-container fluid class="full-screen-container" :style="{ marginTop: isMobile ? '3.5rem' : 0 }">
+    <v-card class="dashboard-card" :class="cardClass" :style="{ height: isMobile ? '68vh' : '86vh' }">
       <slot />
     </v-card>
   </v-container>

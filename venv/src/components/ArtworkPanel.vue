@@ -507,14 +507,14 @@ function closeImageViewer() {
           </div>
         </template>
       </div>
-      <v-btn
-        :icon="mdiArrowLeft"
-        class="description-edit-btn opacity-70"
-        @click="emit('close')"
-      >
-      </v-btn>
     </v-card>
   </v-col>
+  <v-btn
+    :icon="mdiArrowLeft"
+    class="description-edit-btn opacity-70"
+    @click="emit('close')"
+  >
+  </v-btn>
 </template>
 
 <style scoped>

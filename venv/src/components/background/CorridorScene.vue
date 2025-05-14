@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {
-  defineEmits, nextTick,
+  defineEmits,
+  nextTick,
   onMounted,
   reactive,
   ref,
@@ -9,7 +10,7 @@ import {
   shallowRef,
   watch
 } from 'vue'
-import { dispose, useRenderLoop, useTresContext } from '@tresjs/core'
+import { useRenderLoop, useTresContext } from '@tresjs/core'
 import * as THREE from 'three'
 import { Quaternion, Vector3 } from 'three'
 import { type Artwork } from '@/types/oko.ts'
@@ -86,7 +87,8 @@ const seenIDs = new Set()
 const displayedArtworks = ref<Artwork[]>([])
 const groundMaterial = shallowRef<THREE.MeshStandardMaterial | null>(null)
 const groundMesh = shallowRef<THREE.Mesh | null>(null)
-
+const moonMaterial = shallowRef<THREE.MeshPhysicalMaterial | null>(null)
+const moonMesh = shallowRef<THREE.Mesh | null>(null)
 //Fog
 scene.value.fog = new THREE.FogExp2('#d8c7ac', 0.01)
 
@@ -100,13 +102,24 @@ light.castShadow = true
 light.shadow.bias = -0.001
 scene.value.add(light)
 
+const moonLight = new THREE.DirectionalLight(0xffffff, 0.2)
+moonLight.castShadow = true
+moonLight.shadow.bias = -0.001
+
+const moonShine = new THREE.DirectionalLight(0xffffff, 0.2) //haha
+moonShine.castShadow = true
+moonShine.shadow.bias = -0.001
+
+scene.value.add(moonLight)
+// scene.value.add(moonShine)
+
 const ambientLight = reactive({ intensity: 0.5, color: new THREE.Color() })
 // Enable adaptive sun lighting
-const { updateSun } = await useSunLighting(sky, light, ambientLight)
-updateSun()
-renderer.value.shadowMap.enabled = true
-renderer.value.shadowMap.needsUpdate = true
-
+const { updateCelestial } = await useSunLighting(sky, light, ambientLight, {
+  light: moonLight,
+  mesh: moonMesh,
+  material: moonMaterial
+})
 //useSkyDebugger(sky, light, renderer.value)
 
 const artworkStore = useArtworkStore()
@@ -269,6 +282,29 @@ function initArtworks() {
   )
 }
 
+async function initMoon() {
+  if (!moonMaterial.value) return
+  console.log('loading moon texture')
+  const map = await loader.loadAsync('/moon_texture_map.jpg')
+  const displacementMap = await loader.loadAsync('ldem_3_8bit.jpg')
+  moonMaterial.value.map = map
+  moonMaterial.value.shadowSide = THREE.FrontSide
+  moonMaterial.value.displacementScale = 0.33
+  moonMaterial.value.displacementMap = displacementMap
+  moonMaterial.value.transparent = true
+  gsap.to(moonMaterial.value!, {
+    opacity: 1,
+    duration: 2,
+    ease: 'sine.inOut',
+    onUpdate: () => {
+      moonMaterial.value!.needsUpdate = true
+    },
+    onComplete: () => {
+      moonMaterial.value!.transparent = false
+    }
+  })
+}
+
 async function initTerrain(onComplete?: () => void) {
   if (!groundMaterial.value) return
   const map = await loader.loadAsync('/sand-dunes1_albedo.png')
@@ -308,6 +344,8 @@ async function initTerrain(onComplete?: () => void) {
 initArtworks()
 
 onMounted(async () => {
+  await initMoon()
+  updateCelestial()
   await initTerrain(async () => {
     watch(() => props.artworks,
       (newArtworks) => {
@@ -479,6 +517,22 @@ useRenderLoop().onLoop(({ delta }) => {
     :color="ambientLight.color"
     :ground-color="0xfff7de"
   />
+  <TresMesh ref="moonMesh" :rotation="[0, 0, 0]">
+    <TresSphereGeometry :args="[1, 64, 64]" />
+    <TresMeshStandardMaterial
+      ref="moonMaterial"
+      :metalness="0.05"
+      :roughness="0.95"
+      :emissive="[0.02, 0.02, 0.02]"
+      :emissiveIntensity="0.5"
+      :opacity="0.98"
+      transparent
+      :envMapIntensity="0.05"
+      :clearcoat="0.1"
+      :clearcoatRoughness="0.8"
+    />
+  </TresMesh>
+
   <TresGroup
     v-for="(artwork, i) in images"
     :key="i"
@@ -573,7 +627,7 @@ useRenderLoop().onLoop(({ delta }) => {
 
   <!-- Ground Plane -->
   <TresMesh :rotation="[-Math.PI / 2, 0, 0]" cast-shadow receive-shadow ref="groundMesh">
-    <TresPlaneGeometry :args="[100, 100, 256, 256]" />
+    <TresPlaneGeometry :args="[133, 133, 256, 256]" />
     <!-- use enough segments for displacement -->
     <TresMeshPhysicalMaterial
       ref="groundMaterial"

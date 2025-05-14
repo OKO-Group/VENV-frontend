@@ -12,7 +12,7 @@ import {
   mdiLogin,
   mdiLogout,
   mdiSearchWeb,
-  mdiCompass, mdiSetNone
+  mdiCompass, mdiSetNone, mdiEmail
 } from '@mdi/js'
 import {isMobile} from '@/utils/isMobile.ts'
 
@@ -121,6 +121,17 @@ function focusInput() {
           </v-tooltip>
           <RouterLink v-else to="/about" exact-active-class="active">
             <span>ABOUT</span>
+          </RouterLink>
+          <!-- About -->
+          <v-tooltip v-if="!isMobile" text="Contact" :location="isHome ? 'right' : 'bottom'">
+            <template #activator="{ props }">
+              <RouterLink to="/contact" exact-active-class="active" v-bind="props">
+                <v-icon :icon="mdiEmail" size="50" />
+              </RouterLink>
+            </template>
+          </v-tooltip>
+          <RouterLink v-else to="/contact" exact-active-class="active">
+            <span>CONTACT</span>
           </RouterLink>
         </nav>
       </transition>

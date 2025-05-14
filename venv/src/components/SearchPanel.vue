@@ -70,7 +70,7 @@ const filteredArtworks = computed(() => {
 </script>
 
 <template>
-  <v-card class="pa-4 d-flex flex-column panel-card" :height="isMobile ? '60vh' : '75vh'">
+  <v-card class="pa-4 d-flex flex-column panel-card" :height="isMobile? '59vh' : '75vh'">
     <div v-if="useOwnArtworks" class="pa-2 pt-10 pb-10 search-bar-wrapper">
       <v-tooltip v-if="!searchActive" text="Search" location="top">
         <template #activator="{ props }">
@@ -144,7 +144,7 @@ const filteredArtworks = computed(() => {
         </v-icon>
       </v-col>
     </v-row>
-    <div       v-if="filteredArtworks.length">
+    <div v-if="filteredArtworks.length">
     <ArtworkListRenderer
       :artworks="filteredArtworks"
       :viewMode="selectedViewMode"

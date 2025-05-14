@@ -5,6 +5,7 @@ import type { Artwork } from '@/types/oko'
 import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
 import { useIntersectionObserver } from '@vueuse/core'
 import { useArtworkStore } from '@/stores/artworks.ts'
+import {isMobile} from '@/utils/isMobile.ts'
 
 const artworkStore = useArtworkStore()
 const scrollbarOptions = {
@@ -93,7 +94,7 @@ useIntersectionObserver(loadMoreTrigger, ([{ isIntersecting }]) => {
 </script>
 
 <template>
-  <PerfectScrollbar class="ps" :options="scrollbarOptions" ref="tableRef">
+  <PerfectScrollbar class="ps" :style="{'max-height': isMobile ? '70vh' : '80vh'}" :options="scrollbarOptions" ref="tableRef">
     <div class="artwork-list">
       <!-- Grid layout -->
       <v-row v-if="viewMode === 'grid'" dense>
@@ -172,7 +173,6 @@ useIntersectionObserver(loadMoreTrigger, ([{ isIntersecting }]) => {
 
 <style scoped>
 .ps {
-  max-height: 80vh;
   overflow: auto; /* perfect-scrollbar manages overflow itself */
   display: flex;
   flex-direction: column;

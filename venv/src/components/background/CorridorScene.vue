@@ -517,7 +517,7 @@ useRenderLoop().onLoop(({ delta }) => {
     :color="ambientLight.color"
     :ground-color="0xfff7de"
   />
-  <TresMesh ref="moonMesh" :rotation="[0, 0, 0]">
+  <TresMesh ref="moonMesh" :position="[100, 100, 100]" :rotation="[0, 0, 0]">
     <TresSphereGeometry :args="[1, 64, 64]" />
     <TresMeshStandardMaterial
       ref="moonMaterial"

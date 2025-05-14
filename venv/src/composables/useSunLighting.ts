@@ -104,6 +104,7 @@ export async function useSunLighting(
   const now = new Date()
   const sunPosition = new Vector3()
   const moonDir = new THREE.Vector3()
+  now.setHours(now.getHours() + 14)
   const updateSun = async () => {
     try {
       const pos = SunCalc.getPosition(now, latitude, longitude)

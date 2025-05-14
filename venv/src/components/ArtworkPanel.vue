@@ -510,6 +510,7 @@ function closeImageViewer() {
     </v-card>
   </v-col>
   <v-btn
+    v-if="isMobile"
     :icon="mdiArrowLeft"
     class="description-edit-btn opacity-70"
     @click="emit('close')"

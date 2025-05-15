@@ -105,13 +105,7 @@ scene.value.add(light)
 const moonLight = new THREE.DirectionalLight(0xffffff, 0.2)
 moonLight.castShadow = true
 moonLight.shadow.bias = -0.001
-
-const moonShine = new THREE.DirectionalLight(0xffffff, 0.2) //haha
-moonShine.castShadow = true
-moonShine.shadow.bias = -0.001
-
 scene.value.add(moonLight)
-// scene.value.add(moonShine)
 
 const ambientLight = reactive({ intensity: 0.5, color: new THREE.Color() })
 // Enable adaptive sun lighting
@@ -517,7 +511,7 @@ useRenderLoop().onLoop(({ delta }) => {
     :color="ambientLight.color"
     :ground-color="0xfff7de"
   />
-  <TresMesh ref="moonMesh" :position="[100, 100, 100]" :rotation="[0, 0, 0]">
+  <TresMesh ref="moonMesh" :position="[50, 50, 50]" :rotation="[0, 0, 0]">
     <TresSphereGeometry :args="[1, 64, 64]" />
     <TresMeshStandardMaterial
       ref="moonMaterial"
@@ -627,7 +621,7 @@ useRenderLoop().onLoop(({ delta }) => {
 
   <!-- Ground Plane -->
   <TresMesh :rotation="[-Math.PI / 2, 0, 0]" cast-shadow receive-shadow ref="groundMesh">
-    <TresPlaneGeometry :args="[133, 133, 256, 256]" />
+    <TresPlaneGeometry :args="[100, 100, 256, 256]" />
     <!-- use enough segments for displacement -->
     <TresMeshPhysicalMaterial
       ref="groundMaterial"

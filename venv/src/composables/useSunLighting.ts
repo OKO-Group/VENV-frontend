@@ -101,28 +101,28 @@ export async function useSunLighting(
   const timer = ref(0)
   const { latitude, longitude } = await getGeoFromIP()
 
-  const now = new Date()
+  let now = new Date()
   const sunPosition = new Vector3()
   const moonDir = new THREE.Vector3()
-  now.setHours(now.getHours() + 14)
+  let sunElevation = 0.
   const updateSun = async () => {
     try {
       const pos = SunCalc.getPosition(now, latitude, longitude)
       sunPosition.setFromSphericalCoords(1, pos.azimuth, pos.altitude)
       sky.material.uniforms.sunPosition.value.copy(sunPosition)
       // Elevation & moonlight logic
-      const elevation = Math.sin(pos.altitude)
+      sunElevation = Math.sin(pos.altitude)
       const sunriseMin = 0.38
       const sunriseMax = 0.55
-      const isMoonNight = elevation < 0
-      const isNight = elevation < sunriseMin
-      const isSunrise = elevation < sunriseMax
+      const isMoonNight = sunElevation < 0
+      const isNight = sunElevation < sunriseMin
+      const isSunrise = sunElevation < sunriseMax
 
       // Calculate the sky color based on scattering, turbidity, and sun position
       // Normalized elevation for easy calculations
-      const elevationNormalized = Math.max(0, elevation)
+      const elevationNormalized = Math.max(0, sunElevation)
 
-      const skyColor = computeSkyColor(elevation, now.getHours() < 12 ? 'am' : 'pm')
+      const skyColor = computeSkyColor(sunElevation, now.getHours() < 12 ? 'am' : 'pm')
 
       // Realistic sun/moon intensity and color
       sunLight.position.copy(sunPosition.clone().multiplyScalar(100))
@@ -168,7 +168,7 @@ export async function useSunLighting(
   }
 
   function updateMoon() {
-    if (!moon.light || !moon.mesh.value || !moon.material.value) return
+    if (!moon.light || !moon.mesh.value || !moon.material.value || sunElevation < 0) return
 
     const moonPos = SunCalc.getMoonPosition(now, latitude, longitude)
     const illum = SunCalc.getMoonIllumination(now)
@@ -201,6 +201,7 @@ export async function useSunLighting(
     }
   }
   const updateCelestial = () => {
+    now = new Date()
     updateSun()
     updateMoon()
   }

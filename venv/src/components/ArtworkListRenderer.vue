@@ -194,9 +194,6 @@ useIntersectionObserver(loadMoreTrigger, async ([{ isIntersecting }]) => {
   flex-direction: column;
 }
 
-.artwork-list::-webkit-scrollbar {
-  display: none;
-}
 
 .artwork-table {
   background-color: rgba(220, 220, 220, 0.2);

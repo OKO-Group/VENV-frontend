@@ -42,7 +42,7 @@ a,
 /* Hide native scrollbar for Firefox & IE */
 * {
   scrollbar-width: thin;       /* Firefox */
-  scrollbar-color: rgb(164,164,164) #e1dbdb;
+  scrollbar-color: rgba(220, 220, 220, 0.87) rgba(225, 219, 219, 0);
   -ms-overflow-style: none;    /* IE 10+ */
 }
 
@@ -53,11 +53,7 @@ a,
 }
 
 ::-webkit-scrollbar-track {
-  background: #e1dbdb;
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgb(164, 164, 164);
+  background: rgba(225, 219, 219, 0);
 }
 
 ::-webkit-scrollbar-thumb:hover {

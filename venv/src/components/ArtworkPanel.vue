@@ -282,7 +282,7 @@ function closeImageViewer() {
     </template>
   </v-dialog>
   <v-col v-if="artwork" :cols="!isMobile ? 4 : undefined" class="artwork-panel">
-    <v-card class="pa-5 d-flex flex-column justify-space-between" height="80vh">
+    <v-card class="pa-2 d-flex flex-column justify-space-between" variant="flat" height="78vh">
       <v-tabs v-model="subTab" align-tabs="center" height="40">
         <v-tab
           v-if="canEditSelected || artworkImageSources[ArtworkFileCategory.PAINTING]"
@@ -520,7 +520,6 @@ function closeImageViewer() {
 
 <style scoped>
 .artwork-panel {
-  height: 82vh;
   display: flex;
   flex-direction: column;
 }

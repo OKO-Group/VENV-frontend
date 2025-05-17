@@ -31,6 +31,7 @@ function replaceArtwork(id: number) {
     preset="realistic"
     class="canvas-component"
     render-mode="on-demand"
+
   >
     <TresPerspectiveCamera :position="[0, 0, 0]" />
     <Suspense>

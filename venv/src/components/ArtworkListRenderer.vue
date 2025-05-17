@@ -1,19 +1,18 @@
 <script setup lang="ts">
-import { computed, ref, shallowRef } from 'vue'
+import { computed, nextTick, ref, shallowRef } from 'vue'
 import { mdiEyeOutline } from '@mdi/js'
 import type { Artwork } from '@/types/oko'
 import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
 import { useIntersectionObserver } from '@vueuse/core'
 import { useArtworkStore } from '@/stores/artworks.ts'
-import {isMobile} from '@/utils/isMobile.ts'
+import { isMobile } from '@/utils/isMobile.ts'
 
-const artworkStore = useArtworkStore()
+useArtworkStore()
 const scrollbarOptions = {
   wheelPropagation: false,
   suppressScrollX: true,
-  scrollYMarginOffset: -1,
   maxScrollbarLength: 100,
-  wheelSpeed: 0.2,
+  wheelSpeed: 0.2
 }
 
 const props = defineProps<{
@@ -22,6 +21,7 @@ const props = defineProps<{
   selectedArtworkId?: number | null
   useOwnArtworks?: boolean
   hasNextPage: boolean
+  isFetchingNext: boolean
   fetchNextPage: () => Promise<any>
 }>()
 
@@ -57,9 +57,9 @@ const tableHeaders = [
     key: 'artwork',
     width: 100,
     sortable: false,
-    align: 'center',
+    align: 'center'
   },
-  { title: 'Date', key: 'created_at', align: 'end' },
+  { title: 'Date', key: 'created_at', align: 'end' }
 ]
 
 function formatDate(dateStr: string) {
@@ -73,9 +73,9 @@ const artworksWithIndex = computed(() =>
       index: i + 1,
       title: a.title,
       artwork: getThumb(a),
-      created_at: formatDate(a.created_at),
-    }),
-  ),
+      created_at: formatDate(a.created_at)
+    })
+  )
 )
 
 // Handle bottom visibility to trigger fetch
@@ -83,7 +83,7 @@ const isFetching = shallowRef(false)
 const tableRef = ref<HTMLElement | null>(null)
 const loadMoreTrigger = ref<HTMLElement | null>(null)
 
-useIntersectionObserver(loadMoreTrigger, ([{ isIntersecting }]) => {
+useIntersectionObserver(loadMoreTrigger, async ([{ isIntersecting }]) => {
   if (isIntersecting && !isFetching.value && props.hasNextPage) {
     isFetching.value = true
     props.fetchNextPage().finally(() => {
@@ -94,38 +94,43 @@ useIntersectionObserver(loadMoreTrigger, ([{ isIntersecting }]) => {
 </script>
 
 <template>
-  <PerfectScrollbar class="ps" :style="{'max-height': isMobile ? '70vh' : '80vh'}" :options="scrollbarOptions" ref="tableRef">
+  <PerfectScrollbar class="ps-bar"
+                    :style="{'max-height': isMobile ? '70vh' : '80vh', 'overflow-x': 'hidden'}"
+                    :options="scrollbarOptions" ref="tableRef">
     <div class="artwork-list">
       <!-- Grid layout -->
-      <v-row v-if="viewMode === 'grid'" dense>
-        <v-col
-          v-for="(item, index) in artworks"
-          :key="item.id"
-          v-show="useOwnArtworks || hasImage(item)"
-          cols="12"
-          sm="6"
-          md="4"
-          lg="3"
-        >
-          <v-card
-            class="pa-2 mb-2 text-center"
-            :elevation="selectedArtworkId === item.id ? 5 : 1"
-            @click="handleClick(item)"
+      <div v-if="viewMode === 'grid'">
+        <v-row style="max-height: 78vh;" dense>
+          <v-col
+            v-for="(item, index) in artworks"
+            :key="item.id"
+            v-show="useOwnArtworks || hasImage(item)"
+            cols="12"
+            sm="6"
+            md="4"
+            lg="3"
           >
-            <v-img v-if="hasImage(item)" :src="getThumb(item)" height="160" class="mb-2 artwork" />
-            <v-icon v-else :icon="mdiEyeOutline" size="160" class="mb-2" />
-            <div class="text-body-2 font-weight-medium">{{ item.title }}</div>
-            <div class="text-caption grey--text">
-              {{ new Date(item.uploaded_at).toLocaleDateString() }}
-            </div>
-          </v-card>
-        </v-col>
-      </v-row>
+            <v-card
+              class="pa-1 mb-0.5 text-center"
+              :elevation="selectedArtworkId === item.id ? 3 : 0"
+              @click="handleClick(item)"
+              variant="tonal"
+            >
+              <v-img v-if="hasImage(item)" :src="getThumb(item)" height="160"
+                     class="mb-1 artwork" />
+              <v-icon v-else :icon="mdiEyeOutline" size="160" class="mb-1" />
+              <div class="text-body-2 font-weight-medium">{{ item.title }}</div>
+              <div class="text-caption grey--text">
+                {{ new Date(item.uploaded_at).toLocaleDateString() }}
+              </div>
+            </v-card>
+          </v-col>
+        </v-row>
+      </div>
 
       <!-- Scrollable table wrapper -->
       <v-data-table-virtual
         v-else
-        :headers="tableHeaders"
         :items="artworksWithIndex"
         :key="artworksWithIndex.length"
         class="artwork-table text-caption"
@@ -168,23 +173,25 @@ useIntersectionObserver(loadMoreTrigger, ([{ isIntersecting }]) => {
         <div ref="loadMoreTrigger" style="height: 1px"></div>
       </td>
     </tr>
+    <div class="text-center">
+      <v-progress-circular v-if="isFetchingNext" indeterminate />
+    </div>
   </PerfectScrollbar>
+
 </template>
 
 <style scoped>
-.ps {
+.ps-bar {
   overflow: auto; /* perfect-scrollbar manages overflow itself */
   display: flex;
   flex-direction: column;
   background-color: rgba(220, 220, 220, 0);
 }
 
+
 .artwork-list {
   display: flex;
   flex-direction: column;
-  padding: 12px;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
 }
 
 .artwork-list::-webkit-scrollbar {
@@ -218,19 +225,17 @@ useIntersectionObserver(loadMoreTrigger, ([{ isIntersecting }]) => {
 
 .artwork-row {
   background-color: rgba(220, 219, 219, 0.6);
-  transition:
-    box-shadow 0.5s ease,
-    background-color 0.5s ease,
-    transform 0.5s ease;
+  transition: box-shadow 0.33s ease,
+  background-color 0.33s ease,
+  transform 0.33s ease;
 }
 
 .artwork-row:hover {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   background-color: rgba(238, 238, 238, 0.71);
   transform: scaleX(1.008) scaleY(1.008);
-  transition:
-    box-shadow 0.5s ease,
-    transform 0.5s ease;
+  transition: box-shadow 0.33s ease,
+  transform 0.33s ease;
 }
 
 .artwork-row.is-selected {

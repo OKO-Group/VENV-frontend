@@ -1,3 +1,3 @@
 v1 VENV FRONTEND
 
-<img src="venv/img/example_II.svg" alt="example" width="600"/>
+<img src="venv/img/example.svg" alt="example" width="600"/>

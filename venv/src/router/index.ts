@@ -49,7 +49,7 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const authStore = useAuthStore()
   authStore.resetErrors()
-  const isAuthenticated = !!authStore.user
+  const isAuthenticated = !!authStore.id
   if (to.meta.requiresAuth && !isAuthenticated) {
     next('/login')
   } else if (to.meta.requiresAnon && isAuthenticated) {

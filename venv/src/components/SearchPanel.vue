@@ -16,7 +16,6 @@ import { isMobile } from '@/utils/isMobile.ts'
 import { useArtworkStore } from '@/stores/artworks.ts'
 
 
-
 const props = defineProps<{
   showUpload?: boolean
   useOwnArtworks?: boolean
@@ -40,7 +39,7 @@ const selectedViewMode = ref<ViewMode>(isMobile ? 'grid' : 'relaxed')
 
 defineEmits([
   'selectArtwork',
-  'upload',
+  'upload'
 ])
 
 
@@ -105,16 +104,16 @@ const filteredArtworks = computed(() => {
       style="margin-top: 3px; margin-bottom: 3px"
       no-gutters
     >
-      <!-- ⬆ Upload Button -->
-      <v-col       v-if="useOwnArtworks"
-                   class="justify-center" style="max-width: 60px">
+      <!-- Upload Button -->
+      <v-col v-if="useOwnArtworks"
+             class="justify-center" style="max-width: 60px">
         <v-btn v-if="showUpload" @click="$emit('upload')" icon>
           <v-icon :icon="mdiPlusCircle" size="33" />
         </v-btn>
       </v-col>
-      <!-- 🔍 Search Button + Expanding Field -->
-      <v-col       v-if="useOwnArtworks"
-                   class="d-flex align-center" style="max-width: 300px">
+      <!-- Search Button + Expanding Field -->
+      <v-col v-if="useOwnArtworks"
+             class="d-flex align-center" style="max-width: 300px">
         <v-tooltip v-if="!searchActive" text="Search" location="top">
           <template #activator="{ props }">
             <div
@@ -133,7 +132,8 @@ const filteredArtworks = computed(() => {
           @after-leave="searchHiding = false"
 
         >
-          <div ref="searchFieldRef" v-if="searchActive" class="expanded-search-wrapper d-flex align-center">
+          <div ref="searchFieldRef" v-if="searchActive"
+               class="expanded-search-wrapper d-flex align-center">
             <v-text-field
               ref="searchInput"
               v-model="artworkStore.searchOwn"
@@ -149,7 +149,7 @@ const filteredArtworks = computed(() => {
       </v-col>
 
 
-      <!-- 🔲 View Mode Toggle -->
+      <!-- View Mode Toggle -->
       <v-col
         class="d-flex justify-end"
         v-if="!isMobile"
@@ -198,16 +198,16 @@ const filteredArtworks = computed(() => {
         </v-icon>
       </v-col>
     </v-row>
-      <ArtworkListRenderer
-        :artworks="filteredArtworks"
-        :viewMode="selectedViewMode"
-        :selectedArtworkId="selectedArtwork?.id"
-        :useOwnArtworks="useOwnArtworks"
-        :fetch-next-page="fetchNextPage"
-        :is-fetching-next="isFetchingNextPage"
-        :has-next-page="hasNextPage"
-        @select="$emit('selectArtwork', $event)"
-      />
+    <ArtworkListRenderer
+      :artworks="filteredArtworks"
+      :viewMode="selectedViewMode"
+      :selectedArtworkId="selectedArtwork?.id"
+      :useOwnArtworks="useOwnArtworks"
+      :fetch-next-page="fetchNextPage"
+      :is-fetching-next="isFetchingNextPage"
+      :has-next-page="hasNextPage"
+      @select="$emit('selectArtwork', $event)"
+    />
   </v-card>
 </template>
 
@@ -216,6 +216,7 @@ const filteredArtworks = computed(() => {
 .list-controls {
   position: sticky;
 }
+
 .search-panel {
   background-color: rgba(0, 0, 0, 0) !important;
   backdrop-filter: none !important; /* Adds a nice frosted-glass effect */

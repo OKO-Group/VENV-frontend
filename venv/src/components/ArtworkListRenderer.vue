@@ -95,12 +95,12 @@ useIntersectionObserver(loadMoreTrigger, async ([{ isIntersecting }]) => {
 
 <template>
   <PerfectScrollbar class="ps-bar"
-                    :style="{'max-height': isMobile ? '70vh' : '80vh', 'overflow-x': 'hidden'}"
+                    :style="{'height': isMobile ? '70vh' : '80vh', 'overflow-x': 'hidden'}"
                     :options="scrollbarOptions" ref="tableRef">
     <div class="artwork-list">
       <!-- Grid layout -->
       <div v-if="viewMode === 'grid'">
-        <v-row style="max-height: 78vh;" dense>
+        <v-row style="height: 78vh;" dense>
           <v-col
             v-for="(item, index) in artworks"
             :key="item.id"

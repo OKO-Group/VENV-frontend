@@ -100,7 +100,7 @@ useIntersectionObserver(loadMoreTrigger, async ([{ isIntersecting }]) => {
     <div class="artwork-list">
       <!-- Grid layout -->
       <div v-if="viewMode === 'grid'">
-        <v-row style="height: 78vh;" dense>
+        <v-row style="max-height: 78vh;" dense>
           <v-col
             v-for="(item, index) in artworks"
             :key="item.id"

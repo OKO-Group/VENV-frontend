@@ -491,18 +491,17 @@ function closeImageViewer() {
 
         <template v-else>
           <div class="description-container">
-            <div class="text-subtitle-2 font-weight-medium mb-2">{{ artwork.title }}</div>
-            <div class="text-caption">Style: {{ artwork.style }}</div>
-            <div class="text-caption">Genre: {{ artwork.genre }}</div>
-            <div class="text-caption">Media: {{ artwork.media }}</div>
+            <div class="mb-2">{{ artwork.title }}</div>
+            <div class="text-caption">{{ artwork.genre.toUpperCase() }}</div>
+            <div class="text-caption">{{ artwork.media.toUpperCase() }}</div>
             <div class="text-caption">
-              Created At: {{ new Date(artwork.uploaded_at).toLocaleDateString() }}
+              {{ new Date(artwork.uploaded_at).toLocaleDateString() }}
             </div>
             <div v-if="artwork.description" class="text-caption">
-              Description: {{ artwork.description }}
+             {{ artwork.description }}
             </div>
             <div v-if="artwork.soundtracks?.side_a" class="text-caption">
-              Soundtrack: {{ artwork.soundtracks }}
+             {{ artwork.soundtracks }}
             </div>
           </div>
         </template>
@@ -552,9 +551,7 @@ function closeImageViewer() {
   box-shadow: 0 30px 30px rgba(0, 0, 0, 0);
 }
 
-.scroll-area::-webkit-scrollbar {
-  display: none;
-}
+
 
 .scroll-area {
   -ms-overflow-style: none;
@@ -657,12 +654,25 @@ function closeImageViewer() {
 .description-container {
   position: relative;
   transition: transform 0.25s ease;
-  margin-top: 1rem;
-  text-align: center;
+  padding: 1rem;
+  text-align: left;
+  font-size: 20px;
+  font-family: 'Inter', 'Helvetica Neue', sans-serif;
+  color: #2f2f2f;
+  font-weight: lighter;
 }
 
 .description-container:hover {
   transform: scale(1.01);
+}
+
+.description-container .text-subtitle-2 {
+  font-size: 1.2rem; /* larger title */
+}
+
+.description-container .text-caption {
+  font-size: 0.95rem;
+  line-height: 1.6;
 }
 
 .description-container:hover .description-edit-btn {

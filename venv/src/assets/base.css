@@ -86,3 +86,7 @@ body {
   border-radius: 8px; /* Smooth edges */
   transition: background 0.3s ease-in-out;
 }
+
+.v-text-field {
+  variant: 'plain';
+}

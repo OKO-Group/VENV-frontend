@@ -767,9 +767,6 @@ function onFileChange(e: Event) {
   scrollbar-width: none; /* Firefox */
 }
 
-.tabs-window-item::-webkit-scrollbar {
-  display: none; /* Chrome/Safari */
-}
 
 .country-select-wrapper {
   background-color: white;
@@ -811,21 +808,9 @@ function onFileChange(e: Event) {
   scrollbar-width: none;
 }
 
-/* Optional scroll hiding */
-.scroll-area::-webkit-scrollbar {
-  display: none;
-}
 
 .tab-scroll-content {
   flex: 1;
-  overflow-y: auto;
-  /* Optional: Hide scrollbar on WebKit */
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE 10+ */
-}
-
-.tab-scroll-content::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Edge */
 }
 
 .gallery-container {
@@ -842,25 +827,6 @@ function onFileChange(e: Event) {
 
 .filter-row > * {
   min-width: 120px;
-}
-
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-/* Track */
-::-webkit-scrollbar-track {
-  background: #e1dbdb;
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: rgb(164, 164, 164);
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: #555;
 }
 
 .v-list-item:hover {

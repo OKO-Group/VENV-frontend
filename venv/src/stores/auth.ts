@@ -64,12 +64,12 @@ export const useAuthStore = defineStore('auth', {
         this.id = response.data.data.user.id
       } catch (error) {
         console.log('Authentication check failed.')
+        this.id = null
         return false
       }
       await this.fetchUser()
       return true
     },
-
     async fetchUser() {
       try {
         this.loading = true
@@ -87,6 +87,8 @@ export const useAuthStore = defineStore('auth', {
       try {
         this.loading = true
         const response = await api.post('users/_allauth/browser/v1/auth/login', credentials)
+        this.statusCode = response.status
+        this.errors = {}
         this.id = response.data.data.user.id //TODO adjust allauth to send all user data to remove fetchUser()
         this.authTimestamp = response.data.data.methods.pop().at
         await this.fetchUser()
@@ -175,8 +177,10 @@ export const useAuthStore = defineStore('auth', {
         //TODO complete this logic
         const response = await api.delete('users/_allauth/browser/v1/auth/session')
         this.statusCode = response.status
+        this.user = null
+        this.id = null
+        this.authTimestamp = null
       } catch (error) {}
-      this.user = null
     },
 
     async logoutSessions(sessions: SessionInfo['data'][]) {

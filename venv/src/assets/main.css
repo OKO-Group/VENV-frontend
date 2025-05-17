@@ -36,6 +36,34 @@ a,
   }
 }
 
+
+/* Global Scrollbar Styles */
+
+/* Hide native scrollbar for Firefox & IE */
+* {
+  scrollbar-width: thin;       /* Firefox */
+  scrollbar-color: rgb(164,164,164) #e1dbdb;
+  -ms-overflow-style: none;    /* IE 10+ */
+}
+
+/* For WebKit (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #e1dbdb;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(164, 164, 164);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
 /* global-tooltip.css */
 .v-tooltip .v-overlay__content {
   background-color: rgba(187, 172, 172, 0.13) !important;

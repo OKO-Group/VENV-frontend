@@ -278,7 +278,6 @@ function initArtworks() {
 
 async function initMoon() {
   if (!moonMaterial.value) return
-  console.log('loading moon texture')
   const map = await loader.loadAsync('/moon_texture_map.jpg')
   const displacementMap = await loader.loadAsync('ldem_3_8bit.jpg')
   moonMaterial.value.map = map

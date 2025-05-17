@@ -81,11 +81,11 @@ const artworkManager = useArtworkQueryManager()
 const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching, refetch } =
   artworkManager.query(computedQuery)
 
-const updateArtworks = useDebounceFn((newData) => {
+const updateArtworks = (newData) => {
   if (newData?.pages) {
     allArtworks.value = newData.pages.flatMap((page) => page.results)
   }
-}, 150) // debounce delay in ms
+}// debounce delay in ms
 
 watchEffect(() => {
   if (data.value) {
@@ -127,7 +127,7 @@ if (!props.useOwnArtworks) {
       updateQueryParams()
       selectedArtwork.value = null
     },
-    { debounce: 500, deep: true },
+    { debounce: 300, deep: true },
   )
 }
 
@@ -145,21 +145,7 @@ const initArtworkCanvas = () => {
   selectedArtwork.value = artworkStore.artworkDraft
   isCreatingNew.value = true
 }
-const searchActive = ref(false)
-const searchInput = ref<HTMLInputElement | null>(null)
 
-const activateSearch = () => {
-  searchActive.value = true
-  nextTick(() => {
-    searchInput.value?.focus?.()
-  })
-}
-
-const handleBlur = () => {
-  if (!artworkStore.searchOwn) {
-    searchActive.value = false
-  }
-}
 
 function handleArtworkUpdate(updated: Artwork) {
   artworkManager.handleArtworkUpdate(updated)
@@ -209,7 +195,6 @@ function handleCloseArtworkPanel(){
             :artworks="allArtworks"
             :show-upload="showUpload"
             :use-own-artworks="useOwnArtworks"
-            :search-active="searchActive"
             :is-fetching-next-page="isFetchingNextPage"
             :has-next-page="hasNextPage"
             :fetch-next-page="fetchNextPage"
@@ -217,8 +202,6 @@ function handleCloseArtworkPanel(){
             :artwork-store="artworkStore"
             @upload="initArtworkCanvas"
             @select-artwork="selectArtwork"
-            @blur="handleBlur"
-            @activate-search="activateSearch"
           />
         </div>
         <div v-else>
@@ -250,7 +233,6 @@ function handleCloseArtworkPanel(){
           :artworks="allArtworks"
           :show-upload="showUpload"
           :use-own-artworks="useOwnArtworks"
-          :search-active="searchActive"
           :is-fetching-next-page="isFetchingNextPage"
           :has-next-page="hasNextPage"
           :fetch-next-page="fetchNextPage"
@@ -258,8 +240,6 @@ function handleCloseArtworkPanel(){
           :artwork-store="artworkStore"
           @upload="initArtworkCanvas"
           @select-artwork="selectArtwork"
-          @blur="handleBlur"
-          @activate-search="activateSearch"
         />
       </v-col>
       <ArtworkPanel

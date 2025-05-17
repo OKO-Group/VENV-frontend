@@ -1,23 +1,25 @@
 <script setup lang="ts">
 import {
-  mdiMagnify,
-  mdiPlusCircle,
-  mdiArrowUp,
   mdiArrowDown,
+  mdiArrowUp,
   mdiEyeOutline,
-  mdiViewAgenda,
   mdiFormatListBulleted,
-  mdiViewGrid,
+  mdiMagnify,
+  mdiPlusCircle, mdiPlusCircleOutline,
+  mdiViewAgenda,
+  mdiViewGrid
 } from '@mdi/js'
 import ArtworkListRenderer from './ArtworkListRenderer.vue'
-import { computed, ref } from 'vue'
+import { computed, nextTick, ref } from 'vue'
 import orderBy from 'lodash-es/orderBy'
-import {isMobile} from '@/utils/isMobile.ts'
+import { isMobile } from '@/utils/isMobile.ts'
+import { useArtworkStore } from '@/stores/artworks.ts'
+
+
 
 const props = defineProps<{
   showUpload?: boolean
   useOwnArtworks?: boolean
-  searchActive: boolean
   artworks: any[]
   isFetchingNextPage: boolean
   fetchNextPage: () => Promise<any>
@@ -30,25 +32,50 @@ const props = defineProps<{
 const viewModes = [
   { value: 'relaxed', icon: mdiViewAgenda, title: 'Relaxed' },
   { value: 'compact', icon: mdiFormatListBulleted, title: 'Compact' },
-  { value: 'grid', icon: mdiViewGrid, title: 'Grid' },
+  { value: 'grid', icon: mdiViewGrid, title: 'Grid' }
 ] as const
 
 type ViewMode = (typeof viewModes)[number]['value']
 const selectedViewMode = ref<ViewMode>(isMobile ? 'grid' : 'relaxed')
 
-const emit = defineEmits([
-  'update:viewMode',
+defineEmits([
   'selectArtwork',
-  'toggleSort',
   'upload',
-  'blur',
-  'activateSearch',
 ])
+
+
+const artworkStore = useArtworkStore()
+const searchInput = ref<HTMLInputElement | null>(null)
+const searchActive = ref(false)
+const searchHiding = ref(false)
+
+const activateSearch = () => {
+  searchActive.value = true
+  nextTick(() => {
+    searchInput.value?.focus?.()
+  })
+}
+
+const handleBlur = () => {
+  if (!artworkStore.searchOwn) {
+    searchHiding.value = true
+    searchActive.value = false
+  }
+}
+
+import { onClickOutside } from '@vueuse/core'
+
+const searchFieldRef = ref(null)
+
+onClickOutside(searchFieldRef, () => {
+  if (!artworkStore.searchOwn) searchActive.value = false
+})
 
 const sortBy = ref<'date' | 'title'>('date')
 
 const sortDirection = ref<'asc' | 'desc'>('desc')
 const loadedArtworks = ref(false)
+
 function toggleSort(field: 'date' | 'title') {
   if (sortBy.value === field) {
     sortDirection.value = sortDirection.value === 'asc' ? 'desc' : 'asc'
@@ -61,67 +88,94 @@ function toggleSort(field: 'date' | 'title') {
 // Client-side filtering and sorting
 const filteredArtworks = computed(() => {
   if (!props.artworks.length) return []
-
   loadedArtworks.value = true
   return orderBy(props.artworks, sortBy.value === 'title' ? ['title'] : ['uploaded_at'], [
-    sortDirection.value,
+    sortDirection.value
   ])
 })
 </script>
 
 <template>
-  <v-card class="pa-4 d-flex flex-column panel-card" :height="isMobile? '59vh' : '75vh'">
-    <div v-if="useOwnArtworks" class="pa-2 pt-10 pb-10 search-bar-wrapper">
-      <v-tooltip v-if="!searchActive" text="Search" location="top">
-        <template #activator="{ props }">
-          <div v-bind="props" class="search-icon-wrapper" @click="$emit('activateSearch')">
-            <v-icon v-if="!searchActive" :icon="mdiMagnify" />
-          </div>
-        </template>
-      </v-tooltip>
-
-      <transition name="fade-expand">
-        <v-text-field
-          v-if="searchActive"
-          v-model="artworkStore.searchOwn"
-          label="Search artworks..."
-          variant="outlined"
-          density="compact"
-          :prepend-inner-icon="mdiMagnify"
-          class="expanded-search"
-          @blur="$emit('blur')"
-        />
-      </transition>
-    </div>
-
-    <v-btn v-if="showUpload" icon color="black" class="mb-4 mx-auto" @click="$emit('upload')">
-      <v-icon :icon="mdiPlusCircle" />
-    </v-btn>
-
-    <div class="d-flex justify-space-between align-center mb-2">
-      <v-btn-toggle
-        v-if="!isMobile"
-        density="compact"
-        v-model="selectedViewMode"
-        class="mb-2"
-        mandatory
-      >
-        <v-btn
-          variant="outlined"
-          v-for="mode in viewModes"
-          :key="mode.value"
-          :value="mode.value"
-          :title="mode.title"
-          icon
-        >
-          <v-icon :icon="mode.icon" />
+  <v-card class="d-flex flex-column search-panel" variant="flat"
+          :height="isMobile? '59vh' : '78vh'">
+    <v-row
+      class="list-controls align-center"
+      align="center"
+      justify="space-between"
+      style="margin-top: 3px; margin-bottom: 3px"
+      no-gutters
+    >
+      <!-- ⬆ Upload Button -->
+      <v-col       v-if="useOwnArtworks"
+                   class="justify-center" style="max-width: 60px">
+        <v-btn v-if="showUpload" @click="$emit('upload')" icon>
+          <v-icon :icon="mdiPlusCircle" size="33" />
         </v-btn>
-      </v-btn-toggle>
-    </div>
+      </v-col>
+      <!-- 🔍 Search Button + Expanding Field -->
+      <v-col       v-if="useOwnArtworks"
+                   class="d-flex align-center" style="max-width: 300px">
+        <v-tooltip v-if="!searchActive" text="Search" location="top">
+          <template #activator="{ props }">
+            <div
+              v-bind="props"
+              class="search-icon-wrapper"
+              @click="activateSearch"
+              v-show="!searchActive && !searchHiding"
+            >
+              <v-icon :icon="mdiMagnify" />
+            </div>
+          </template>
+        </v-tooltip>
+
+        <transition
+          name="fade-expand"
+          @after-leave="searchHiding = false"
+
+        >
+          <div ref="searchFieldRef" v-if="searchActive" class="expanded-search-wrapper d-flex align-center">
+            <v-text-field
+              ref="searchInput"
+              v-model="artworkStore.searchOwn"
+              label="Search"
+              variant="solo"
+              density="compact"
+              :append-inner-icon="mdiMagnify"
+              class="expanded-search"
+              @blur="handleBlur"
+            />
+          </div>
+        </transition>
+      </v-col>
+
+
+      <!-- 🔲 View Mode Toggle -->
+      <v-col
+        class="d-flex justify-end"
+        v-if="!isMobile"
+      >
+        <v-btn-toggle
+          density="compact"
+          v-model="selectedViewMode"
+          mandatory
+        >
+          <v-btn
+            v-for="mode in viewModes"
+            :key="mode.value"
+            :value="mode.value"
+            :title="mode.title"
+            icon
+            variant="outlined"
+          >
+            <v-icon :icon="mode.icon" />
+          </v-btn>
+        </v-btn-toggle>
+      </v-col>
+    </v-row>
 
     <v-row
       v-if="selectedViewMode !== 'grid'"
-      class="px-2 py-1 font-weight-medium text-caption grey text-center"
+      class="font-weight-medium text-caption grey text-center"
       style="width: 99%; max-height: 60px; min-height: 60px"
     >
       <v-col cols="1">#</v-col>
@@ -131,11 +185,11 @@ const filteredArtworks = computed(() => {
           {{ sortBy === 'title' ? (sortDirection === 'asc' ? mdiArrowUp : mdiArrowDown) : '' }}
         </v-icon>
       </v-col>
-      <v-col cols="4">Artwork</v-col>
+      <v-col cols="5" style="padding-right: 33px">Artwork</v-col>
       <v-col
-        cols="4"
+        cols="3"
         class="cursor-pointer text-end"
-        style="padding-right: 25px"
+        style="padding-right: 0"
         @click="toggleSort('date')"
       >
         Date
@@ -144,49 +198,30 @@ const filteredArtworks = computed(() => {
         </v-icon>
       </v-col>
     </v-row>
-    <div v-if="filteredArtworks.length">
-    <ArtworkListRenderer
-      :artworks="filteredArtworks"
-      :viewMode="selectedViewMode"
-      :selectedArtworkId="selectedArtwork?.id"
-      :useOwnArtworks="useOwnArtworks"
-      :fetch-next-page="fetchNextPage"
-      :has-next-page="hasNextPage"
-      @select="$emit('selectArtwork', $event)"
-    />
-    </div>
-    <div v-else>
-      <v-row class="text-center">
-        <v-col>
-          <v-progress-circular v-if="!filteredArtworks.length" indeterminate />
-        </v-col>
-      </v-row>
-    </div>
-    <div class="text-center mt-4">
-      <v-progress-circular v-if="isFetchingNextPage" indeterminate />
-      <v-icon v-else-if="!hasNextPage && filteredArtworks.length"> {{ mdiEyeOutline }}</v-icon>
-    </div>
+      <ArtworkListRenderer
+        :artworks="filteredArtworks"
+        :viewMode="selectedViewMode"
+        :selectedArtworkId="selectedArtwork?.id"
+        :useOwnArtworks="useOwnArtworks"
+        :fetch-next-page="fetchNextPage"
+        :is-fetching-next="isFetchingNextPage"
+        :has-next-page="hasNextPage"
+        @select="$emit('selectArtwork', $event)"
+      />
   </v-card>
 </template>
 
 <style scoped>
-.panel-card:hover {
-  background-color: rgba(180, 180, 180, 0.11) !important;
-  transition: background-color 0.5s ease-in-out;
+
+.list-controls {
+  position: sticky;
 }
-.search-bar-wrapper {
-  height: 50px;
-  overflow: hidden;
-  position: relative;
-  display: flex;
-  align-items: center;
-  margin: 0;
-  padding: 0;
+.search-panel {
+  background-color: rgba(0, 0, 0, 0) !important;
+  backdrop-filter: none !important; /* Adds a nice frosted-glass effect */
 }
 
 .search-icon-wrapper {
-  width: 50px;
-  height: 50px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -199,11 +234,37 @@ const filteredArtworks = computed(() => {
 }
 
 .expanded-search {
-  width: 240px;
-  transition: all 0.3s ease;
+  width: 300px;
+  transition: all 0.5s ease !important;
 }
 
 .cursor-pointer {
   cursor: pointer;
 }
+
+.expanded-search-wrapper {
+  width: 300px;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.fade-expand-enter-active,
+.fade-expand-leave-active {
+  transition: width 0.4s ease, opacity 0.3s ease;
+  overflow: hidden;
+  display: inline-block;
+}
+
+.fade-expand-enter-from,
+.fade-expand-leave-to {
+  width: 0;
+  opacity: 0;
+}
+
+.fade-expand-enter-to,
+.fade-expand-leave-from {
+  width: 300px;
+  opacity: 1;
+}
+
+
 </style>

@@ -149,7 +149,7 @@ export async function useSunLighting(
       // Mie directional scattering: consistent, but slightly more forward-scattering at sunrise/sunset
       sky.material.uniforms.mieDirectionalG.value = 1 - (elevationNormalized + 0.1) ** 2 // From 0.7 (daytime) to 0.8 (sunset/sunrise)
 
-      ambientLight.intensity = elevationNormalized * 1.3 + 0.088
+      ambientLight.intensity = elevationNormalized * 1.3 + 0.038
       ambientLight.color.set(skyColor)
       // Fog and background color
       const fogHue = isNight ? 0.62 : 0.1
@@ -159,7 +159,6 @@ export async function useSunLighting(
       scene.value.fog = new FogExp2(
         new Color().setHSL(fogHue, fogSat, fogLightness),
         isNight ? 0.0001 : isSunrise ? 0.1 * elevationNormalized**2 : 0.05 * elevationNormalized**2)
-
       renderer.value.setClearColor(skyColor)
       renderer.value.toneMappingExposure = Math.max(0.7, elevationNormalized)
     } catch (e) {

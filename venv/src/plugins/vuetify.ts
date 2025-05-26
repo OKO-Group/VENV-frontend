@@ -4,16 +4,31 @@ import { createVuetify } from 'vuetify'
 import { aliases, mdi } from 'vuetify/iconsets/mdi-svg'
 import { VDateInput } from 'vuetify/labs/components'
 
-const myCustomTheme: ThemeDefinition = {
+const lightTheme: ThemeDefinition = {
   dark: false,
   colors: {
-    primary: 'rgba(170,190,204,0.67)', // Change button primary color
-    secondary: 'rgba(153,208,197,0.5)',
-    accent: '#FFC107',
-    success: '#4CAF50',
-    warning: '#FB8C00',
-    error: '#D32F2F',
-    info: '#2196F3',
+    background: '#eeeeee',
+    surface: '#FFFFFF',
+    primary: '#90CAF9',
+    onPrimary: '#000000',
+    secondary: '#FFCDD2',
+    onSecondary: '#000000',
+
+  },
+  variables: {
+    'font-family': "'Lato', sans-serif",
+  },
+}
+
+const darkTheme: ThemeDefinition = {
+  dark: true,
+  colors: {
+    background: '#121212',
+    surface: '#949494',
+    primary: '#c49ae3',
+    onPrimary: '#000000',
+    secondary: '#03DAC6',
+    onSecondary: '#000000',
   },
   variables: {
     'font-family': "'Lato', sans-serif",
@@ -22,9 +37,9 @@ const myCustomTheme: ThemeDefinition = {
 
 const vuetify = createVuetify({
   theme: {
-    defaultTheme: 'myCustomTheme',
+    defaultTheme: 'darkTheme',
     themes: {
-      myCustomTheme,
+      lightTheme, darkTheme
     },
   },
   defaults: {

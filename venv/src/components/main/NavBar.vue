@@ -64,7 +64,8 @@ function focusInput() {
 }
 </script>
 <template>
-  <v-row>
+  <v-container fluid fill-height>
+    <v-row class="fill-height ma-0 pa-0" align="start">
     <v-col cols="2" md="3">
       <RouterLink to="/" exact-active-class="active">
         <v-icon
@@ -100,14 +101,14 @@ function focusInput() {
           </RouterLink>
 
           <!-- Artists -->
-          <v-tooltip v-if="!isMobile" text="Artists" :location="isHome ? 'right' : 'bottom'">
+          <v-tooltip v-if="!isMobile" text="Members" :location="isHome ? 'right' : 'bottom'">
             <template #activator="{ props }">
-              <RouterLink to="/artists" exact-active-class="active" v-bind="props">
+              <RouterLink to="/members" exact-active-class="active" v-bind="props">
                 <v-icon :icon="mdiAccountGroup" size="50" />
               </RouterLink>
             </template>
           </v-tooltip>
-          <RouterLink v-else to="/artists" exact-active-class="active">
+          <RouterLink v-else to="/members" exact-active-class="active">
             <span>MEMBERS</span>
           </RouterLink>
 
@@ -213,10 +214,13 @@ function focusInput() {
       </v-card>
     </v-dialog>
   </v-row>
+  </v-container>
 </template>
 
 <style scoped>
 /* Base navigation styles */
+
+
 .search-wrapper {
   position: absolute;
   top: 2vh;
@@ -234,7 +238,6 @@ nav {
   position: absolute;
   font-size: 65px;
   left: 1.5rem;
-  color: #ffffff;
   z-index: 1000;
 }
 
@@ -273,7 +276,6 @@ nav {
 /* Link styles */
 nav a {
   text-decoration: none;
-  color: white;
   padding: 0.5rem 1rem;
   position: relative;
   overflow: auto;
@@ -287,7 +289,6 @@ nav a::after {
   left: 50%;
   width: 0;
   height: 2px;
-  background-color: white;
   transition:
     width 0.3s ease-in-out,
     left 0.3s ease-in-out;

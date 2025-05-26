@@ -5,8 +5,10 @@ import CorridorScene from '@/components/background/CorridorScene.vue'
 import { useArtworkQueryManager } from '@/stores/ArtworkQueryManager.ts'
 import { useArtworkStore } from '@/stores/artworks.ts'
 import { useRouter } from 'vue-router'
+import { useSiteSettings } from '@/stores/siteSettings.ts'
 
 const artworkStore = useArtworkStore()
+const siteSettings = useSiteSettings()
 const artworkManager = useArtworkQueryManager()
 
 const router = useRouter()

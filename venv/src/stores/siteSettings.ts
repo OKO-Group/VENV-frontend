@@ -3,8 +3,7 @@ import { defineStore } from 'pinia'
 
 export const useSiteSettings = defineStore('siteSettings', {
   state: () => ({
-    zenMode: false,
-    enableBackground: false,
+    mode: 'dark' as 'dark' | 'light' | 'dune',
   }),
   persist: true, // auto-persist via plugin
 })

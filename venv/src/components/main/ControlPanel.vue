@@ -1,50 +1,66 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useSiteSettings } from '@/stores/siteSettings.ts'
-import { mdiChevronLeft, mdiTune } from '@mdi/js'
+import {
+  mdiChevronLeft, mdiCog,
+  mdiImageFilterHdr,
+  mdiMoonFirstQuarter, mdiMoonWaningCrescent,
+  mdiSunAngle,
+  mdiTune, mdiWeatherNight, mdiWhiteBalanceSunny
+} from '@mdi/js'
+import { useDebounceFn } from '@vueuse/core'
 
 const isExpanded = ref(false)
 const settings = useSiteSettings()
+
+let retractTimeout: ReturnType<typeof setTimeout> | null = null
 
 function togglePanel() {
   isExpanded.value = !isExpanded.value
 }
 
-function retractPanel() {
-  isExpanded.value = false
+function scheduleRetract() {
+  retractTimeout = setTimeout(() => {
+    isExpanded.value = false
+  }, 400)
+}
+
+function cancelRetract() {
+  if (retractTimeout) {
+    clearTimeout(retractTimeout)
+    retractTimeout = null
+  }
 }
 </script>
 
 <template>
-  <div class="site-panel-wrapper" @mouseleave="retractPanel">
+  <div class="site-panel-wrapper"   @mouseleave="scheduleRetract"
+       @mouseenter="cancelRetract">
     <!-- Floating Toggle -->
-    <v-btn icon variant="tonal" class="toggle-button" color="grey-darken-3" @click="togglePanel">
-      <v-icon>{{ isExpanded ? mdiChevronLeft : mdiTune }}</v-icon>
+    <v-btn
+      icon
+      class="toggle-button"
+      @click="togglePanel"
+    >
+      <v-icon>{{ isExpanded ? mdiChevronLeft : mdiCog }}</v-icon>
     </v-btn>
 
-    <!-- Panel -->
+    <!-- Absolutely positioned Panel -->
     <transition name="slide-fade">
-      <v-card v-if="isExpanded" class="panel-content pa-3" elevation="10" density="compact">
-        <div class="settings-header">SETTINGS</div>
-
-        <v-switch
-          v-model="settings.zenMode"
-          label="Zen Mode"
-          color="rgba(62, 107, 57, 0.5)"
-          density="compact"
-          hide-details
-          class="switch-item"
-        />
-
-        <v-switch
-          v-model="settings.enableBackground"
-          label="KULISSE"
-          color="rgba(124, 107, 57, 0.5)"
-          density="compact"
-          hide-details
-          class="switch-item"
-        />
-      </v-card>
+      <div v-if="isExpanded" class="panel-container">
+        <v-card class="pa-3" elevation="10" density="compact">
+          <v-btn-toggle
+            v-model="settings.mode"
+            label="Theme"
+            density="compact"
+            class="switch-item"
+          >
+            <v-btn :icon="mdiWhiteBalanceSunny"  value="light" color="grey-darken-3"/>
+            <v-btn  :icon="mdiWeatherNight" value="dark" color="grey-darken-3" />
+            <v-btn :icon="mdiImageFilterHdr" value="dune" color="grey-darken-3" />
+          </v-btn-toggle>
+        </v-card>
+      </div>
     </transition>
   </div>
 </template>
@@ -52,59 +68,35 @@ function retractPanel() {
 <style scoped>
 .site-panel-wrapper {
   position: fixed;
-  bottom: 20px;
-  left: 20px;
-  display: flex;
-  align-items: flex-end;
+  bottom: 10px;
+  left: 22px;
   z-index: 999;
 }
 
 .toggle-button {
-  z-index: 1000;
-  margin-right: 4px;
-  border-radius: 999px;
-  backdrop-filter: blur(2px);
-  background-color: rgba(168, 165, 165, 0.37);
   transition: all 0.3s ease;
-}
-
-.panel-content {
-  width: 180px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(2px);
-  border-radius: 10px;
-  color: #fff;
-  transition: all 0.4s ease;
-  font-size: 0.88rem;
-}
-
-.settings-header {
-  font-weight: 300;
-  font-size: 0.9rem;
-  letter-spacing: 0.04em;
-  color: #5b5858;
-  margin-bottom: 6px;
-  padding-left: 2px;
+  opacity: 0.88;
 }
 
 .switch-item {
-  margin-bottom: 4px;
-  padding-top: 0px;
-  padding-bottom: 0px;
-  font-weight: 300;
-  letter-spacing: 0.04em;
+  opacity: 0.7;
+}
+.panel-container {
+  position: absolute;
+  bottom: 50px; /* Adjust as needed */
+  left: 0;
 }
 
-/* Animations */
+/* Transitions */
 .slide-fade-enter-active,
 .slide-fade-leave-active {
-  transition: all 0.4s ease;
+  transition: all 0.3s ease;
 }
 
 .slide-fade-enter-from,
 .slide-fade-leave-to {
   opacity: 0;
-  transform: translateX(-30px);
+  transform: translateX(-20px);
 }
+
 </style>

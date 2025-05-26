@@ -5,7 +5,7 @@ import path from 'path'
 const links = [
   { url: '/', changefreq: 'weekly', priority: 1.0 },
   { url: '/explore', changefreq: 'weekly' },
-  { url: '/artists', changefreq: 'monthly' },
+  { url: '/members', changefreq: 'monthly' },
   { url: '/search', changefreq: 'daily' },
   { url: '/about', changefreq: 'monthly' },
   // Add dynamic paths here if needed

@@ -1,21 +1,62 @@
 <script setup lang="ts">
 import { RouterView, useRoute } from 'vue-router'
 import NavBar from '@/components/main/NavBar.vue'
-// import ControlPanel from '@/components/main/ControlPanel.vue'
+import ControlPanel from '@/components/main/ControlPanel.vue'
 import GalleryView from '@/views/GalleryView.vue'
 import { routeBus } from '@/utils/routeBus.ts'
 import {watch} from 'vue'
-
+import { watchEffect } from 'vue'
+import { useDebounceFn, usePreferredDark } from '@vueuse/core'
+import { useSiteSettings } from '@/stores/siteSettings'
 
 const route = useRoute()
+const settings = useSiteSettings()
+const isSystemDark = usePreferredDark()
+import { useTheme } from 'vuetify'
+
+const theme = useTheme()
 
 watch(() => route.path, (to, from) => {
   routeBus.emit('route-change', { from, to })
+    // if (!theme.current.value.dark){
+    //   if (to === '/') {
+    //     useDebounceFn(() => {
+    //       // theme.themes.value['lightTheme'].colors.background = '#e03131'
+    //     }, 500)()
+    //   } else {
+    //     useDebounceFn(() => {
+    //       theme.themes.value['lightTheme'].colors.background = '#eeeeee'
+    //     }, 0)()
+    //   }
+    // }
+})
+
+function toggleTheme () {
+  theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark'
+}
+watchEffect(() => {
+  const mode = settings.mode
+
+  if (mode === 'light') {
+    theme.global.name.value = 'lightTheme'
+    document.body.classList.remove('theme-dark')
+    document.body.classList.add('theme-light')
+  } else if (mode === 'dark') {
+    theme.global.name.value = 'darkTheme'
+    document.body.classList.remove('theme-light')
+    document.body.classList.add('theme-dark')
+  } else if (mode === 'dune') {
+    // use system Vuetify theme
+    theme.global.name.value = isSystemDark.value ? 'darkTheme' : 'lightTheme'
+    document.body.classList.remove('bg-light', 'bg-dark')
+  }
 })
 
 
 </script>
 <template>
+  <v-app>
+
   <header></header>
   <NavBar />
 
@@ -25,9 +66,10 @@ watch(() => route.path, (to, from) => {
     </transition>
   </RouterView>
 
-  <GalleryView />
-  <!--  <ControlPanel/>-->
-  <div id="gui-container" style="position: fixed; bottom: 1rem; right: 1rem; z-index: 9999"></div>
+  <GalleryView v-if="settings.mode === 'dune'"/>
+   <ControlPanel/>
+  </v-app>
+
 </template>
 
 <style scoped>
@@ -37,7 +79,6 @@ header {
   left: 0;
   width: 100%;
   padding: 2rem;
-  color: white;
   text-align: center;
 }
 

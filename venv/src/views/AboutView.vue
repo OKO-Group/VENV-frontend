@@ -8,7 +8,7 @@ import VENV from '@/components/main/VENV.vue'
     <v-container class="py-10">
       <VENV location="about" :close-hint="false" />
 
-      <v-card class="pa-1 elevation-2 mx-auto about-card" variant="tonal">
+      <v-card class="pa-1 mx-auto about-card" >
         <v-card-text class="text-body-1">
           <p>
             <i>VENV</i> is yet another initiative to gather a curious community of creators.
@@ -42,8 +42,6 @@ import VENV from '@/components/main/VENV.vue'
 
 <style scoped>
 .about-card {
-  width: 97%;
-  backdrop-filter: blur(15px);
-  background-color: rgba(255, 255, 255, 0.8) !important;
+  backdrop-filter: blur(5px);
 }
 </style>

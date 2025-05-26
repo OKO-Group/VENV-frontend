@@ -48,12 +48,11 @@ defineProps<{
 
 .definition-wrapper.about {
   margin-bottom: 0;
-  padding: 3rem 1rem;
+  padding: 1rem 1rem;
 }
 
 .definition-box {
-  color: white;
-  width: 100%;
+  color: #eeeeee;
   backdrop-filter: blur(10px);
   background-color: rgba(0, 0, 0, 0.88);
   padding: 3rem 1rem;

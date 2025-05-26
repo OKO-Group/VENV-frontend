@@ -1,5 +1,4 @@
 import './assets/main.css'
-import './assets/global.scss'
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
@@ -48,7 +47,7 @@ useAuthStore()
   })
 
 app.use(VueQueryPlugin)
+app.use(vuetify)
 
 app.use(router)
-app.use(vuetify)
 app.mount('#app')

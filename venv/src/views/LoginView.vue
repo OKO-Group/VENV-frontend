@@ -104,7 +104,5 @@ const clearError = (field: string) => {
 .login {
   z-index: 100;
 }
-.login-title {
-  color: hsl(0, 0%, 43%);
-}
+
 </style>

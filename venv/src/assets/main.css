@@ -17,8 +17,11 @@ body {
   margin: 0;
   padding: 0;
   width: 100%;
-  min-height: 100%;
-  overflow-x: hidden;
+  height: 100vh;
+  overflow: hidden;
+  scroll-behavior: smooth;
+  scrollbar-width: none;      /* hides scrollbar */
+  -ms-overflow-style: none;   /* IE and Edge */
 }
 
 /* Layout container */
@@ -95,20 +98,20 @@ a,
   scrollbar-color: rgba(82, 82, 82, 0.87) rgba(225, 219, 219, 0);
 }
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 0;
+  height: 0;
 }
-::-webkit-scrollbar-track {
-  background: rgba(225, 219, 219, 0);
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
+/*::-webkit-scrollbar-track {*/
+/*  background: rgba(225, 219, 219, 0);*/
+/*}*/
+/*::-webkit-scrollbar-thumb:hover {*/
+/*  background: #555;*/
+/*}*/
 
 /* Dark theme */
 .theme-dark ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 0;
+  height: 0;
 }
 
 .theme-dark ::-webkit-scrollbar-thumb {
@@ -120,19 +123,8 @@ a,
   background-color: transparent;
 }
 
-/* Firefox (applies to both themes, respects system preferences) */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: var(--scrollbar-thumb, #232323) transparent;
-}
 
-.theme-dark {
-  --scrollbar-thumb: #1f1f1f;
-}
 
-.theme-light {
-  --scrollbar-thumb: #272734;
-}
 
 /* Global tooltip */
 .v-tooltip .v-overlay__content {
@@ -156,8 +148,9 @@ input[type='number'] {
 
 /* Cards, sheets, etc */
 .v-card {
-  background: rgba(220, 219, 219, 0.2) !important;
+  background: rgba(var(--v-theme-surface), 0.2) !important;
   color: var(--color-text) !important;
+
   backdrop-filter: blur(10px);
 }
 .v-sheet,
@@ -173,12 +166,12 @@ input[type='number'] {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.9) !important;
+  background: rgba(255, 255, 255, 0.44) !important;
   backdrop-filter: blur(10px);
 }
 
-/* Autocomplete width fix */
 .v-overlay__content.v-autocomplete-match-width {
+
   width: var(--v-field-width) !important;
   max-width: 100% !important;
 }

@@ -96,7 +96,7 @@ const filteredArtworks = computed(() => {
 
 <template>
   <v-card class="d-flex flex-column search-panel" variant="flat"
-          :height="isMobile? '59vh' : '78vh'">
+          :height="isMobile? '75vh' : '78vh'">
     <v-row
       class="list-controls align-center"
       align="center"

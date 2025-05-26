@@ -282,7 +282,7 @@ function closeImageViewer() {
     </template>
   </v-dialog>
   <v-col v-if="artwork" :cols="!isMobile ? 4 : undefined" class="artwork-panel">
-    <v-card class="pa-2 d-flex flex-column justify-space-between" variant="flat" height="78vh">
+    <v-container class="pa-1 d-flex flex-column justify-space-between" height="73.5vh">
       <v-tabs v-model="subTab" align-tabs="center" height="40">
         <v-tab
           v-if="canEditSelected || artworkImageSources[ArtworkFileCategory.PAINTING]"
@@ -506,15 +506,16 @@ function closeImageViewer() {
           </div>
         </template>
       </div>
-    </v-card>
+    </v-container>
+    <v-btn
+      v-if="isMobile"
+      :icon="mdiArrowLeft"
+      class="description-edit-btn opacity-70 "
+      @click="emit('close')"
+    >
+    </v-btn>
   </v-col>
-  <v-btn
-    v-if="isMobile"
-    :icon="mdiArrowLeft"
-    class="description-edit-btn opacity-70"
-    @click="emit('close')"
-  >
-  </v-btn>
+
 </template>
 
 <style scoped>
@@ -523,6 +524,10 @@ function closeImageViewer() {
   flex-direction: column;
 }
 
+.v-card {
+  background-color: rgba(255, 255, 255, 0) !important;
+
+}
 .v-tab {
   font-size: clamp(0.5rem, 2vw, 0.9rem);
   white-space: nowrap;
@@ -658,7 +663,6 @@ function closeImageViewer() {
   text-align: left;
   font-size: 20px;
   font-family: 'Inter', 'Helvetica Neue', sans-serif;
-  color: #2f2f2f;
   font-weight: lighter;
 }
 

@@ -55,7 +55,7 @@ watchEffect(() => {
 
 </script>
 <template>
-  <v-app>
+  <v-app class="scrollable">
 
   <header></header>
   <NavBar />
@@ -73,18 +73,18 @@ watchEffect(() => {
 </template>
 
 <style scoped>
+
+.scrollable {
+    height: 100%;
+    overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+
+}
 header {
   position: fixed;
-  top: 0;
-  left: 0;
+  top: 1rem;
   width: 100%;
-  padding: 2rem;
   text-align: center;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
 }
 
 /* Fade In/Out Animation */
@@ -102,11 +102,6 @@ header {
   header {
     display: flex;
     place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
   }
 
   header .wrapper {

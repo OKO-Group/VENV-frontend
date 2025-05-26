@@ -8,34 +8,50 @@ import VENV from '@/components/main/VENV.vue'
     <v-container class="py-10">
       <VENV location="about" :close-hint="false" />
 
-      <v-card class="pa-1 mx-auto about-card" >
+      <v-card class="pa-1 mx-auto about-card">
         <v-card-text class="text-body-1">
-          <p>
-            <i>VENV</i> is yet another initiative to gather a curious community of creators.
+          <p class="text-center">
+            <i>VENV</i> is a new initiative to foster a curious, creative community of people.
           </p>
 
-          <p class="mt-4">
-            At its core, <i>VENV</i> begins by offering a fine art database and sharing platform and
-            idling screensaver.
+          <p class="mt-4 text-center" >
+            At its core, <i>VENV</i> begins as a fine art database, a social graph for art, culture, and media—
+            and an idling screensaver.
           </p>
 
-          <p class="mt-4">
-            Account holders enjoy full control over their artworks and exposure. Membership is
-            application-based, intentionally designed to grow gradually and mindfully, preserving
-            the integrity and alignment of the community.
+          <p class="paragraph mt-4" >
+            Account holders enjoy full control over their artworks and visibility. Membership is
+            application-based, intentionally designed to grow gradually and mindfully—preserving
+            the integrity and alignment of the community. However, anyone already included in the public social graph
+            is automatically considered part of the community and anyone can explore the platform and its public content.
           </p>
 
-          <p class="mt-4">
-            This platform is an open canvas. While its current purpose is rooted in digital fine
-            arts, future visions include various endeavors that could be pursued following community's
-            wishes and engineer's abilities accordingly.
+          <p class="paragraph mt-2">
+            <i>N.B.</i> VENV.co is <strong>not</strong> a marketplace, and it will never support any form of monetization
+            beyond donations to cover hosting and maintenance costs. For now, we encourage you to support
+            those in more urgent need.
           </p>
-          <p class="mt-8">
-            Whatever your background is, <i>VENV</i> welcomes
-            you to explore and grow alongside it.
+
+          <p class="mt-4 paragraph">
+            This platform is an open canvas. While its current purpose is rooted in fine
+            art, future directions may include broader creative and cultural endeavors—
+            shaped by the wishes of the community and the capabilities of its developers.
+          </p>
+
+          <p class="mt-8 text-center">
+            Whatever your background, <i>VENV</i> invites you to explore and evolve with it.
           </p>
         </v-card-text>
       </v-card>
+
+      <div class="support-flags mt-8">
+        <a href="https://linktr.ee/thesameerproject" target="_blank" rel="noopener" aria-label="Support Palestine">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/0/00/Flag_of_Palestine.svg" alt="Palestinian Flag" class="flag" width="120"/>
+        </a>
+        <a href="https://u24.gov.ua/" target="_blank" rel="noopener" aria-label="Support Ukraine">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/4/49/Flag_of_Ukraine.svg" alt="Ukrainian Flag" class="flag" width="88" />
+        </a>
+      </div>
     </v-container>
   </StandardPage>
 </template>
@@ -43,5 +59,25 @@ import VENV from '@/components/main/VENV.vue'
 <style scoped>
 .about-card {
   backdrop-filter: blur(5px);
+}
+.paragraph{
+  text-indent: 1.5rem; /* or any spacing unit you want */
+}
+/* Support flags layout */
+.support-flags {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.flag {
+  height: auto;
+  border-radius: 1px;
+  transition: transform 0.88s ease;
+}
+.flag:hover {
+  transform: scale(1.05);
 }
 </style>

@@ -71,7 +71,7 @@ function focusInput() {
         <v-icon
           :icon="mdiSetNone"
           class="top-left-icon cursor-pointer"
-          :style="{ position: isMobile ? 'absolute' : 'fixed', top: isMobile ? 0 : '1rem' }"
+          :style="{ top: isMobile ? 0 : '1rem' }"
         />
       </RouterLink>
     </v-col>
@@ -222,7 +222,7 @@ function focusInput() {
 
 
 .search-wrapper {
-  position: absolute;
+  position: fixed;
   top: 2vh;
   left: 50%;
   transform: translateX(-50%);
@@ -235,7 +235,7 @@ nav {
 }
 
 .top-left-icon {
-  position: absolute;
+  position: fixed;
   font-size: 65px;
   left: 1.5rem;
   z-index: 1000;
@@ -253,6 +253,7 @@ nav {
   z-index: 100;
 }
 
+
 /* Other pages: top-left horizontal navigation */
 .cornered {
   top: 1rem;
@@ -260,6 +261,11 @@ nav {
   display: flex;
   flex-direction: row;
   z-index: 100;
+}
+
+
+nav.home .v-icon {
+  color: white !important;
 }
 
 /* Fade In/Out Animation */

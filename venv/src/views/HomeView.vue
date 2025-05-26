@@ -31,14 +31,30 @@ onBeforeMount(() => {
   backdrop-filter: blur(5px) !important;
   -webkit-backdrop-filter: blur(5px) !important;
 }
+
+.center-stripe {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 88px;
+  background-color: #9b0909; /* strong red */
+  z-index: 0; /* ensure it's behind other content */
+}
+
+
 </style>
 
 <template>
-  <main style="z-index: 5">
+  <main style="z-index: 5; position: relative">
+    <!-- Red background stripe -->
+    <div class="center-stripe" aria-hidden="true"></div>
+
     <v-dialog v-model="isOpen" transition="slide-y-transition" width="auto" @click="isOpen = false">
       <template #activator="{ on, attrs }"></template>
       <v-card class="elevation-10" style="position: relative; max-width: 1000px">
-        <VENV location="home" closeHint="true" />
+        <VENV location="home" :closeHint="true" />
       </v-card>
     </v-dialog>
   </main>

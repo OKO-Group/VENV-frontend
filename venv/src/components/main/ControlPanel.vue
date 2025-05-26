@@ -68,8 +68,8 @@ function cancelRetract() {
 <style scoped>
 .site-panel-wrapper {
   position: fixed;
-  bottom: 10px;
-  left: 22px;
+  bottom: 1vw;
+  left: 1vw;
   z-index: 999;
 }
 

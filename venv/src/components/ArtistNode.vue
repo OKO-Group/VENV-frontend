@@ -21,7 +21,6 @@ const props = defineProps<NodeProps<ArtistNodeData>>()
   border-radius: 50%;
   overflow: hidden;
   border: 2px solid white;
-  background-color: rgba(255, 255, 255, 0.6);
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 

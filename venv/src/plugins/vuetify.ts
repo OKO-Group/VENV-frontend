@@ -9,7 +9,7 @@ const lightTheme: ThemeDefinition = {
   colors: {
     background: '#eeeeee',
     surface: '#FFFFFF',
-    primary: '#90CAF9',
+    primary: '#62acda',
     onPrimary: '#000000',
     secondary: '#FFCDD2',
     onSecondary: '#000000',
@@ -25,7 +25,7 @@ const darkTheme: ThemeDefinition = {
   colors: {
     background: '#121212',
     surface: '#949494',
-    primary: '#c49ae3',
+    primary: '#a8bec7',
     onPrimary: '#000000',
     secondary: '#03DAC6',
     onSecondary: '#000000',
@@ -44,14 +44,14 @@ const vuetify = createVuetify({
   },
   defaults: {
     VTextField: {
-      variant: 'solo-filled',
+      variant: 'outlined',
       density: 'compact',
     },
     VTextarea: {
-      variant: 'solo-filled',
+      variant: 'outlined',
     },
     VAutocomplete: {
-      variant: 'solo-filled',
+      variant: 'outlined',
       density: 'compact',
       menuProps: {
         maxWidth: '100%',
@@ -59,6 +59,10 @@ const vuetify = createVuetify({
       },
       style: 'width: 100%',
     },
+    VCard: {
+      variant: 'flat',
+      density: 'compact',
+    }
   },
   icons: {
     defaultSet: 'mdi',

@@ -514,7 +514,7 @@ function onFileChange(e: Event) {
     </v-dialog>
 
     <!-- Fixed Full-Width Tabs -->
-    <v-tabs v-model="tab" color="black" align-tabs="center" height="50" class="main-tabs">
+    <v-tabs v-model="tab"  align-tabs="center" height="50" class="main-tabs">
       <v-tab :value="1">Gallery</v-tab>
       <v-tab :value="2">Profile</v-tab>
     </v-tabs>
@@ -672,7 +672,6 @@ function onFileChange(e: Event) {
                   </div>
                   <div>
                     <v-btn
-                      color="black"
                       variant="outlined"
                       class="mt-3 mb-10 self-start"
                       style="width: 260px"

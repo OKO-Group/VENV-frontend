@@ -66,11 +66,9 @@ const dialogOpen = computed({
     <div
       v-if="hoveredUser"
       class="hover-card"
-      :style="{ top: `${hoverPosition.y + 10}px`, left: `${hoverPosition.x + 10}px` }"
+      :style="{ top: `${hoverPosition.y + 70}px`, left: `${hoverPosition.x - 40}px` }"
     >
       <strong>{{ hoveredUser.first_name }} {{ hoveredUser.last_name }}</strong
-      ><br />
-      <span class="text-caption">{{ hoveredUser.email }}</span
       ><br />
       <a :href="hoveredUser.portfolio_link" class="text-caption" target="_blank">
         {{ hoveredUser.portfolio_link }}
@@ -157,7 +155,7 @@ const dialogOpen = computed({
 .hover-card {
   position: fixed;
   z-index: 100;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(var(--v-theme-surface), 0.9);
   border-radius: 6px;
   padding: 8px 12px;
   font-size: 12px;

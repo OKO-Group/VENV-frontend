@@ -3,7 +3,7 @@ import { mdiClose } from '@mdi/js'
 
 defineProps<{
   location: 'home' | 'about'
-  closeHint: false
+  closeHint: false | true
 }>()
 </script>
 
@@ -28,7 +28,7 @@ defineProps<{
         </div>
       </div>
       <div class="text-right">
-        <p>First release: May 25, 2025</p>
+        <p>First release: June 1, 2025</p>
       </div>
     </div>
   </div>

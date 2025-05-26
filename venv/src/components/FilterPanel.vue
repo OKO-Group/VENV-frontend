@@ -19,18 +19,6 @@ const isExpanded = ref(false)
         <div class="toggle-wrapper" @click="isExpanded = !isExpanded">
           <v-icon class="mb-2 mt-2 text-center w-100">{{ mdiFilter }}</v-icon>
         </div>
-        <v-autocomplete
-          v-model="filters.style"
-          :items="filterdb.styles"
-          item-title="label"
-          item-value="value"
-          multiple
-          chips
-          closable-chips
-          label="Style"
-          variant="outlined"
-          density="compact"
-        />
 
         <v-autocomplete
           v-model="filters.genre"
@@ -41,8 +29,6 @@ const isExpanded = ref(false)
           chips
           closable-chips
           label="Genre"
-          variant="outlined"
-          density="compact"
         />
 
         <v-autocomplete
@@ -54,8 +40,6 @@ const isExpanded = ref(false)
           chips
           closable-chips
           label="Media"
-          variant="outlined"
-          density="compact"
         />
 
         <v-autocomplete
@@ -67,8 +51,6 @@ const isExpanded = ref(false)
           chips
           closable-chips
           label="Artist"
-          variant="outlined"
-          density="compact"
         />
       </div>
     </transition>
@@ -91,7 +73,6 @@ const isExpanded = ref(false)
 }
 
 .filter-card:hover {
-  background-color: rgba(180, 180, 180, 0.11) !important;
   transition: background-color 0.5s ease-in-out;
 }
 

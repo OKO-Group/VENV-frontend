@@ -95,12 +95,12 @@ useIntersectionObserver(loadMoreTrigger, async ([{ isIntersecting }]) => {
 
 <template>
   <PerfectScrollbar class="ps-bar"
-                    :style="{'height': isMobile ? '70vh' : '80vh', 'overflow-x': 'hidden'}"
+                    :style="{'height': isMobile ? '100%' : '80vh', 'overflow-x': 'hidden'}"
                     :options="scrollbarOptions" ref="tableRef">
     <div class="artwork-list">
       <!-- Grid layout -->
       <div v-if="viewMode === 'grid'">
-        <v-row style="max-height: 78vh;" dense>
+        <v-row style="max-height: 80vh;" dense>
           <v-col
             v-for="(item, index) in artworks"
             :key="item.id"
@@ -113,8 +113,8 @@ useIntersectionObserver(loadMoreTrigger, async ([{ isIntersecting }]) => {
             <v-card
               class="pa-1 mb-0.5 text-center"
               :elevation="selectedArtworkId === item.id ? 3 : 0"
+              :color="selectedArtworkId == item.id ? 'rgba(208, 216, 224, 0.82)' : 'transparent'"
               @click="handleClick(item)"
-              variant="tonal"
             >
               <v-img v-if="hasImage(item)" :src="getThumb(item)" height="160"
                      class="mb-1 artwork" />
@@ -221,15 +221,12 @@ useIntersectionObserver(loadMoreTrigger, async ([{ isIntersecting }]) => {
 }
 
 .artwork-row {
-  background-color: rgba(220, 219, 219, 0.6);
   transition: box-shadow 0.33s ease,
   background-color 0.33s ease,
   transform 0.33s ease;
 }
 
 .artwork-row:hover {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  background-color: rgba(238, 238, 238, 0.71);
   transform: scaleX(1.008) scaleY(1.008);
   transition: box-shadow 0.33s ease,
   transform 0.33s ease;

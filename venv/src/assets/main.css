@@ -71,7 +71,7 @@ body {
 
 /* Themed link and icon colors */
 :root {
-  --link-color-light: #1c1c1c;
+  --link-color-light: #212121;
   --link-color-dark: #eeeeee;
 }
 

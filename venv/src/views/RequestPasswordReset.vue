@@ -4,6 +4,7 @@ import { useAuthStore } from '@/stores/auth'
 import type { ResetPasswordRequestPayload } from '@/types/auth'
 import { useRouter } from 'vue-router'
 import { requiredRule, emailRule } from '@/utils/validation.ts'
+import { mdiLogin } from '@mdi/js'
 
 const authStore = useAuthStore()
 const router = useRouter()
@@ -48,12 +49,10 @@ const clearError = (field: string) => {
 
             <v-btn
               :disabled="!valid"
-              color="primary"
-              block
               @click="reset_password"
               :loading="authStore.loading"
-              >->
-            </v-btn>
+              :icon="mdiLogin"
+              />
             <p v-if="authStore.errors" class="text-error">{{ authStore.errors.error || '' }}</p>
           </v-card-text>
           <v-card-actions class="d-flex flex-column align-start">

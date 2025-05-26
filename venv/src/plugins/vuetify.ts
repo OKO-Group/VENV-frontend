@@ -25,7 +25,7 @@ const darkTheme: ThemeDefinition = {
   colors: {
     background: '#121212',
     surface: '#949494',
-    primary: '#a8bec7',
+    primary: '#ffffff',
     onPrimary: '#000000',
     secondary: '#03DAC6',
     onSecondary: '#000000',

@@ -10,10 +10,6 @@ import VENV from '@/components/main/VENV.vue'
 
       <v-card class="pa-1 mx-auto about-card">
         <v-card-text class="text-body-1">
-          <p class="text-center">
-            <i>VENV</i> is a new initiative to foster a curious, creative community of people.
-          </p>
-
           <p class="mt-4 text-center" >
             At its core, <i>VENV</i> begins as a fine art database, a social graph for art, culture, and media—
             and an idling screensaver.
@@ -22,8 +18,14 @@ import VENV from '@/components/main/VENV.vue'
           <p class="paragraph mt-4" >
             Account holders enjoy full control over their artworks and visibility. Membership is
             application-based, intentionally designed to grow gradually and mindfully—preserving
-            the integrity and alignment of the community. However, anyone already included in the public social graph
-            is automatically considered part of the community and anyone can explore the platform and its public content.
+            the integrity and alignment of the community.
+          </p>
+
+          <p class="paragraph mt-4">
+             However, anyone already included in the public social graph
+             is automatically considered part of the community and anyone can explore the platform and its public content.
+             If you wish to have your account removed, please contact us. The graph was designed as a public data visualisation tool
+             with purpose to connect organizations and users involved in art or science, who are either interested in exposure or don't mind it.
           </p>
 
           <p class="paragraph mt-2">
@@ -39,7 +41,8 @@ import VENV from '@/components/main/VENV.vue'
           </p>
 
           <p class="mt-8 text-center">
-            Whatever your background, <i>VENV</i> invites you to explore and evolve with it.
+            Amitié,<br />
+            <i>ODRADEQ</i>
           </p>
         </v-card-text>
       </v-card>

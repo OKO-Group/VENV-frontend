@@ -31,9 +31,6 @@ watch(() => route.path, (to, from) => {
     // }
 })
 
-function toggleTheme () {
-  theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark'
-}
 watchEffect(() => {
   const mode = settings.mode
 
@@ -48,7 +45,8 @@ watchEffect(() => {
   } else if (mode === 'dune') {
     // use system Vuetify theme
     theme.global.name.value = isSystemDark.value ? 'darkTheme' : 'lightTheme'
-    document.body.classList.remove('bg-light', 'bg-dark')
+    document.body.classList.remove('theme-dark', 'theme-light')
+    document.body.classList.add(isSystemDark.value ? 'theme-dark' : 'theme-light')
   }
 })
 

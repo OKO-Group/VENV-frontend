@@ -7,8 +7,10 @@ import { fallbackArtworks } from '@/assets/fallbackArtworks.ts'
 import { useArtworkQueryManager } from '@/stores/ArtworkQueryManager.ts'
 import { isMobile } from '@/utils/isMobile.ts'
 import SocialGraph from '@/components/SocialGraph.vue'
-import { mdiAccount, mdiAccountGroup, mdiInformation } from '@mdi/js'
+import { mdiAccountGroup, mdiInformation } from '@mdi/js'
+import { useSiteSettings } from '@/stores/siteSettings.ts'
 
+const siteSettings = useSiteSettings()
 const artworkStore = useArtworkStore()
 const artworkManager = useArtworkQueryManager()
 
@@ -64,9 +66,7 @@ onUnmounted(() => {
   artworkStore.cameraPos = [0, 1.8, 20]
 })
 
-
 const isOpen = ref(false)
-
 
 onBeforeMount(() => {
   const hasSeenIntro = localStorage.getItem('venv_explore_info_shown')
@@ -77,29 +77,40 @@ onBeforeMount(() => {
     localStorage.setItem('venv_explore_info_shown', 'true')
   }
 })
-
 </script>
 
 <template>
-    <div class="graph-container">
-      <v-dialog v-model="isOpen" transition="slide-y-transition" width="auto" @click="isOpen = false">
-        <v-card style="position: relative; max-width: 1000px" variant="flat">
-          <v-card-text class="text-center">
-            <h1 class="text-h5 font-weight-bold mb-2"> <v-icon :icon="mdiAccountGroup" size="small" class="mx-1" style="vertical-align: middle;" /></h1>
-            <p class="text-body-1 mb-4">
-              This graph displays the IG community graph spanning from VENV.co to FOF (friends-of-friends).
-              We derive no monetary gain from this graph and no rights for any of the content displayed here.
-              Only creators & organizations minimalist public data is shown. If you want to have your node removed, please contact us.
-              Read About
-              <v-icon :icon="mdiInformation" size="small" class="mx-1" style="vertical-align: middle;" />
-              page for more information.
-            </p>
-            <v-btn @click="isOpen = false">OK</v-btn>
-          </v-card-text>
-        </v-card>
-      </v-dialog>
-      <SocialGraph v-if="venvSocialGraph" :graph-data="venvSocialGraph" />
-    </div>
+  <div v-if="siteSettings.mode != 'dune'" class="graph-container">
+    <v-dialog v-model="isOpen" transition="slide-y-transition" width="auto" @click="isOpen = false">
+      <v-card style="position: relative; max-width: 1000px" variant="flat">
+        <v-card-text class="text-center">
+          <h1 class="text-h5 font-weight-bold mb-2">
+            <v-icon
+              :icon="mdiAccountGroup"
+              size="small"
+              class="mx-1"
+              style="vertical-align: middle"
+            />
+          </h1>
+          <p class="text-body-1 mb-4">
+            This graph displays the IG community graph spanning from VENV.co to FOF
+            (friends-of-friends). We derive no monetary gain from this graph and no rights for any
+            of the content displayed here. Only creators & organizations minimalist public data is
+            shown. If you want to have your node removed, please contact us. Read About
+            <v-icon
+              :icon="mdiInformation"
+              size="small"
+              class="mx-1"
+              style="vertical-align: middle"
+            />
+            page for more information.
+          </p>
+          <v-btn @click="isOpen = false">OK</v-btn>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+    <SocialGraph v-if="venvSocialGraph" :graph-data="venvSocialGraph" />
+  </div>
 </template>
 
 <style scoped>

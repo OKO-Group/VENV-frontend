@@ -92,7 +92,7 @@ function focusInput() {
           <v-tooltip v-if="!isMobile" text="Explore" :location="isHome ? 'right' : 'bottom'">
             <template #activator="{ props }">
               <RouterLink to="/explore" exact-active-class="active" v-bind="props">
-                <v-icon :icon="mdiCompass" size="50" />
+                <v-icon :icon="mdiCompass" size="42" />
               </RouterLink>
             </template>
           </v-tooltip>
@@ -104,7 +104,7 @@ function focusInput() {
           <v-tooltip v-if="!isMobile" text="Members" :location="isHome ? 'right' : 'bottom'">
             <template #activator="{ props }">
               <RouterLink to="/members" exact-active-class="active" v-bind="props">
-                <v-icon :icon="mdiAccountGroup" size="50" />
+                <v-icon :icon="mdiAccountGroup" size="42" />
               </RouterLink>
             </template>
           </v-tooltip>
@@ -116,7 +116,7 @@ function focusInput() {
           <v-tooltip v-if="!isMobile" text="About" :location="isHome ? 'right' : 'bottom'">
             <template #activator="{ props }">
               <RouterLink to="/about" exact-active-class="active" v-bind="props">
-                <v-icon :icon="mdiInformation" size="50" />
+                <v-icon :icon="mdiInformation" size="42" />
               </RouterLink>
             </template>
           </v-tooltip>
@@ -127,7 +127,7 @@ function focusInput() {
           <v-tooltip v-if="!isMobile" text="Contact" :location="isHome ? 'right' : 'bottom'">
             <template #activator="{ props }">
               <RouterLink to="/contact" exact-active-class="active" v-bind="props">
-                <v-icon :icon="mdiEmail" size="50" />
+                <v-icon :icon="mdiEmail" size="42" />
               </RouterLink>
             </template>
           </v-tooltip>

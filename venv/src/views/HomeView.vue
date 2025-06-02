@@ -43,6 +43,17 @@ onBeforeMount(() => {
   z-index: 0; /* ensure it's behind other content */
 }
 
+.corner-poem {
+  position: fixed;
+  bottom: 33px;
+  right: 33px;
+  font-size: 1rem;
+  font-style: italic;
+  text-align: left;
+  line-height: 1.4;
+  max-width: 280px;
+  pointer-events: none;
+}
 
 </style>
 
@@ -57,5 +68,15 @@ onBeforeMount(() => {
         <VENV location="home" :closeHint="true" />
       </v-card>
     </v-dialog>
+
+    <!-- Poem in bottom-right corner -->
+    <div class="corner-poem">
+      <p>
+        In this virtual sea,<br />
+        What is true relevancy?<br />
+        Who am I to you?<br />
+        Who are you, to me?<br />
+      </p>
+    </div>
   </main>
 </template>

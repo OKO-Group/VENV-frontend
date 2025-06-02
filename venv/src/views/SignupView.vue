@@ -16,7 +16,7 @@ const router = useRouter()
 
 const valid = ref(false)
 const dialog = ref(false) // Controls the success message dialog
-const formClosed = true // TODO set to true on release
+const officialFormDisabled = true // TODO set to true on release
 const userData = ref<SignupPayload>({
   username: '',
   email: '',
@@ -54,21 +54,48 @@ const redirectToHome = () => {
   dialog.value = false
   router.push('/') // Redirect to home
 }
-
 </script>
 
 <template>
   <div class="signup-container">
     <v-container class="d-flex justify-center align-center fill-height">
-      <v-card class="venv-card">
-        <v-card-title class="venv-title">VENV Artist Application</v-card-title>
+      <div v-if="officialFormDisabled">
+        <v-card class="contact-card mx-auto">
+          <v-card-text class="text-body-1">
+            <div class="text-center mb-6">
+              <h2 class="text-h5 font-weight-medium mb-2">Join VENV</h2>
+              <p class="mt-2">Artist, scientist or engineer?</p>
+              <p>We’d love to hear from you—just drop us an email to apply.</p>
+              <p>
+                Please include a link to your portfolio or public profile, a brief introduction
+                about yourself,
+              </p>
+              <p>and let us know which role you’d like to fulfill.</p>
+              <p class="mt-4 text-medium-emphasis">Warm regards,</p>
+              <p class="mt-4 text-medium-emphasis">
+                <i>Odradeq Team</i>
+              </p>
+            </div>
+
+            <v-row justify="center" class="text-center">
+              <v-col cols="12" md="8">
+                <v-btn
+                  variant="outlined"
+                  href="mailto:odradeq@venv.co"
+                  color="primary"
+                  class="mt-2"
+                >
+                  odradeq@venv.co
+                </v-btn>
+              </v-col>
+            </v-row>
+          </v-card-text>
+        </v-card>
+      </div>
+      <v-card v-else class="venv-card">
+        <v-card-title class="venv-title">VENV Application</v-card-title>
         <v-card-text>
-          <div v-if="formClosed">
-            <p class="text-center text-subtitle-1 venv-title">
-              Applications open on June 1st, 2025. See you soon! 👋
-            </p>
-          </div>
-          <v-form v-else v-model="valid">
+          <v-form v-model="valid">
             <v-text-field
               v-model="userData.email"
               :rules="[requiredRule, emailRule]"
@@ -138,7 +165,6 @@ const redirectToHome = () => {
             </v-btn>
           </v-form>
           <p v-if="authStore.errors" class="text-error">{{ authStore.errors.error || '' }}</p>
-
         </v-card-text>
         <v-card-actions>
           <router-link to="/login">Already have an account? Login</router-link>
@@ -163,10 +189,10 @@ const redirectToHome = () => {
 <style scoped>
 /* Ensures full-page centering */
 
-
 .venv-card {
   background: rgba(220, 219, 219, 0.5) !important;
 }
+
 .signup-container {
   display: flex;
   justify-content: center;

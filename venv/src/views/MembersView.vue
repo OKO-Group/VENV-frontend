@@ -2,12 +2,12 @@
 import { VueFlow, type GraphNode, type GraphEdge } from '@vue-flow/core'
 import ArtistNode from '@/components/ArtistNode.vue'
 import { generateArtistGraph, useLayout } from '@/utils/generate_artist_graph.ts'
-import { computed, markRaw, nextTick, onMounted, ref } from 'vue'
+import { computed, markRaw, nextTick, onBeforeMount, onMounted, ref } from 'vue'
 import { useArtworkStore } from '@/stores/artworks'
 import type { User } from '@/types/oko.ts'
 import { Background } from '@vue-flow/background'
 import StandardPage from '@/components/main/StandardPage.vue'
-import { mdiEyeOutline, mdiLinkVariant, mdiMapMarker } from '@mdi/js'
+import { mdiAccount, mdiAccountGroup, mdiEyeOutline, mdiLinkVariant, mdiMapMarker } from '@mdi/js'
 
 const artworkStore = useArtworkStore()
 const nodes = ref<GraphNode<User>[]>([])
@@ -17,10 +17,30 @@ const hoveredUser = ref(null)
 const hoverPosition = ref({ x: 0, y: 0 })
 
 const { layout } = useLayout()
-onMounted(async () => {
-  await artworkStore.getArtists(true)
 
-  const { nodes: rawNodes, edges: rawEdges } = generateArtistGraph(artworkStore.artists_graph)
+
+const venvNode = {
+
+  first_name: 'VENV.COmmunity',
+  last_name: '',
+  username: 'venv.co',
+  id: 'venv.co',
+  profile_picture: { file_thumbnail: 'media/thumbnails/venv.co/avatar.jpg' },
+  portfolio_link: 'https://venv.co',
+  biography: ', Odradeq',
+  location: 'Everywhere',
+  genres: ['*'],
+  media: ['*'],
+  styles: ['*'],
+  is_approved: true,
+
+
+}
+
+onMounted(async () => {
+  // await artworkStore.getArtists(true)
+
+  const { nodes: rawNodes, edges: rawEdges } = generateArtistGraph( [venvNode])
 
   // Apply dagre layout
   await nextTick(() => {
@@ -36,10 +56,38 @@ const dialogOpen = computed({
     if (!val) clickedUser.value = null
   },
 })
+
+
+const isOpen = ref(false)
+
+
+onBeforeMount(() => {
+  const hasSeenIntro = localStorage.getItem('venv_members_info_shown')
+  const isFirstVisit = !hasSeenIntro
+
+  if (isFirstVisit) {
+    isOpen.value = true
+    localStorage.setItem('venv_members_info_shown', 'true')
+  }
+})
+
 </script>
 
 <template>
-  <StandardPage>
+  <div class="artist-graph-container">
+    <v-dialog v-model="isOpen" transition="slide-y-transition" width="auto" @click="isOpen = false">
+      <v-card style="position: relative; max-width: 1000px" variant="flat">
+        <v-card-text class="text-center">
+          <h1 class="text-h5 font-weight-bold mb-2"> <v-icon :icon="mdiAccountGroup" size="small" class="mx-1" style="vertical-align: middle;" /></h1>
+          <p class="text-body-1 mb-4">
+            This graph displays the VENV community members. To become a VENV member, please apply through the top right
+            <v-icon :icon="mdiAccount" size="small" class="mx-1" style="vertical-align: middle;" />
+            icon.
+          </p>
+          <v-btn @click="isOpen = false">OK</v-btn>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
     <VueFlow
       v-model:nodes="nodes"
       v-model:edges="edges"
@@ -129,7 +177,7 @@ const dialogOpen = computed({
         </v-card-text>
       </v-card>
     </v-dialog>
-  </StandardPage>
+  </div>
 </template>
 
 <style scoped>
@@ -148,6 +196,11 @@ const dialogOpen = computed({
   background: rgba(255, 255, 255, 0.05);
 }
 
+.artist-graph-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
 .user-card {
   background-color: rgba(141, 141, 141, 0.47) !important;
 }

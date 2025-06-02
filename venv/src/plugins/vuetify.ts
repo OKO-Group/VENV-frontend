@@ -13,7 +13,6 @@ const lightTheme: ThemeDefinition = {
     onPrimary: '#000000',
     secondary: '#FFCDD2',
     onSecondary: '#000000',
-
   },
   variables: {
     'font-family': "'Lato', sans-serif",
@@ -24,7 +23,7 @@ const darkTheme: ThemeDefinition = {
   dark: true,
   colors: {
     background: '#121212',
-    surface: '#949494',
+    surface: '#878787',
     primary: '#ffffff',
     onPrimary: '#000000',
     secondary: '#03DAC6',
@@ -39,7 +38,8 @@ const vuetify = createVuetify({
   theme: {
     defaultTheme: 'darkTheme',
     themes: {
-      lightTheme, darkTheme
+      lightTheme,
+      darkTheme,
     },
   },
   defaults: {
@@ -62,6 +62,14 @@ const vuetify = createVuetify({
     VCard: {
       variant: 'flat',
       density: 'compact',
+    },
+    VToolbar: {
+      density: 'compact',
+      color: 'background',
+      flat: true,
+    },
+    VBtn: {
+      variant: 'flat'
     }
   },
   icons: {

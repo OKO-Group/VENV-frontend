@@ -1,0 +1,8 @@
+{
+	"devDependencies": {
+		"@types/cytoscape-euler": "^1.2.3"
+	},
+	"dependencies": {
+		"cytoscape-euler": "^1.2.3"
+	}
+}
